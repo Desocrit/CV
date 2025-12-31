@@ -1,0 +1,18 @@
+---
+interface Props {
+  title: string;
+  id?: string;
+}
+
+const { title, id } = Astro.props;
+const headingId = id ? `${id}-heading` : undefined;
+---
+
+<section class="mb-[var(--space-fluid-lg)]" id={id} aria-labelledby={headingId}>
+  <h2 id={headingId} class="mb-[var(--space-fluid-md)] text-gray-900">
+    {title}
+  </h2>
+  <div class="space-y-[var(--space-fluid-md)]">
+    <slot />
+  </div>
+</section>

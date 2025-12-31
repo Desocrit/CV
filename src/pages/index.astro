@@ -1,16 +1,104 @@
 ---
+import { getCollection, render } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import ExperienceCard from '../components/ExperienceCard.astro';
+import EducationCard from '../components/EducationCard.astro';
 
+// CV Data - Single Source of Truth
+const cvData = {
+  name: 'Chris Saunders',
+  jobTitle: 'Software Engineer',
+  email: 'chris@example.com',
+  location: 'London, UK',
+  linkedin: 'https://linkedin.com/in/chrissaunders',
+  github: 'https://github.com/chrissaunders',
+};
+
+const experiences = (await getCollection('experience')).sort((a, b) => a.data.order - b.data.order);
+
+const education = (await getCollection('education')).sort((a, b) => a.data.order - b.data.order);
+
+// Transform data for Layout JSON-LD
+const socialLinks = [
+  ...(cvData.linkedin ? [{ platform: 'LinkedIn', url: cvData.linkedin }] : []),
+  ...(cvData.github ? [{ platform: 'GitHub', url: cvData.github }] : []),
+];
+
+const workExperiences = experiences.map((exp) => ({
+  company: exp.data.company,
+  role: exp.data.role,
+  startDate: exp.data.startDate,
+  endDate: exp.data.endDate,
+  location: exp.data.location,
+}));
+
+const educationData = education.map((edu) => ({
+  institution: edu.data.institution,
+  degree: edu.data.degree,
+  field: edu.data.field,
+  startDate: edu.data.startDate,
+  endDate: edu.data.endDate,
+}));
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout
+  title={`${cvData.name} - CV`}
+  description={`Professional CV for ${cvData.name}, ${cvData.jobTitle} based in ${cvData.location}.`}
+  name={cvData.name}
+  jobTitle={cvData.jobTitle}
+  email={cvData.email}
+  location={cvData.location}
+  socialLinks={socialLinks}
+  workExperiences={workExperiences}
+  education={educationData}
+>
+  <Hero
+    name={cvData.name}
+    title={cvData.jobTitle}
+    email={cvData.email}
+    location={cvData.location}
+    linkedin={cvData.linkedin}
+    github={cvData.github}
+  />
+
+  <Section title="Work Experience" id="experience">
+    {
+      experiences.map(async (exp) => {
+        const { Content } = await render(exp);
+        return (
+          <ExperienceCard
+            company={exp.data.company}
+            role={exp.data.role}
+            startDate={exp.data.startDate}
+            endDate={exp.data.endDate}
+            location={exp.data.location}
+          >
+            <Content />
+          </ExperienceCard>
+        );
+      })
+    }
+  </Section>
+
+  <Section title="Education" id="education">
+    {
+      education.map(async (edu) => {
+        const { Content } = await render(edu);
+        return (
+          <EducationCard
+            institution={edu.data.institution}
+            degree={edu.data.degree}
+            field={edu.data.field}
+            startDate={edu.data.startDate}
+            endDate={edu.data.endDate}
+            location={edu.data.location}
+          >
+            <Content />
+          </EducationCard>
+        );
+      })
+    }
+  </Section>
+</Layout>

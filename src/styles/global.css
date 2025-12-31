@@ -1,0 +1,161 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@theme {
+  --font-sans: 'Inter', 'system-ui', 'sans-serif';
+
+  /* Fluid typography scale (min: 320px, max: 1280px) */
+  --text-fluid-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --text-fluid-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+  --text-fluid-base: clamp(1rem, 0.925rem + 0.375vw, 1.125rem);
+  --text-fluid-lg: clamp(1.125rem, 1rem + 0.625vw, 1.375rem);
+  --text-fluid-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+  --text-fluid-2xl: clamp(1.5rem, 1.3rem + 1vw, 1.875rem);
+  --text-fluid-3xl: clamp(1.875rem, 1.6rem + 1.375vw, 2.5rem);
+  --text-fluid-4xl: clamp(2.25rem, 1.9rem + 1.75vw, 3rem);
+
+  /* Fluid spacing scale */
+  --space-fluid-xs: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem);
+  --space-fluid-sm: clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem);
+  --space-fluid-md: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+  --space-fluid-lg: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
+  --space-fluid-xl: clamp(2rem, 1.6rem + 2vw, 3.5rem);
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    font-size: var(--text-fluid-base);
+    line-height: 1.6;
+  }
+
+  h1 {
+    font-size: var(--text-fluid-3xl);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+  }
+
+  h2 {
+    font-size: var(--text-fluid-xl);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-size: var(--text-fluid-lg);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  /* Enhanced focus styles for AAA compliance */
+  :focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+  }
+
+  /* Skip link for keyboard navigation */
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #000;
+    color: #fff;
+    padding: 8px 16px;
+    z-index: 100;
+    transition: top 0.2s;
+  }
+
+  .skip-link:focus {
+    top: 0;
+  }
+}
+
+/* Print-specific styles - Primary output target */
+@media print {
+  @page {
+    size: A4;
+    margin: 1.5cm 2cm;
+  }
+
+  html {
+    font-size: 11pt;
+  }
+
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Hide non-essential elements */
+  .no-print {
+    display: none !important;
+  }
+
+  /* Prevent orphans and widows */
+  p,
+  li,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Keep headings with their content */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  /* Prevent breaking inside important elements */
+  article,
+  section,
+  blockquote,
+  figure,
+  table,
+  pre {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Keep list items together when possible */
+  li {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Ensure links are visible in print */
+  a[href^='http']:not(.no-print-url)::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  /* Don't show URL for email/tel links */
+  a[href^='mailto']::after,
+  a[href^='tel']::after {
+    content: none;
+  }
+
+  /* Remove shadows and transitions */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    transition: none !important;
+  }
+
+  /* Ensure proper contrast for printed text */
+  body {
+    color: #000;
+    background: #fff;
+  }
+}
