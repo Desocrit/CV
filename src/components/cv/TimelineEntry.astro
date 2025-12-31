@@ -1,0 +1,108 @@
+---
+interface Props {
+  company: string;
+  role: string;
+  tenure: string;
+  summary: string;
+  impact: string[];
+  techStack: string[];
+}
+
+const { company, role, tenure, summary, impact, techStack } = Astro.props;
+---
+
+<li class="timeline-entry border-t border-border pt-fluid-md pb-fluid-sm first:border-t-0 first:pt-0">
+  <!-- Two-column grid matching ProjectCard: COL 1-4 | COL 5-12 -->
+  <article class="group grid gap-3 lg:grid-cols-12 lg:gap-6">
+    <!-- Left Column: Cols 1-4 - Role, Company, Tenure, Tech Stack -->
+    <div class="lg:col-span-4 space-y-2">
+      <div>
+        <h3 class="text-fluid-base font-medium tracking-tight text-foreground">{role}</h3>
+        <p class="font-mono text-fluid-2xs text-muted-foreground mt-0.5">
+          <time>{tenure}</time>
+        </p>
+      </div>
+
+      <p class="company-name font-mono text-fluid-xs">{company}</p>
+
+      <!-- Tech stack - comment green aesthetic -->
+      <div class="tech-stack font-mono text-fluid-xs leading-tight" data-print="hide">
+        {techStack.filter(t => !t.startsWith('TODO')).join(' / ')}
+      </div>
+    </div>
+
+    <!-- Right Column: Cols 5-12 - Summary + Impact -->
+    <div class="lg:col-span-8 space-y-3">
+      <p class="text-fluid-sm text-foreground leading-snug" data-print="hide">
+        {summary}
+      </p>
+
+      <!-- Impact bullets -->
+      <ul class="flex flex-wrap gap-x-4 gap-y-1 font-mono text-fluid-xs">
+        {impact.map((item) => {
+          const cleanItem = item.replace(/^["']|["']$/g, '');
+          return (
+            <li class="flex items-center gap-1.5 text-foreground opacity-90">
+              <span class="impact-slash" aria-hidden="true">//</span>
+              <span>{cleanItem}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </article>
+</li>
+
+<style>
+  /* Company name - purple accent */
+  .company-name {
+    color: var(--color-accent-purple);
+  }
+
+  /* Tech stack - comment green aesthetic */
+  .tech-stack {
+    color: var(--color-accent-green);
+  }
+
+  /* Impact slash dividers - green accent */
+  .impact-slash {
+    color: var(--color-accent-green-muted);
+    letter-spacing: -0.05em;
+  }
+
+  /* Print: Compact display with bullet points */
+  @media print {
+    .timeline-entry {
+      padding-top: 0.3rem;
+      padding-bottom: 0.3rem;
+    }
+
+    article {
+      display: block;
+    }
+
+    .tech-stack,
+    .company-name {
+      color: #333 !important;
+    }
+
+    /* Convert inline list to vertical bullet list */
+    .timeline-entry ul {
+      display: block !important;
+      flex-direction: column;
+      gap: 0 !important;
+      padding-left: 1rem !important;
+    }
+
+    .timeline-entry ul li {
+      display: list-item !important;
+      list-style-type: disc !important;
+      margin: 0.1rem 0 !important;
+    }
+
+    /* Hide the // slash prefix */
+    .impact-slash {
+      display: none !important;
+    }
+  }
+</style>

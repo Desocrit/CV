@@ -1,23 +1,22 @@
 ---
 interface Props {
-  title: string;
   id?: string;
-  class?: string;
+  title: string;
   sectionNumber?: string;
 }
 
-const { title, id, class: className = '', sectionNumber } = Astro.props;
+const { id, title, sectionNumber } = Astro.props;
 const headingId = id ? `${id}-heading` : undefined;
 
-// Convert title to SCREAMING_SNAKE_CASE for consistency with other sections
+// Convert title to SCREAMING_SNAKE_CASE for Linear-docs aesthetic
 const formatTitle = (str: string) =>
   str.toUpperCase().replace(/\s+/g, '_');
 ---
 
 <section
-  class:list={['mt-fluid-md mb-fluid-md', className]}
   id={id}
   aria-labelledby={headingId}
+  class="mt-fluid-lg mb-fluid-md"
 >
   <!-- Section header - // PREFIX NUMBERED format -->
   <h2
@@ -29,20 +28,22 @@ const formatTitle = (str: string) =>
     </span>
     <span class="font-mono text-fluid-sm tracking-wide">{formatTitle(title)}</span>
   </h2>
-  <div class="space-y-fluid-md">
+
+  <!-- Timeline entries - Clean separation -->
+  <ol class="relative space-y-fluid-sm">
     <slot />
-  </div>
+  </ol>
 </section>
 
 <style>
   /* Section prefix - comment green */
   .section-prefix {
-    color: var(--color-accent-green);
+    color: var(--accent-green);
   }
 
   @media print {
     .section-prefix {
-      display: none;
+      display: none !important;
     }
 
     /* Add spacing around section divider (h2 border) */

@@ -1,0 +1,74 @@
+---
+interface Achievement {
+  metric: string;
+  headline: string;
+  description: string;
+}
+
+interface Props {
+  achievements: Achievement[];
+  class?: string;
+}
+
+const { achievements, class: className = '' } = Astro.props;
+
+// Transform metric names into SCREAMING_SNAKE_CASE for labels
+const toSnakeCase = (str: string) =>
+  str.toUpperCase().replace(/\s+/g, '_');
+---
+
+<section
+  aria-label="Key Achievements"
+  class:list={['achievement-grid', className]}
+>
+  <!-- Pass 3: Three borderless columns separated by whitespace -->
+  <div class="flex flex-col md:flex-row md:justify-between gap-8">
+    {achievements.map((achievement) => (
+      <div class="flex flex-col gap-1 items-center text-center">
+        <!-- Metric: Large Geist Mono in White -->
+        <data
+          value={achievement.headline}
+          class="font-mono text-fluid-xl font-semibold tracking-tight text-foreground whitespace-nowrap leading-none"
+        >
+          {achievement.headline}
+        </data>
+        <!-- Label: Small-caps Geist Mono in Purple -->
+        <span class="achievement-label font-mono text-[10px] uppercase tracking-[0.15em] mt-0.5">
+          {toSnakeCase(achievement.metric)}
+        </span>
+        <!-- Description: One sentence in Geist Sans Slate -->
+        <p class="text-fluid-xs text-muted-foreground leading-snug mt-1">
+          {achievement.description}
+        </p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  /* Label - purple accent */
+  .achievement-label {
+    color: var(--color-accent-purple);
+  }
+
+  /* Print: Compact inline display */
+  @media print {
+    .achievement-grid {
+      margin: 0;
+    }
+
+    .achievement-grid > div {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+    }
+
+    .achievement-grid > div > div {
+      flex: 1;
+    }
+
+    .achievement-label {
+      color: #333 !important;
+    }
+  }
+</style>
