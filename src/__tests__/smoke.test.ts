@@ -60,9 +60,9 @@ describe('Build Output Smoke Tests', () => {
     // Skip link for accessibility
     expect(document.querySelector('a[href="#main-content"]')).not.toBeNull();
 
-    // Section headings
-    expect(getByText(container, 'Work Experience')).not.toBeNull();
-    expect(getByText(container, 'Education')).not.toBeNull();
+    // Section headings (formatted as SCREAMING_SNAKE_CASE)
+    expect(getByText(container, 'WORK_HISTORY')).not.toBeNull();
+    expect(getByText(container, 'FLAGSHIP_PROJECTS')).not.toBeNull();
   });
 
   it('contains accessible print button', () => {
