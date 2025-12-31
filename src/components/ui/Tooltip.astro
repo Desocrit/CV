@@ -1,0 +1,67 @@
+---
+interface Props {
+  content: string;
+  side?: 'top' | 'bottom' | 'left' | 'right';
+}
+
+const { content, side = 'top' } = Astro.props;
+
+const sideClasses = {
+  top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
+  bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
+  left: 'right-full top-1/2 -translate-y-1/2 mr-2',
+  right: 'left-full top-1/2 -translate-y-1/2 ml-2',
+};
+---
+
+<button type="button" class="tooltip-trigger group relative inline" aria-describedby="tooltip-content">
+  <slot />
+  <span
+    id="tooltip-content"
+    class:list={[
+      'tooltip absolute z-50 hidden w-max max-w-xs rounded-md bg-popover px-3 py-1.5 text-fluid-xs text-popover-foreground shadow-md border border-border font-normal',
+      'group-hover:block group-focus:block',
+      sideClasses[side],
+    ]}
+    role="tooltip"
+  >
+    {content}
+  </span>
+</button>
+
+<style>
+  .tooltip-trigger {
+    appearance: none;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 2px;
+    cursor: help;
+  }
+
+  .tooltip-trigger:focus {
+    outline: none;
+  }
+
+  .tooltip-trigger:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media print {
+    .tooltip {
+      display: none !important;
+    }
+
+    .tooltip-trigger {
+      text-decoration: none;
+      cursor: default;
+    }
+  }
+</style>

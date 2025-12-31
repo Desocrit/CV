@@ -1,104 +1,149 @@
 ---
-import { getCollection, render } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/cv/Hero.astro';
 import Section from '../components/ui/Section.astro';
-import ExperienceCard from '../components/cv/ExperienceCard.astro';
-import EducationCard from '../components/cv/EducationCard.astro';
+import Timeline from '../components/cv/Timeline.astro';
+import TimelineEntry from '../components/cv/TimelineEntry.astro';
+import ProjectCard from '../components/cv/ProjectCard.astro';
+import SkillsTerminal from '../components/cv/SkillsTerminal.astro';
+import LeadershipGrid from '../components/cv/LeadershipGrid.astro';
+import { cvData } from '../lib/cv-data';
 
-// CV Data - Single Source of Truth
-const cvData = {
-  name: 'Chris Saunders',
-  jobTitle: 'Software Engineer',
-  email: 'chris@example.com',
-  location: 'London, UK',
-  linkedin: 'https://linkedin.com/in/chrissaunders',
-  github: 'https://github.com/chrissaunders',
-};
+// Transform skills data for SkillsTerminal component
+const skillCategories = [
+  {
+    name: 'technical_specialties',
+    displayName: 'Technical Specialties',
+    skills: cvData.skills.technical_specialties,
+  },
+  {
+    name: 'organizational_leverage',
+    displayName: 'Organizational Leverage',
+    skills: cvData.skills.organizational_leverage,
+  },
+  {
+    name: 'emerging_frontier',
+    displayName: 'Emerging Frontier',
+    skills: cvData.skills.emerging_frontier,
+  },
+];
 
-const experiences = (await getCollection('experience')).sort((a, b) => a.data.order - b.data.order);
-
-const education = (await getCollection('education')).sort((a, b) => a.data.order - b.data.order);
+// Derive leadership items from loose_details achievements
+const leadershipItems = [
+  {
+    icon: 'users' as const,
+    title: 'Mentorship',
+    description: 'Mentored multiple engineers to successful promotion, with every IC6 engineer having been on my team immediately before promotion.',
+  },
+  {
+    icon: 'book' as const,
+    title: 'Education Initiatives',
+    description: 'Two Minute Guides, Claude Academy, Advent of AI, Prompt Workshop, AI Engineering Guild.',
+  },
+  {
+    icon: 'code' as const,
+    title: 'Engineering Standards',
+    description: 'Pioneered accessibility-first testing, completed TypeScript migration to 100% strictest.',
+  },
+  {
+    icon: 'star' as const,
+    title: 'Incident Response',
+    description: 'Number one responder to company incidents, including many out-of-hours incidents.',
+  },
+];
 
 // Transform data for Layout JSON-LD
 const socialLinks = [
-  ...(cvData.linkedin ? [{ platform: 'LinkedIn', url: cvData.linkedin }] : []),
-  ...(cvData.github ? [{ platform: 'GitHub', url: cvData.github }] : []),
+  { platform: 'LinkedIn', url: cvData.linkedin },
+  { platform: 'GitHub', url: cvData.github },
 ];
 
-const workExperiences = experiences.map((exp) => ({
-  company: exp.data.company,
-  role: exp.data.role,
-  startDate: exp.data.startDate,
-  endDate: exp.data.endDate,
-  location: exp.data.location,
-}));
+const workExperiences = cvData.work_history.map((exp) => {
+  const tenureParts = exp.tenure.split(' — ');
+  return {
+    company: exp.company,
+    role: exp.role,
+    startDate: tenureParts[0] ?? exp.tenure,
+    endDate: tenureParts[1] || undefined,
+    location: cvData.location,
+  };
+});
 
-const educationData = education.map((edu) => ({
-  institution: edu.data.institution,
-  degree: edu.data.degree,
-  field: edu.data.field,
-  startDate: edu.data.startDate,
-  endDate: edu.data.endDate,
+const educationData = cvData.education.map((edu) => ({
+  institution: edu.institution,
+  degree: edu.degree,
+  field: '',
+  startDate: String(edu.year),
+  endDate: String(edu.year),
 }));
 ---
 
 <Layout
   title={`${cvData.name} - CV`}
-  description={`Professional CV for ${cvData.name}, ${cvData.jobTitle} based in ${cvData.location}.`}
+  description={`Professional CV for ${cvData.name}, ${cvData.role} based in ${cvData.location}.`}
   name={cvData.name}
-  jobTitle={cvData.jobTitle}
+  jobTitle={cvData.role}
   email={cvData.email}
   location={cvData.location}
   socialLinks={socialLinks}
   workExperiences={workExperiences}
   education={educationData}
 >
+  <!-- Hero with Strategic Abstract and Outlier Dashboard -->
   <Hero
     name={cvData.name}
-    title={cvData.jobTitle}
+    role={cvData.role}
     email={cvData.email}
     location={cvData.location}
     linkedin={cvData.linkedin}
     github={cvData.github}
+    website={cvData.website}
+    summary={cvData.summary}
+    achievements={cvData.outlier_achievements}
+    education={{
+      degree: cvData.education[0]?.degree ?? '',
+      specialism: cvData.education[0]?.specialism ?? '',
+      institution: cvData.education[0]?.institution ?? '',
+      year: cvData.education[0]?.year ?? 0,
+    }}
   />
 
-  <Section title="Work Experience" id="experience">
-    {
-      experiences.map(async (exp) => {
-        const { Content } = await render(exp);
-        return (
-          <ExperienceCard
-            company={exp.data.company}
-            role={exp.data.role}
-            startDate={exp.data.startDate}
-            endDate={exp.data.endDate}
-            location={exp.data.location}
-          >
-            <Content />
-          </ExperienceCard>
-        );
-      })
-    }
+  <!-- Flagship Projects - Engineering Deep-Dive -->
+  <Section title="Flagship Projects" id="projects" sectionNumber="01">
+    <div class="space-y-fluid-lg">
+      {cvData.projects.slice(0, 4).map((project, index) => (
+        <div data-print={index >= 2 ? 'hide' : undefined}>
+          <ProjectCard
+            title={project.project_title}
+            status={project.status as 'Live' | 'Still live' | 'Completed' | 'Active' | 'Success'}
+            role={project.role}
+            stack={project.stack_and_tools}
+            premise={project.the_premise}
+            technicalDetails={project.technical_meat}
+            impact={project.impact_and_acclaim}
+          />
+        </div>
+      ))}
+    </div>
   </Section>
 
-  <Section title="Education" id="education">
-    {
-      education.map(async (edu) => {
-        const { Content } = await render(edu);
-        return (
-          <EducationCard
-            institution={edu.data.institution}
-            degree={edu.data.degree}
-            field={edu.data.field}
-            startDate={edu.data.startDate}
-            endDate={edu.data.endDate}
-            location={edu.data.location}
-          >
-            <Content />
-          </EducationCard>
-        );
-      })
-    }
-  </Section>
+  <!-- Work History - The Principal Era -->
+  <Timeline title="Work History" id="experience" sectionNumber="02">
+    {cvData.work_history.map((job) => (
+      <TimelineEntry
+        company={job.company}
+        role={job.role}
+        tenure={job.tenure}
+        summary={job.summary}
+        impact={job.impact}
+        techStack={job.tech_stack}
+      />
+    ))}
+  </Timeline>
+
+  <!-- Skills Terminal -->
+  <SkillsTerminal categories={skillCategories} />
+
+  <!-- Cultural Leadership -->
+  <LeadershipGrid items={leadershipItems} />
 </Layout>

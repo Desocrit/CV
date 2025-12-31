@@ -2,34 +2,33 @@
 interface Props {
   institution: string;
   degree: string;
-  field: string;
-  startDate: string;
-  endDate?: string;
-  location: string;
+  year: number;
+  notable?: string;
 }
 
-const { institution, degree, field, startDate, endDate, location } = Astro.props;
+const { institution, degree, year, notable } = Astro.props;
 ---
 
-<article class="relative border-l-2 border-gray-300 pl-fluid-sm">
-  <div
-    class="absolute top-1 -left-[0.4375rem] h-3 w-3 rounded-full border-2 border-gray-400 bg-white"
-    aria-hidden="true"
-  >
-  </div>
-  <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-    <div>
-      <h3 class="text-gray-900">{degree} in {field}</h3>
-      <p class="text-fluid-base text-gray-700">{institution}</p>
-    </div>
-    <div class="flex flex-col text-fluid-sm text-gray-700 sm:items-end sm:text-right">
-      <time>{startDate} – {endDate ?? 'Present'}</time>
-      <span>{location}</span>
-    </div>
-  </div>
-  <div
-    class="prose prose-sm prose-gray prose-li:my-0 mt-fluid-xs max-w-none text-gray-700"
-  >
-    <slot />
-  </div>
+<article class="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-fluid-sm">
+  <h3 class="font-medium text-foreground">{degree}</h3>
+  <span class="text-muted-foreground">·</span>
+  <p class="text-muted-foreground">{institution}</p>
+  <span class="text-muted-foreground">·</span>
+  <time class="font-mono text-fluid-xs text-muted-foreground">{year}</time>
+  {notable && (
+    <span class="notable-text w-full font-mono text-fluid-xs">{notable}</span>
+  )}
 </article>
+
+<style>
+  /* Notable text - comment green */
+  .notable-text {
+    color: var(--accent-green);
+  }
+
+  @media print {
+    .notable-text {
+      color: #333 !important;
+    }
+  }
+</style>

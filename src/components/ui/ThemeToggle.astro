@@ -1,0 +1,108 @@
+---
+// Server component wrapper for client-side toggle
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  class="inline-flex h-8 w-8 items-center justify-center border border-border bg-transparent text-foreground transition-colors hover:border-foreground/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring no-print"
+  aria-label="Toggle theme"
+>
+  <!-- Sun icon (shown in dark mode, click to switch to light) -->
+  <svg
+    class="h-4 w-4 sun-icon"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="1.5"
+      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+    />
+  </svg>
+  <!-- Moon icon (shown in light mode, click to switch to dark) -->
+  <svg
+    class="h-4 w-4 moon-icon hidden"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="1.5"
+      d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+    />
+  </svg>
+</button>
+
+<script>
+  function initThemeToggle() {
+    const toggle = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+    const sunIconEl = toggle?.querySelector('.sun-icon');
+    const moonIconEl = toggle?.querySelector('.moon-icon');
+
+    if (!toggle || !sunIconEl || !moonIconEl) return;
+
+    // Store references after null check for TypeScript closure narrowing
+    const sunIcon = sunIconEl;
+    const moonIcon = moonIconEl;
+
+    // Check for saved preference or system preference
+    const savedTheme = localStorage.getItem('theme');
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = savedTheme ? savedTheme === 'dark' : systemDark;
+
+    // Apply initial theme
+    function applyTheme(dark: boolean) {
+      if (dark) {
+        html.removeAttribute('data-theme');
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+      } else {
+        html.setAttribute('data-theme', 'light');
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+      }
+    }
+
+    // Set initial state
+    applyTheme(isDark);
+
+    // Handle toggle click
+    toggle.addEventListener('click', () => {
+      const isCurrentlyLight = html.getAttribute('data-theme') === 'light';
+      const newTheme = isCurrentlyLight ? 'dark' : 'light';
+
+      localStorage.setItem('theme', newTheme);
+      applyTheme(newTheme === 'dark');
+    });
+
+    // Update aria-label based on current theme
+    const updateAriaLabel = () => {
+      const isLight = html.getAttribute('data-theme') === 'light';
+      toggle.setAttribute('aria-label', isLight ? 'Switch to dark theme' : 'Switch to light theme');
+    };
+
+    updateAriaLabel();
+
+    // Create observer to update aria-label when theme changes
+    const observer = new MutationObserver(updateAriaLabel);
+    observer.observe(html, { attributes: true, attributeFilter: ['data-theme'] });
+  }
+
+  // Initialize on DOMContentLoaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initThemeToggle);
+  } else {
+    initThemeToggle();
+  }
+
+  // Re-initialize after Astro page transitions
+  document.addEventListener('astro:page-load', initThemeToggle);
+</script>

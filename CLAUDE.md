@@ -24,6 +24,8 @@ This repository serves as a high-fidelity digital representation of my professio
 
 **Fluid Systems:** Use mathematical scaling for typography and spacing (e.g., clamp() functions) rather than arbitrary breakpoints.
 
+**Design details:** The page must look sleek, elegant, and well thought out, with Swiss Grid excellence. All components should look neat, and well thought about.
+
 **Print Fidelity:** The @media print layer is not an afterthought. It is a primary output target. Layouts must be designed to avoid orphans/widows and ensure logical page breaks.
 
 # 3. Implementation Specifics

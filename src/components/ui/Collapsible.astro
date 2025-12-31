@@ -1,0 +1,58 @@
+---
+interface Props {
+  triggerText?: string;
+  defaultOpen?: boolean;
+  class?: string;
+}
+
+const { triggerText = 'Read more', defaultOpen = false, class: className = '' } = Astro.props;
+---
+
+<details class:list={['collapsible group', className]} open={defaultOpen}>
+  <summary
+    class="flex cursor-pointer list-none items-center gap-2 font-mono text-fluid-xs text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors"
+  >
+    <svg
+      class="h-3 w-3 shrink-0 transition-transform group-open:rotate-90"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7" />
+    </svg>
+    <span class="tracking-wide">{triggerText}</span>
+  </summary>
+  <div class="collapsible-content mt-3 pl-5">
+    <slot />
+  </div>
+</details>
+
+<style>
+  /* Remove default marker */
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::marker {
+    display: none;
+    content: '';
+  }
+
+  /* Print: always show content, hide toggle */
+  @media print {
+    details {
+      display: block;
+    }
+
+    summary {
+      display: none;
+    }
+
+    .collapsible-content {
+      display: block !important;
+      padding-left: 0;
+      margin-top: 0;
+    }
+  }
+</style>
