@@ -12,17 +12,17 @@ interface Props {
 const { name, title, email, phone, location, linkedin, github } = Astro.props;
 ---
 
-<header class="mb-[var(--space-fluid-lg)] border-b border-gray-200 pb-[var(--space-fluid-lg)]">
+<header class="mb-fluid-lg border-b border-gray-200 pb-fluid-lg">
   <div
-    class="flex flex-col gap-[var(--space-fluid-md)] sm:flex-row sm:items-start sm:justify-between"
+    class="flex flex-col gap-fluid-md sm:flex-row sm:items-start sm:justify-between"
   >
     <div>
       <h1 class="text-gray-900">
         {name}
       </h1>
-      {title && <p class="mt-2 text-[var(--text-fluid-lg)] text-gray-700">{title}</p>}
+      {title && <p class="mt-2 text-fluid-lg text-gray-700">{title}</p>}
       <address
-        class="mt-[var(--space-fluid-sm)] flex flex-wrap gap-x-[var(--space-fluid-sm)] gap-y-2 text-[var(--text-fluid-sm)] text-gray-700 not-italic"
+        class="mt-fluid-sm flex flex-wrap gap-x-fluid-sm gap-y-2 text-fluid-sm text-gray-700 not-italic"
       >
         {
           email && (
@@ -138,7 +138,7 @@ const { name, title, email, phone, location, linkedin, github } = Astro.props;
     <button
       type="button"
       onclick="window.print()"
-      class="no-print inline-flex shrink-0 items-center gap-2 rounded-lg bg-gray-900 px-4 py-2.5 font-medium text-[var(--text-fluid-sm)] text-white shadow-sm transition-colors hover:bg-gray-800 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none"
+      class="no-print inline-flex shrink-0 items-center gap-2 rounded-lg bg-gray-900 px-4 py-2.5 font-medium text-fluid-sm text-white shadow-sm transition-colors hover:bg-gray-800 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none"
       aria-label="Print CV to PDF"
     >
       <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
