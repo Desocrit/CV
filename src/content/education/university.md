@@ -6,8 +6,5 @@ startDate: Sep 2015
 endDate: Jun 2019
 location: London, UK
 order: 1
+grade: First Class Honours
 ---
-
-- First Class Honours
-- Specialized in Software Engineering and Distributed Systems
-- Thesis: "Scalable Microservices Architecture Patterns"

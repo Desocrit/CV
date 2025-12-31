@@ -4,14 +4,17 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "npm run lint && npm run check && astro build && npm run test",
+    "build:only": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "lint": "eslint . && astro check",
+    "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
+    "check": "astro check",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "typecheck": "astro check"
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.19",
@@ -22,14 +25,18 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.6",
     "@eslint/js": "^9.39.2",
+    "@testing-library/dom": "^10.4.1",
     "@types/eslint__js": "^8.42.3",
+    "@types/jsdom": "^27.0.0",
     "eslint": "^9.39.2",
     "eslint-plugin-astro": "^1.5.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
+    "jsdom": "^27.4.0",
     "prettier": "^3.7.4",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.51.0"
+    "typescript-eslint": "^8.51.0",
+    "vitest": "^4.0.16"
   }
 }

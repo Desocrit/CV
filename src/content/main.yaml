@@ -1,0 +1,142 @@
+# General Info
+name: "Chris Saunders"
+role: "Principal Engineer"
+location: "London, UK"
+email: "cjasaunders@outlook.com"
+website: "https://cs-cv.vercel.app/"
+github: "https://github.com/Desocrit"
+linkedin: "https://www.linkedin.com/in/christopher-saunders-48b092110/"
+
+# Abstract
+summary: >
+  15 years of engineering leadership focused on [e.g., distributed systems, 
+  large-scale AI infrastructure, or high-throughput real-time data]. 
+  Expertise in bridging the gap between hardware constraints and 
+  abstract software patterns. Known for [The One Thing You Are The Best At].
+
+outlier_achievements:
+  - title: "Throughput"
+    description: "Increased throughput of the system by 1000x for the London Marathon."
+    metric: "From 0.2bps to 200bps"
+  - title: "Cost savings"
+    description: "Reduced overall infrastructure costs by $500,000pa (25% reduction)."
+    metric: "30% reduction in infrastructure costs"
+  - title: "Testing"
+    description: Build the "systems test" framework, which allows local integration testing across microservices
+    metric: "35% increase in test coverage over 6 months"
+
+# Temporary section - start with too much content and tidy it up
+loose_achievements:
+  - Build the CI/CD pipeline and optimised the hell out of it
+  - 
+
+# Fill this out later - loose reminder to later make the website actually fun for normal viewers
+war_stories: []
+
+projects:
+  - project_title: "Nova"
+    stack_and_tools: ["Vercel AI SDK", "Mastra", "mem0", "MongoDB Vector Search", "MCP"]
+    the_premise: |
+      Our flagship AI product, an Agentic Operating System that can handle
+      most of the growth and operational challenges of being an RP for you
+    technical_meat: |
+      Build "experiment first", with the ability to extremely rapidly switch
+      tools, models, and even architectures, and enormous amounts of observability
+      and A/B testing to know what works best.
+      We ship the latest models within a 24 hours of them being released.
+      Custom MCP server backend with elicitations passed through, to allow headlessness.
+      Runs on multiple "heads", including Web, Slack, iframe, even Linear.
+      Heavily dogfooded internally, from developers coding with it to GTM using it for product questions.
+    impact_and_acclaim:
+      - Sales momentum increased dramatically
+      - 95% conversion rate from users to WAU
+    role: Designed and built the infrastructure, top contributor on the project
+    status: Live
+  - project_title: "BFv2"
+    stack_and_tools:
+      - Recoil/Jotai
+      - NextJS
+      - GraphQL
+    the_premise: |
+      A complete rebuild of our checkout experience, to allow for easy modification of
+      code, but also enforce standards to reduce the amount of 
+    technical_meat: ""
+    impact_and_acclaim:
+      - Went from several incidents per day to zero for the first three months
+      - Has since withstood several large ballots including the London Marathon
+      - 
+    status: Still live, but had a few fires since
+    role: Lead the project
+  - project_title: "London Marathon"
+    stack_and_tools: []
+    the_premise: ""
+    technical_meat: ""
+    impact_and_acclaim: []
+    status: ""
+  - project_title: "Monorepo"
+    stack_and_tools: []
+    the_premise: ""
+    technical_meat: ""
+    impact_and_acclaim: []
+    status: ""
+  - project_title: "Cost"
+    stack_and_tools: []
+    the_premise: ""
+    technical_meat: ""
+    impact_and_acclaim: []
+    status: ""
+  - project_title: "System Tests"
+    stack_and_tools: []
+    the_premise: ""
+    technical_meat: ""
+    impact_and_acclaim: []
+    status: ""
+  - project_title: "AI Leadership"
+    stack_and_tools: []
+    the_premise: ""
+    technical_meat: |
+      Ran the AI Engineering guild
+      Wrote the AI Vision
+      Near daily posts in AI channel
+      Claude Academy
+
+    impact_and_acclaim: []
+    status: ""
+  
+# Experience - "Accomplished [X] as measured by [Y], by doing [Z]" TODO
+work_history:
+  - company: "Let's Do This"
+    role: "Principal Engineer"
+    tenure: "2020 — Present"
+    summary: "Leading the [Team/Org] responsible for [Mission]."
+    impact:
+      - "Reduced [Cost/Latency/Error Rate] by [X%] by implementing [Complex Technical Solution]."
+      - "Spearheaded the migration of [Monolith] to [Modern Architecture], enabling [X] faster feature velocity."
+      - "Mentored 5 Staff Engineers who subsequently led [Specific Major Projects]."
+    tech_stack: ["Go", "Rust", "Kubernetes", "Spanner"]
+
+  - company: "The Mid-Career Pivot"
+    role: "Staff / Senior Staff Engineer"
+    tenure: "2015 — 2020"
+    summary: "Founding member of the [X] division."
+    impact:
+      - "Designed a [System] from scratch that handled [X] requests per second at peak."
+      - "Authored the internal [Language/System] whitepaper that became the corporate standard."
+    tech_stack: ["C++", "Python", "Distributed Systems"]
+
+# Skills - Grouped by "Depth of Knowledge" TODO
+skills:
+  production_hardened: ["C++", "Go", "Distributed Systems", "Cloud Infra"]
+  exploratory_research: ["Large Language Models", "JAX", "Triton"]
+  soft_power: ["Architectural Review", "Technical Strategy", "Org Leadership"]
+
+# Education - Minimalist but flawless. TODO
+education:
+  - degree: "First Class Honours, BSc Computer Science"
+    institution: "University of Southampton"
+    year: 2015
+    notable: "Highest overall grade in the BSc."
+
+# The "Invisible" Meta-data for JSON-LD/SEO TODO
+meta:
+  keywords: ["Principal Engineer", "L6"]
