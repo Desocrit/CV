@@ -3,10 +3,9 @@ interface Props {
   title: string;
   id?: string;
   class?: string;
-  sectionNumber?: string;
 }
 
-const { title, id, class: className = '', sectionNumber } = Astro.props;
+const { title, id, class: className = '' } = Astro.props;
 const headingId = id ? `${id}-heading` : undefined;
 
 // Convert title to SCREAMING_SNAKE_CASE for consistency with other sections
@@ -15,42 +14,98 @@ const formatTitle = (str: string) =>
 ---
 
 <section
-  class:list={['mt-fluid-md mb-fluid-md', className]}
+  class:list={['section-with-label', className]}
   id={id}
   aria-labelledby={headingId}
 >
-  <!-- Section header - // PREFIX NUMBERED format -->
-  <h2
-    id={headingId}
-    class="mb-fluid-sm flex items-baseline gap-2 text-foreground border-b border-border pb-fluid-xs"
-  >
-    <span class="section-prefix font-mono text-fluid-xs tracking-wider" aria-hidden="true">
-      //{sectionNumber ? ` ${sectionNumber}` : ''}
-    </span>
-    <span class="font-mono text-fluid-sm tracking-wide">{formatTitle(title)}</span>
-  </h2>
-  <div class="space-y-fluid-md">
-    <slot />
+  <!-- Section layout: mini label column + content -->
+  <div class="section-grid">
+    <!-- Left: Section label -->
+    <div class="section-label" aria-hidden="true">
+      <span class="section-title font-mono text-fluid-2xs">// {formatTitle(title)}</span>
+    </div>
+
+    <!-- Right: Section content -->
+    <div class="section-content">
+      <h2 id={headingId} class="sr-only">{title}</h2>
+      <slot />
+    </div>
   </div>
 </section>
 
 <style>
-  /* Section prefix - comment green */
-  .section-prefix {
-    color: var(--color-accent-green);
+  .section-with-label {
+    /*
+     * Spacing symmetry around horizontal rule:
+     * - margin-top: space ABOVE the border-top
+     * - padding-top: space BELOW the border-top
+     * Both use --section-rule-spacing for visual symmetry
+     */
+    --section-rule-spacing: var(--spacing-fluid-sm);
+    margin-top: var(--section-rule-spacing);
+    margin-bottom: var(--spacing-fluid-md);
+    padding-top: var(--section-rule-spacing);
+    border-top: 1px solid var(--color-border);
   }
 
-  @media print {
-    .section-prefix {
-      display: none;
+  /* First section doesn't need top border or margin */
+  .section-with-label:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .section-grid {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    gap: var(--spacing-fluid-md);
+    align-items: start;
+  }
+
+  .section-title {
+    color: var(--color-accent-green);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  /* Light mode: use primary foreground color */
+  [data-theme='light'] .section-title {
+    color: var(--color-foreground);
+  }
+
+  .section-content {
+    min-width: 0;
+  }
+
+  /* Responsive: Stack on smaller screens */
+  @media (max-width: 768px) {
+    .section-grid {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-fluid-xs);
     }
 
-    /* Add spacing around section divider (h2 border) */
-    section h2 {
-      margin-top: 0.4rem !important;
-      margin-bottom: 0.3rem !important;
-      padding-bottom: 0.15rem !important;
-      border-bottom: 1px solid #ccc !important;
+    .section-title {
+      margin-bottom: var(--spacing-fluid-xs);
+    }
+  }
+
+  /* Print styles */
+  @media print {
+    .section-with-label {
+      margin-top: 0.4rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .section-grid {
+      grid-template-columns: 5rem 1fr;
+      gap: 0.5rem;
+    }
+
+    .section-title {
+      color: #333 !important;
+      font-size: 7pt;
     }
   }
 </style>
