@@ -85,7 +85,6 @@
 [data-theme='light'] {
   --color-background: #F2F2F0;
   --color-foreground: #323234;
-  font-weight: 500; /* One step heavier for light backgrounds */
 
   --color-card: #F2F2F0;
   --color-card-foreground: #323234;
@@ -122,6 +121,21 @@
   /* Light mode accents - Balanced Ink */
   --color-accent-purple: #6E56AF;
   --color-accent-green: #323234;
+}
+
+/* Specific light-mode weight overrides */
+[data-theme='light'] h1,
+[data-theme='light'] h2 {
+  font-weight: 600; /* Semibold for headers */
+}
+
+[data-theme='light'] .mono-marker {
+  font-weight: 500; /* Medium for // Gutter Markers */
+  letter-spacing: -0.01em; /* Tighten slightly for density */
+}
+
+[data-theme='light'] .metadata-spec {
+  font-weight: 400; /* Solid regular for university/tech tags */
 }
 
 @layer base {

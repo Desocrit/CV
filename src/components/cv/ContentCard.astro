@@ -34,7 +34,7 @@ const highlightMetrics = (text: string): string => {
 
       {tag && (
         <p class="font-mono text-fluid-2xs text-muted-foreground opacity-60">
-          <time>{tag}</time>
+          <span>{tag}</span>
         </p>
       )}
 
@@ -86,10 +86,10 @@ const highlightMetrics = (text: string): string => {
       <!-- Optional Details Toggle -->
       {details && (
         <details class="group/details mt-fluid-xs" data-print="hide">
-          <summary class="details-toggle inline-flex cursor-pointer list-none items-center gap-0.5 font-mono text-fluid-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
+          <summary class="details-toggle inline-flex cursor-pointer list-none items-center gap-0.5 font-mono text-fluid-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
             <span class="bracket">[</span>
-            <span class="toggle-text group-open/details:hidden">VIEW_DETAILS</span>
-            <span class="toggle-text hidden group-open/details:inline">HIDE_DETAILS</span>
+            <span class="toggle-text group-open/details:hidden"> VIEW_DETAILS </span>
+            <span class="toggle-text hidden group-open/details:inline"> HIDE_DETAILS </span>
             <span class="bracket">]</span>
           </summary>
           <div class="details-content mt-fluid-xs pl-3 border-l-2 text-fluid-xs leading-relaxed whitespace-pre-line">

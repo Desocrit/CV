@@ -139,7 +139,7 @@ const toSnakeCase = (str: string) =>
           <div class="flex items-baseline gap-2">
             <data
               value={achievement.headline}
-              class="font-mono text-fluid-base font-semibold tracking-tight text-muted-foreground leading-none"
+              class="achievement-headline font-mono text-fluid-base font-semibold tracking-tight leading-none"
             >
               {achievement.headline}
             </data>
@@ -225,6 +225,11 @@ const toSnakeCase = (str: string) =>
     width: fit-content;
   }
 
+  /* Achievement headline - purple accent */
+  .achievement-headline {
+    color: var(--color-accent-purple);
+  }
+
   /* Achievement label - purple accent */
   .achievement-label {
     color: var(--color-accent-purple);
@@ -252,6 +257,7 @@ const toSnakeCase = (str: string) =>
       border-color: #ccc;
     }
 
+    .achievement-headline,
     .achievement-label {
       color: #333 !important;
     }
