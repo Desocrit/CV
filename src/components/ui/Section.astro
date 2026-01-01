@@ -45,22 +45,26 @@ const formatTitle = (str: string) =>
     margin-top: 0;
   }
 
+  /* First section label doesn't need top padding */
+  .section-with-label:first-child .section-label {
+    padding-top: 0;
+  }
+
   /* 12-column internal grid: Label (2 cols) + Content (10 cols) */
   .section-grid {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     gap: var(--spacing-fluid-sm);
-    /* Note: align-items removed - breaks sticky positioning */
   }
 
   .section-label {
     grid-column: span 2;
+    align-self: start; /* Critical for sticky to work in grid */
     position: sticky;
-    top: 0;
+    top: calc(-1 * var(--spacing-fluid-lg));
     z-index: 10;
     background-color: var(--color-background);
-    padding: var(--spacing-fluid-sm) 0;
-    margin-top: calc(-1 * var(--spacing-fluid-sm));
+    padding-top: var(--spacing-fluid-sm);
   }
 
   .section-content {

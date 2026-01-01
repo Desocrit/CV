@@ -20,6 +20,7 @@ export const outlierAchievementSchema = z.object({
 
 export const projectSchema = z.object({
   project_title: nonEmptyString,
+  subtitle: nonEmptyString.optional(),
   stack_and_tools: z.array(nonEmptyString),
   the_premise: nonEmptyString,
   technical_meat: nonEmptyString,

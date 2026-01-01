@@ -2,9 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Sidebar from '../components/cv/Sidebar.astro';
 import Section from '../components/ui/Section.astro';
-import Timeline from '../components/cv/Timeline.astro';
-import TimelineEntry from '../components/cv/TimelineEntry.astro';
-import ProjectCard from '../components/cv/ProjectCard.astro';
+import ContentCard from '../components/cv/ContentCard.astro';
 import LeadershipGrid from '../components/cv/LeadershipGrid.astro';
 import { cvData } from '../lib/cv-data';
 
@@ -87,6 +85,7 @@ const educationData = cvData.education.map((edu) => ({
   socialLinks={socialLinks}
   workExperiences={workExperiences}
   education={educationData}
+  knowsAbout={cvData.meta.keywords}
 >
   <!-- Two-column asymmetric layout -->
   <div class="cv-layout">
@@ -122,17 +121,17 @@ const educationData = cvData.education.map((edu) => ({
 
       <!-- Projects -->
       <Section title="Projects" id="projects">
-        <div class="projects-list">
+        <div class="content-list">
           {cvData.projects.slice(0, 4).map((project, index) => (
-            <div class="border-t border-border pt-fluid-md pb-fluid-sm first:border-t-0 first:pt-0" data-print={index >= 2 ? 'hide' : undefined}>
-              <ProjectCard
+            <div class="border-t border-border pt-fluid-sm pb-fluid-sm first:border-t-0 first:pt-0" data-print={index >= 2 ? 'hide' : undefined}>
+              <ContentCard
                 title={project.project_title}
-                status={project.status as 'Live' | 'Still live' | 'Completed' | 'Active' | 'Success'}
-                role={project.role}
-                stack={project.stack_and_tools}
-                premise={project.the_premise}
-                technicalDetails={project.technical_meat}
-                impact={project.impact_and_acclaim}
+                subtitle={project.subtitle}
+                label={project.role}
+                technologies={project.stack_and_tools}
+                headline={project.the_premise}
+                bulletPoints={project.impact_and_acclaim}
+                details={project.technical_meat}
               />
             </div>
           ))}
@@ -140,18 +139,22 @@ const educationData = cvData.education.map((edu) => ({
       </Section>
 
       <!-- Experience -->
-      <Timeline title="Experience" id="experience">
-        {cvData.work_history.map((job) => (
-          <TimelineEntry
-            company={job.company}
-            role={job.role}
-            tenure={job.tenure}
-            summary={job.summary}
-            impact={job.impact}
-            techStack={job.tech_stack}
-          />
-        ))}
-      </Timeline>
+      <Section title="Experience" id="experience">
+        <div class="content-list">
+          {cvData.work_history.map((job) => (
+            <div class="border-t border-border pt-fluid-sm pb-fluid-sm first:border-t-0 first:pt-0">
+              <ContentCard
+                title={job.role}
+                tag={job.tenure}
+                label={job.company}
+                technologies={job.tech_stack}
+                headline={job.summary}
+                bulletPoints={job.impact}
+              />
+            </div>
+          ))}
+        </div>
+      </Section>
 
       <!-- Cultural Leadership -->
       <LeadershipGrid items={leadershipItems} />
@@ -160,15 +163,16 @@ const educationData = cvData.education.map((edu) => ({
 </Layout>
 
 <style>
-  /* Two-column asymmetric layout with independent scrolling */
+  /* Two-column asymmetric layout */
   .cv-layout {
     display: grid;
-    grid-template-columns: 420px 1fr;
-    gap: var(--spacing-fluid-xs);
+    grid-template-columns: 380px 1fr;
+    gap: 0;
     height: 100vh;
     overflow: hidden;
   }
 
+  /* Main content column */
   .main-column {
     min-width: 0; /* Prevent grid blowout */
     overflow-y: auto;
@@ -179,6 +183,7 @@ const educationData = cvData.education.map((edu) => ({
   @media (max-width: 1024px) {
     .cv-layout {
       grid-template-columns: 1fr;
+      gap: 0;
       height: auto;
       overflow: visible;
     }

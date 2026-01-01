@@ -35,6 +35,7 @@ interface Props {
   socialLinks?: SocialLink[];
   workExperiences?: WorkExperience[];
   education?: Education[];
+  knowsAbout?: string[];
 }
 
 const {
@@ -49,6 +50,7 @@ const {
   socialLinks = [],
   workExperiences = [],
   education = [],
+  knowsAbout = [],
 } = Astro.props;
 
 // Build JSON-LD structured data
@@ -90,6 +92,7 @@ const jsonLd = {
       name: edu.institution,
     })),
   }),
+  ...(knowsAbout.length > 0 && { knowsAbout }),
 };
 ---
 
@@ -157,7 +160,7 @@ const jsonLd = {
 
     <main
       id="main-content"
-      class="h-screen print:h-auto print:overflow-visible"
+      class="h-screen max-lg:h-auto max-lg:overflow-visible print:h-auto print:overflow-visible"
       role="main"
     >
       <slot />
