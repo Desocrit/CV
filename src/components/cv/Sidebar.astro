@@ -35,7 +35,7 @@ interface Props {
   skillCategories: SkillCategory[];
 }
 
-const { name, role, email, location, linkedin, github, website, achievements, education, skillCategories } = Astro.props;
+const { name, role, email, location, linkedin, github, website: _website, achievements, education, skillCategories } = Astro.props;
 
 // Transform metric names into SCREAMING_SNAKE_CASE for labels
 const toSnakeCase = (str: string) =>

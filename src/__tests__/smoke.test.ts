@@ -108,7 +108,8 @@ describe('CSS Spacing Consistency Tests', () => {
     // Extract the style block
     const styleMatch = content.match(/<style>([\s\S]*?)<\/style>/);
     expect(styleMatch).not.toBeNull();
-    const css = styleMatch![1];
+    if (!styleMatch) return;
+    const css = styleMatch[1];
 
     // Both margin-top and padding-top should use the same CSS variable
     const marginTop = extractCSSValue(css, '.section-with-label', 'margin-top');
@@ -129,7 +130,8 @@ describe('CSS Spacing Consistency Tests', () => {
     // Check the li element classes for pt and pb values
     const liMatch = content.match(/<li[^>]*class="([^"]+)"[^>]*>/);
     expect(liMatch).not.toBeNull();
-    const classes = liMatch![1];
+    if (!liMatch) return;
+    const classes = liMatch[1];
 
     // Extract pt-fluid-* and pb-fluid-* values
     const ptMatch = classes.match(/pt-fluid-(\w+)/);
@@ -137,9 +139,10 @@ describe('CSS Spacing Consistency Tests', () => {
 
     expect(ptMatch).not.toBeNull();
     expect(pbMatch).not.toBeNull();
+    if (!ptMatch || !pbMatch) return;
 
     // Both padding values should be equal for symmetric spacing
-    expect(ptMatch![1]).toBe(pbMatch![1]);
+    expect(ptMatch[1]).toBe(pbMatch[1]);
   });
 
   it('Section grid aligns title with content top', () => {
@@ -148,7 +151,8 @@ describe('CSS Spacing Consistency Tests', () => {
 
     const styleMatch = content.match(/<style>([\s\S]*?)<\/style>/);
     expect(styleMatch).not.toBeNull();
-    const css = styleMatch![1];
+    if (!styleMatch) return;
+    const css = styleMatch[1];
 
     const alignItems = extractCSSValue(css, '.section-grid', 'align-items');
     expect(alignItems).toBe('start');
