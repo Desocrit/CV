@@ -18,12 +18,13 @@ function extractCSSValue(css: string, selector: string, property: string): strin
     's'
   );
   const match = cssNoComments.match(selectorRegex);
-  if (!match) return null;
+  const block = match?.[1];
+  if (!block) return null;
 
   // Extract the property value
   const propRegex = new RegExp(`${property}\\s*:\\s*([^;]+);`);
-  const propMatch = match[1].match(propRegex);
-  return propMatch ? propMatch[1].trim() : null;
+  const propMatch = block.match(propRegex);
+  return propMatch?.[1]?.trim() ?? null;
 }
 
 describe('Build Output Smoke Tests', () => {
@@ -108,8 +109,8 @@ describe('CSS Spacing Consistency Tests', () => {
     // Extract the style block
     const styleMatch = content.match(/<style>([\s\S]*?)<\/style>/);
     expect(styleMatch).not.toBeNull();
-    if (!styleMatch) return;
-    const css = styleMatch[1];
+    const css = styleMatch?.[1];
+    if (!css) return;
 
     // Both margin-top and padding-top should use the same CSS variable
     const marginTop = extractCSSValue(css, '.section-with-label', 'margin-top');
@@ -130,8 +131,8 @@ describe('CSS Spacing Consistency Tests', () => {
     // Check the li element classes for pt and pb values
     const liMatch = content.match(/<li[^>]*class="([^"]+)"[^>]*>/);
     expect(liMatch).not.toBeNull();
-    if (!liMatch?.[1]) return;
-    const classes = liMatch[1];
+    const classes = liMatch?.[1];
+    if (!classes) return;
 
     // Extract pt-fluid-* and pb-fluid-* values
     const ptMatch = classes.match(/pt-fluid-(\w+)/);
@@ -151,8 +152,8 @@ describe('CSS Spacing Consistency Tests', () => {
 
     const styleMatch = content.match(/<style>([\s\S]*?)<\/style>/);
     expect(styleMatch).not.toBeNull();
-    if (!styleMatch?.[1]) return;
-    const css = styleMatch[1];
+    const css = styleMatch?.[1];
+    if (!css) return;
 
     const alignItems = extractCSSValue(css, '.section-grid', 'align-items');
     expect(alignItems).toBe('start');
