@@ -81,46 +81,46 @@
   --tracking-widest-plus: 0.2em;
 }
 
-/* Light theme override - Inverted Noir */
+/* Light theme override - Apple-style Premium */
 [data-theme='light'] {
-  --color-background: #f2f2f2;
-  --color-foreground: #050505;
+  --color-background: #F5F5F7;
+  --color-foreground: #1D1D1F;
 
-  --color-card: #f2f2f2;
-  --color-card-foreground: #050505;
+  --color-card: #F5F5F7;
+  --color-card-foreground: #1D1D1F;
 
-  --color-popover: #f2f2f2;
-  --color-popover-foreground: #050505;
+  --color-popover: #F5F5F7;
+  --color-popover-foreground: #1D1D1F;
 
-  --color-primary: #050505;
-  --color-primary-foreground: #f2f2f2;
+  --color-primary: #1D1D1F;
+  --color-primary-foreground: #F5F5F7;
 
-  --color-secondary: #e8e8e8;
-  --color-secondary-foreground: #050505;
+  --color-secondary: #EBEBED;
+  --color-secondary-foreground: #1D1D1F;
 
-  --color-muted: #e0e0e0;
-  --color-muted-foreground: #555555;
-  --color-muted-foreground-light: #777777;
+  --color-muted: #E8E8EA;
+  --color-muted-foreground: #6E6E73;
+  --color-muted-foreground-light: #86868B;
 
-  --color-accent: #e8e8e8;
-  --color-accent-foreground: #050505;
+  --color-accent: #EBEBED;
+  --color-accent-foreground: #1D1D1F;
 
-  --color-border: rgba(0, 0, 0, 0.1);
-  --color-border-subtle: rgba(0, 0, 0, 0.05);
-  --color-input: rgba(0, 0, 0, 0.1);
-  --color-ring: #050505;
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-subtle: rgba(0, 0, 0, 0.04);
+  --color-input: rgba(0, 0, 0, 0.08);
+  --color-ring: #1D1D1F;
 
-  --color-achievement: #050505;
-  --color-achievement-foreground: #f2f2f2;
+  --color-achievement: #1D1D1F;
+  --color-achievement-foreground: #F5F5F7;
 
-  --color-terminal-bg: #e8e8e8;
-  --color-terminal-text: #555555;
-  --color-terminal-prompt: #555555;
-  --color-terminal-accent: #050505;
+  --color-terminal-bg: #EBEBED;
+  --color-terminal-text: #6E6E73;
+  --color-terminal-prompt: #6E6E73;
+  --color-terminal-accent: #1D1D1F;
 
-  /* Tokyo Night Accents - Light mode variants (AAA compliant) */
-  --color-accent-purple: #7c3aed;
-  --color-accent-green: #166534;
+  /* Light mode accents - Architectural Blue & Forest Green */
+  --color-accent-purple: #0066CC;
+  --color-accent-green: #248A3D;
 }
 
 @layer base {
