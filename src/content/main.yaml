@@ -16,16 +16,17 @@ summary: >
 outlier_achievements:
   - metric: Throughput
     headline: 1000x
-    description: Increased system throughput by 1000x for the London Marathon ballot.
+    description: Increased maximum system throughput to scale for the London Marathon
   - metric: Cost Savings
     headline: $500k
-    description: Orchestrated infrastructure cost reductions via surgical code and database optimization.
-  - metric: Test Coverage
-    headline: 35%
-    description: Built a custom 'Systems Test' framework for local integration testing across microservices.
+    description: Per annum savings due to direct individual contributions
+  - metric: Contributions
+    headline: "2800"
+    description: Average contributions per year in company code alone
 
 projects:
   - project_title: Nova
+    subtitle: Flagship AI product
     stack_and_tools: [AI SDK, mem0, MongoDB, MCP, RAG]
     the_premise: Defined and executed the company’s transition to an Agentic Operating System.
     technical_meat: |
@@ -38,6 +39,7 @@ projects:
     status: Resulted in a company-wide pivot.
 
   - project_title: Monorepo
+    subtitle: Org-wide standardisation
     stack_and_tools: [Turborepo, Protobuf, GHA, ESLint]
     the_premise: Consolidated 22 diverged microservices into a unified, high-standard monorepo.
     technical_meat: |
@@ -45,11 +47,13 @@ projects:
       Introduced validation pipelines and mandatory READMEs for all backend packages.
     impact_and_acclaim:
       - Reduced average PRs per change from five to one.
-      - Standardized 100% strict TypeScript adoption across the organization.
+      - Reached 100% strict TypeScript adoption across the organization.
+      - Wrote and enforced standards for ESLint, CI and constraints.
     role: Lead Contributor
     status: Structural game-changer.
 
   - project_title: Checkout v2
+    subtitle: Complete checkout rebuild
     stack_and_tools: [NextJS, GraphQL, Recoil]
     the_premise: Rebuilt the core checkout engine with a focus on accessibility and keyboard-navigable architecture.
     technical_meat: |
@@ -94,7 +98,7 @@ work_history:
 
 skills:
   technical_specialties:
-    - Optimizing systems for performance at scale
+    - Optimizing system performance at scale
     - IAC and Cloud Governance
     - Deep Database Optimization
     - Architecture for Distributed Systems
@@ -113,8 +117,8 @@ education:
     degree_title: MEng
     score_short: 1st
     score_long: First Class Honours
-    specialism: Data Science and AI
-    institution: Southampton University
+    specialism: Data Science & AI
+    institution: Southampton Uni
     year: 2015
     notable: Highest overall grade in the BSc.
 
