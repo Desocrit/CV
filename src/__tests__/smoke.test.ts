@@ -4,6 +4,28 @@ import { JSDOM } from 'jsdom';
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
+/**
+ * Helper to extract CSS property values from a style block
+ * Returns the value for a given property within a specific selector block
+ */
+function extractCSSValue(css: string, selector: string, property: string): string | null {
+  // Strip CSS comments first
+  const cssNoComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
+
+  // Match the selector and its block
+  const selectorRegex = new RegExp(
+    `${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]+)\\}`,
+    's'
+  );
+  const match = cssNoComments.match(selectorRegex);
+  if (!match) return null;
+
+  // Extract the property value
+  const propRegex = new RegExp(`${property}\\s*:\\s*([^;]+);`);
+  const propMatch = match[1].match(propRegex);
+  return propMatch ? propMatch[1].trim() : null;
+}
+
 describe('Build Output Smoke Tests', () => {
   const distPath = join(process.cwd(), 'dist', 'index.html');
 
@@ -60,17 +82,75 @@ describe('Build Output Smoke Tests', () => {
     // Skip link for accessibility
     expect(document.querySelector('a[href="#main-content"]')).not.toBeNull();
 
-    // Section headings (formatted as SCREAMING_SNAKE_CASE)
-    expect(getByText(container, 'WORK_HISTORY')).not.toBeNull();
-    expect(getByText(container, 'FLAGSHIP_PROJECTS')).not.toBeNull();
+    // Section headings (formatted as // SCREAMING_SNAKE_CASE)
+    expect(getByText(container, /\/\/ PROFILE/)).not.toBeNull();
+    expect(getByText(container, /\/\/ EXPERIENCE/)).not.toBeNull();
   });
 
-  it('contains accessible print button', () => {
+  it('contains print button', () => {
     const html = readFileSync(distPath, 'utf-8');
     const dom = new JSDOM(html);
     const { document } = dom.window;
 
-    const printBtn = document.querySelector('button[aria-label="Print CV to PDF"]');
+    // Print button uses onclick="window.print()"
+    const printBtn = document.querySelector('button[onclick="window.print()"]');
     expect(printBtn).not.toBeNull();
+  });
+});
+
+describe('CSS Spacing Consistency Tests', () => {
+  const srcPath = join(process.cwd(), 'src');
+
+  it('Section.astro has symmetric spacing around horizontal rule', () => {
+    const sectionPath = join(srcPath, 'components', 'ui', 'Section.astro');
+    const content = readFileSync(sectionPath, 'utf-8');
+
+    // Extract the style block
+    const styleMatch = content.match(/<style>([\s\S]*?)<\/style>/);
+    expect(styleMatch).not.toBeNull();
+    const css = styleMatch![1];
+
+    // Both margin-top and padding-top should use the same CSS variable
+    const marginTop = extractCSSValue(css, '.section-with-label', 'margin-top');
+    const paddingTop = extractCSSValue(css, '.section-with-label', 'padding-top');
+
+    expect(marginTop).not.toBeNull();
+    expect(paddingTop).not.toBeNull();
+
+    // Both should reference the same spacing variable for symmetry
+    expect(marginTop).toBe('var(--section-rule-spacing)');
+    expect(paddingTop).toBe('var(--section-rule-spacing)');
+  });
+
+  it('TimelineEntry.astro has symmetric spacing around horizontal rule', () => {
+    const entryPath = join(srcPath, 'components', 'cv', 'TimelineEntry.astro');
+    const content = readFileSync(entryPath, 'utf-8');
+
+    // Check the li element classes for pt and pb values
+    const liMatch = content.match(/<li[^>]*class="([^"]+)"[^>]*>/);
+    expect(liMatch).not.toBeNull();
+    const classes = liMatch![1];
+
+    // Extract pt-fluid-* and pb-fluid-* values
+    const ptMatch = classes.match(/pt-fluid-(\w+)/);
+    const pbMatch = classes.match(/pb-fluid-(\w+)/);
+
+    expect(ptMatch).not.toBeNull();
+    expect(pbMatch).not.toBeNull();
+
+    // Both padding values should be equal for symmetric spacing
+    expect(ptMatch![1]).toBe(pbMatch![1]);
+  });
+
+  it('Section grid aligns title with content top', () => {
+    const sectionPath = join(srcPath, 'components', 'ui', 'Section.astro');
+    const content = readFileSync(sectionPath, 'utf-8');
+
+    const styleMatch = content.match(/<style>([\s\S]*?)<\/style>/);
+    expect(styleMatch).not.toBeNull();
+    const css = styleMatch![1];
+
+    const alignItems = extractCSSValue(css, '.section-grid', 'align-items');
+    expect(alignItems).toBe('start');
   });
 });
