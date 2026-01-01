@@ -26,100 +26,98 @@
   --spacing-fluid-xl: clamp(4rem, 3.2rem + 4vw, 6rem);
   --spacing-fluid-2xl: clamp(6rem, 4.8rem + 6vw, 10rem);
 
-  /* Noir Theme - Pure Black Foundation */
-  --color-background: #000000;
-  --color-foreground: #F8F8F8;
+  /* Noir Theme - Tokyo Night Foundation */
+  --color-background: #050505;
+  --color-foreground: #f2f2f2;
 
-  --color-card: #000000;
-  --color-card-foreground: #F8F8F8;
+  --color-card: #050505;
+  --color-card-foreground: #f2f2f2;
 
-  --color-popover: #000000;
-  --color-popover-foreground: #F8F8F8;
+  --color-popover: #050505;
+  --color-popover-foreground: #f2f2f2;
 
-  --color-primary: #F8F8F8;
-  --color-primary-foreground: #000000;
+  --color-primary: #f2f2f2;
+  --color-primary-foreground: #050505;
 
   --color-secondary: #0a0a0a;
-  --color-secondary-foreground: #F8F8F8;
+  --color-secondary-foreground: #f2f2f2;
 
   --color-muted: #111111;
-  --color-muted-foreground: #666666;
+  --color-muted-foreground: #888888;
+  --color-muted-foreground-light: #a0a0a0;
 
   --color-accent: #111111;
-  --color-accent-foreground: #F8F8F8;
+  --color-accent-foreground: #f2f2f2;
 
   --color-destructive: #7f1d1d;
-  --color-destructive-foreground: #F8F8F8;
+  --color-destructive-foreground: #f2f2f2;
 
   /* Subtle borders - Swiss precision */
   --color-border: rgba(255, 255, 255, 0.1);
   --color-border-subtle: rgba(255, 255, 255, 0.05);
   --color-input: rgba(255, 255, 255, 0.1);
-  --color-ring: #F8F8F8;
+  --color-ring: #f2f2f2;
 
   /* Accent - Minimal, only when needed */
-  --color-achievement: #F8F8F8;
-  --color-achievement-foreground: #000000;
+  --color-achievement: #f2f2f2;
+  --color-achievement-foreground: #050505;
 
   /* Terminal aesthetic - Refined */
   --color-terminal-bg: #050505;
   --color-terminal-text: #888888;
-  --color-terminal-prompt: #666666;
-  --color-terminal-accent: #F8F8F8;
+  --color-terminal-prompt: #888888;
+  --color-terminal-accent: #f2f2f2;
 
   /* Status - Monochromatic */
-  --color-status-live: #F8F8F8;
-  --color-status-completed: #666666;
+  --color-status-live: #f2f2f2;
+  --color-status-completed: #888888;
   --color-status-active: #888888;
 
-  /* Tokyo Night Accents - Tertiary palette (high contrast) */
-  --color-accent-purple: #b794f6;
-  --color-accent-purple-muted: #a78bda;
-  --color-accent-green: #7ec682;
-  --color-accent-green-muted: #6db870;
+  /* Tokyo Night Accents - Minimal palette */
+  --color-accent-purple: #9d7cd8;
+  --color-accent-green: #37BF51;
 }
 
 /* Light theme override - Inverted Noir */
 [data-theme='light'] {
-  --color-background: #F8F8F8;
-  --color-foreground: #000000;
+  --color-background: #f2f2f2;
+  --color-foreground: #050505;
 
-  --color-card: #F8F8F8;
-  --color-card-foreground: #000000;
+  --color-card: #f2f2f2;
+  --color-card-foreground: #050505;
 
-  --color-popover: #F8F8F8;
-  --color-popover-foreground: #000000;
+  --color-popover: #f2f2f2;
+  --color-popover-foreground: #050505;
 
-  --color-primary: #000000;
-  --color-primary-foreground: #F8F8F8;
+  --color-primary: #050505;
+  --color-primary-foreground: #f2f2f2;
 
-  --color-secondary: #f0f0f0;
-  --color-secondary-foreground: #000000;
+  --color-secondary: #e8e8e8;
+  --color-secondary-foreground: #050505;
 
-  --color-muted: #f5f5f5;
-  --color-muted-foreground: #666666;
+  --color-muted: #e0e0e0;
+  --color-muted-foreground: #555555;
+  --color-muted-foreground-light: #777777;
 
-  --color-accent: #f0f0f0;
-  --color-accent-foreground: #000000;
+  --color-accent: #e8e8e8;
+  --color-accent-foreground: #050505;
 
   --color-border: rgba(0, 0, 0, 0.1);
   --color-border-subtle: rgba(0, 0, 0, 0.05);
   --color-input: rgba(0, 0, 0, 0.1);
-  --color-ring: #000000;
+  --color-ring: #050505;
 
-  --color-achievement: #000000;
-  --color-achievement-foreground: #F8F8F8;
+  --color-achievement: #050505;
+  --color-achievement-foreground: #f2f2f2;
 
-  --color-terminal-bg: #f5f5f5;
-  --color-terminal-text: #333333;
-  --color-terminal-prompt: #666666;
-  --color-terminal-accent: #000000;
+  --color-terminal-bg: #e8e8e8;
+  --color-terminal-text: #555555;
+  --color-terminal-prompt: #555555;
+  --color-terminal-accent: #050505;
 
   /* Tokyo Night Accents - Light mode variants (AAA compliant) */
-  --color-accent-purple: #5b21b6;
-  --color-accent-purple-muted: #4c1d95;
+  --color-accent-purple: #7c3aed;
   --color-accent-green: #166534;
-  --color-accent-green-muted: #14532d;
 }
 
 @layer base {
@@ -136,6 +134,16 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on;
+    overflow: hidden; /* Prevent body scroll - layout handles it */
+  }
+
+  /* Hide scrollbar but allow scrolling */
+  .scrollbar-hidden {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Opera */
   }
 
   /* Swiss Grid Typography - Tight tracking for headers */
