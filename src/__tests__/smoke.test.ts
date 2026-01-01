@@ -130,7 +130,7 @@ describe('CSS Spacing Consistency Tests', () => {
     // Check the li element classes for pt and pb values
     const liMatch = content.match(/<li[^>]*class="([^"]+)"[^>]*>/);
     expect(liMatch).not.toBeNull();
-    if (!liMatch) return;
+    if (!liMatch?.[1]) return;
     const classes = liMatch[1];
 
     // Extract pt-fluid-* and pb-fluid-* values
@@ -151,7 +151,7 @@ describe('CSS Spacing Consistency Tests', () => {
 
     const styleMatch = content.match(/<style>([\s\S]*?)<\/style>/);
     expect(styleMatch).not.toBeNull();
-    if (!styleMatch) return;
+    if (!styleMatch?.[1]) return;
     const css = styleMatch[1];
 
     const alignItems = extractCSSValue(css, '.section-grid', 'align-items');
