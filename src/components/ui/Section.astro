@@ -60,14 +60,13 @@ const formatTitle = (str: string) =>
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     gap: var(--spacing-fluid-sm);
-    align-items: start;
+    /* Note: align-items removed - breaks sticky positioning */
   }
 
   .section-label {
     grid-column: span 2;
     position: sticky;
     top: 0;
-    align-self: start;
     z-index: 10;
     background-color: var(--color-background);
     padding: var(--spacing-fluid-sm) 0;
@@ -77,6 +76,7 @@ const formatTitle = (str: string) =>
   .section-content {
     grid-column: span 10;
     min-width: 0;
+    align-self: start;
   }
 
   .section-title {
