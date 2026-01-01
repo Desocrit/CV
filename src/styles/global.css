@@ -52,9 +52,9 @@
   --color-destructive: #7f1d1d;
   --color-destructive-foreground: #f2f2f2;
 
-  /* Subtle borders - Swiss precision */
-  --color-border: rgba(255, 255, 255, 0.1);
-  --color-border-subtle: rgba(255, 255, 255, 0.05);
+  /* Subtle borders - Blueprint precision */
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border-subtle: rgba(255, 255, 255, 0.03);
   --color-input: rgba(255, 255, 255, 0.1);
   --color-ring: #f2f2f2;
 
@@ -76,6 +76,9 @@
   /* Tokyo Night Accents - Minimal palette */
   --color-accent-purple: #9d7cd8;
   --color-accent-green: #37BF51;
+
+  /* Tracking utilities */
+  --tracking-widest-plus: 0.2em;
 }
 
 /* Light theme override - Inverted Noir */
@@ -133,8 +136,15 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on;
+    font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on, 'zero' on;
     overflow: hidden; /* Prevent body scroll - layout handles it */
+  }
+
+  /* Mobile: restore normal scrolling */
+  @media (max-width: 1024px) {
+    body {
+      overflow: auto;
+    }
   }
 
   /* Hide scrollbar but allow scrolling */
@@ -214,6 +224,11 @@
 }
 
 @layer components {
+  /* Tracking utility - wider than widest */
+  .tracking-widest-plus {
+    letter-spacing: var(--tracking-widest-plus);
+  }
+
   /* Minimal badge - Fine borders only */
   .badge {
     display: inline-flex;
@@ -405,6 +420,22 @@
   /* Show print-only elements */
   [data-print='only'] {
     display: block !important;
+  }
+
+  /* Force single-column layout for all grids */
+  .grid,
+  [class*='grid-'] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Remove all sticky positioning */
+  * {
+    position: static !important;
+  }
+
+  /* Restore relative for positioned children that need it */
+  .relative {
+    position: relative !important;
   }
 
   /* Prevent orphans and widows */

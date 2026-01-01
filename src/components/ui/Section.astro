@@ -20,10 +20,10 @@ const formatTitle = (str: string) =>
 >
   <!-- Section layout: mini label column + content -->
   <div class="section-grid">
-    <!-- Left: Section label -->
-    <div class="section-label" aria-hidden="true">
+    <!-- Left: Section label (sticky navigation marker) -->
+    <nav class="section-label" aria-hidden="true">
       <span class="section-title font-mono text-fluid-2xs">// {formatTitle(title)}</span>
-    </div>
+    </nav>
 
     <!-- Right: Section content -->
     <div class="section-content">
@@ -55,11 +55,24 @@ const formatTitle = (str: string) =>
     border-top: none;
   }
 
+  /* 12-column internal grid: Label (2 cols) + Content (10 cols) */
   .section-grid {
     display: grid;
-    grid-template-columns: 6.5rem 1fr;
-    gap: var(--spacing-fluid-md);
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--spacing-fluid-sm);
     align-items: start;
+  }
+
+  .section-label {
+    grid-column: span 2;
+    position: sticky;
+    top: 0.5rem;
+    align-self: start;
+  }
+
+  .section-content {
+    grid-column: span 10;
+    min-width: 0;
   }
 
   .section-title {
@@ -75,19 +88,25 @@ const formatTitle = (str: string) =>
     color: var(--color-foreground);
   }
 
-  .section-content {
-    min-width: 0;
-  }
-
   /* Responsive: Stack on smaller screens */
   @media (max-width: 768px) {
     .section-grid {
-      grid-template-columns: 1fr;
-      gap: var(--spacing-fluid-xs);
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .section-label {
+      position: static; /* Remove sticky on mobile */
+      margin-bottom: var(--spacing-fluid-xs);
+    }
+
+    .section-content {
+      width: 100%;
     }
 
     .section-title {
-      margin-bottom: var(--spacing-fluid-xs);
+      display: block;
     }
   }
 
@@ -101,6 +120,15 @@ const formatTitle = (str: string) =>
     .section-grid {
       grid-template-columns: 5rem 1fr;
       gap: 0.5rem;
+    }
+
+    .section-label {
+      grid-column: auto;
+      position: static; /* Remove sticky for print */
+    }
+
+    .section-content {
+      grid-column: auto;
     }
 
     .section-title {
