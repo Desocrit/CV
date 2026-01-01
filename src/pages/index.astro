@@ -25,29 +25,8 @@ const skillCategories = [
   },
 ];
 
-// Derive leadership items from loose_details achievements
-const leadershipItems = [
-  {
-    icon: 'users' as const,
-    title: 'Mentorship',
-    description: 'Mentored multiple engineers to successful promotion, with every IC6 engineer having been on my team immediately before promotion.',
-  },
-  {
-    icon: 'book' as const,
-    title: 'Education Initiatives',
-    description: 'Two Minute Guides, Claude Academy, Advent of AI, Prompt Workshop, AI Engineering Guild.',
-  },
-  {
-    icon: 'code' as const,
-    title: 'Engineering Standards',
-    description: 'Pioneered accessibility-first testing, completed TypeScript migration to 100% strictest.',
-  },
-  {
-    icon: 'star' as const,
-    title: 'Incident Response',
-    description: 'Number one responder to company incidents, including many out-of-hours incidents.',
-  },
-];
+// Pass impact_nodes directly to component
+const impactNodes = cvData.impact_nodes;
 
 // Transform data for Layout JSON-LD
 const socialLinks = [
@@ -126,8 +105,7 @@ const educationData = cvData.education.map((edu) => ({
             <div class="border-t border-border pt-fluid-sm pb-fluid-sm first:border-t-0 first:pt-0" data-print={index >= 2 ? 'hide' : undefined}>
               <ContentCard
                 title={project.project_title}
-                subtitle={project.subtitle}
-                label={project.role}
+                tag={project.subtitle}
                 technologies={project.stack_and_tools}
                 headline={project.the_premise}
                 bulletPoints={project.impact_and_acclaim}
@@ -139,7 +117,7 @@ const educationData = cvData.education.map((edu) => ({
       </Section>
 
       <!-- Experience -->
-      <Section title="Experience" id="experience">
+      <Section title="History" id="experience">
         <div class="content-list">
           {cvData.work_history.map((job) => (
             <div class="border-t border-border pt-fluid-sm pb-fluid-sm first:border-t-0 first:pt-0">
@@ -156,8 +134,8 @@ const educationData = cvData.education.map((edu) => ({
         </div>
       </Section>
 
-      <!-- Cultural Leadership -->
-      <LeadershipGrid items={leadershipItems} />
+      <!-- Impact -->
+      <LeadershipGrid nodes={impactNodes} />
     </div>
   </div>
 </Layout>
@@ -194,16 +172,18 @@ const educationData = cvData.education.map((edu) => ({
     }
   }
 
-  /* Print: Single column for better page flow */
+  /* Print: Professional two-column layout */
   @media print {
     .cv-layout {
-      display: block;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 1.5rem;
       height: auto;
       overflow: visible;
     }
 
     .main-column {
-      margin-top: 0.5rem;
+      margin-top: 0;
       overflow: visible;
       padding: 0;
     }

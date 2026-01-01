@@ -55,6 +55,18 @@ export const educationSchema = z.object({
   notable: nonEmptyString.optional(),
 });
 
+export const impactNodeSchema = z.object({
+  pillar: nonEmptyString,
+  items: z.array(
+    z.object({
+      primary: nonEmptyString,
+      detail: nonEmptyString,
+      action: nonEmptyString.optional(),
+      drilldown: nonEmptyString.optional(),
+    })
+  ),
+});
+
 export const cvSchema = z.object({
   // Profile
   name: nonEmptyString,
@@ -81,6 +93,9 @@ export const cvSchema = z.object({
   // Education
   education: z.array(educationSchema),
 
+  // Impact nodes (for Impact section)
+  impact_nodes: z.array(impactNodeSchema),
+
   // Meta
   meta: z.object({
     keywords: z.array(nonEmptyString),
@@ -103,6 +118,7 @@ export type WorkHistory = z.infer<typeof workHistorySchema>;
 export type OutlierAchievement = z.infer<typeof outlierAchievementSchema>;
 export type Skills = z.infer<typeof skillsSchema>;
 export type Education = z.infer<typeof educationSchema>;
+export type ImpactNode = z.infer<typeof impactNodeSchema>;
 
 const parsed = parse(yamlContent);
 export const cvData = cvSchema.parse(parsed);

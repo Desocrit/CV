@@ -11,7 +11,7 @@ linkedin: https://www.linkedin.com/in/christopher-saunders-48b092110/
 # Abstract
 summary: >
   High impact, high velocity engineer, with deep expertise in AI and infrastructure, and a
-  proven track record of transforming engineering culture, across testing, AI, and infrastructure standards.
+  proven track record of transforming engineering culture, and leading large strategic initiatives.
 
 outlier_achievements:
   - metric: Throughput
@@ -39,7 +39,7 @@ projects:
     status: Resulted in a company-wide pivot.
 
   - project_title: Monorepo
-    subtitle: Org-wide standardisation
+    subtitle: Codebase standardisation
     stack_and_tools: [Turborepo, Protobuf, GHA, ESLint]
     the_premise: Consolidated 22 diverged microservices into a unified, high-standard monorepo.
     technical_meat: |
@@ -53,7 +53,7 @@ projects:
     status: Structural game-changer.
 
   - project_title: Checkout v2
-    subtitle: Complete checkout rebuild
+    subtitle: Complete rebuild
     stack_and_tools: [NextJS, GraphQL, Recoil]
     the_premise: Rebuilt the core checkout engine with a focus on accessibility and keyboard-navigable architecture.
     technical_meat: |
@@ -68,7 +68,7 @@ projects:
 work_history:
   - company: Let's Do This
     role: Principal Engineer
-    tenure: 2020 — Present
+    tenure: Feb 2021 — Present
     summary: Massive contributions across the entire org, across infrastructure, AI and product
     impact:
       - Orchestrated infrastructure cost reductions totaling over $500k annually
@@ -98,7 +98,7 @@ work_history:
 
 skills:
   technical_specialties:
-    - Optimizing system performance at scale
+    - Optimizing systems at scale
     - IAC and Cloud Governance
     - Deep Database Optimization
     - Architecture for Distributed Systems
@@ -121,6 +121,38 @@ education:
     institution: Southampton Uni
     year: 2015
     notable: Highest overall grade in the BSc.
+
+impact_nodes:
+  - pillar: strategic transformation
+    items:
+      - primary: Catalyzed the company-wide Agentic OS pivot.
+        detail: Achieved 95% WAU conversion rate for flagship AI products; aligned technical roadmaps with executive vision for 2026.
+        # ACTION: Placeholder - needs real link/modal
+        action: VIEW_STRATEGY
+        drilldown: Drilldowns are work in progress, sorry!
+      - primary: Institutionalized 100% strict TypeScript adoption.
+        detail: Standardized monorepo patterns across 22 microservices, effectively eliminating 40% of runtime regressions.
+        action: VIEW_STANDARDS
+
+  - pillar: talent multiplication
+    items:
+      - primary: Engineered a 100% IC6 promotion pipeline for direct reports.
+        detail: Architected the 'Staff+ Fast-Track' mentorship program; institutionalized leadership growth across departmental silos.
+        # ACTION: Placeholder - needs real link/modal
+        action: VIEW_FRAMEWORK
+      - primary: Launched 'Claude Academy' for organizational AI literacy.
+        detail: Established the Engineering Guild to centralize senior expertise and accelerate internal knowledge transfer.
+        action: VIEW_CURRICULUM
+
+  - pillar: institutional resilience
+    items:
+      - primary: Stabilized operations via Incident Command diagnostic automation.
+        detail: Reduced MTTR by 60% through surgical PagerDuty optimization and cross-functional response protocols.
+        # ACTION: Placeholder - needs real link/modal
+        action: VIEW_POSTMORTEM
+      - primary: Orchestrated $500k+ in annual infrastructure cost savings.
+        detail: Performed surgical code and database optimizations while maintaining 1000x throughput for peak-load events.
+        action: VIEW_METRICS
 
 meta:
   keywords: [Principal Engineer, AI Infrastructure Lead, Systems Architect]
