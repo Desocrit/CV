@@ -1,15 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Hero from '../components/cv/Hero.astro';
+import Sidebar from '../components/cv/Sidebar.astro';
 import Section from '../components/ui/Section.astro';
 import Timeline from '../components/cv/Timeline.astro';
 import TimelineEntry from '../components/cv/TimelineEntry.astro';
 import ProjectCard from '../components/cv/ProjectCard.astro';
-import SkillsTerminal from '../components/cv/SkillsTerminal.astro';
 import LeadershipGrid from '../components/cv/LeadershipGrid.astro';
 import { cvData } from '../lib/cv-data';
 
-// Transform skills data for SkillsTerminal component
+// Transform skills data for Sidebar component
 const skillCategories = [
   {
     name: 'technical_specialties',
@@ -89,61 +88,119 @@ const educationData = cvData.education.map((edu) => ({
   workExperiences={workExperiences}
   education={educationData}
 >
-  <!-- Hero with Strategic Abstract and Outlier Dashboard -->
-  <Hero
-    name={cvData.name}
-    role={cvData.role}
-    email={cvData.email}
-    location={cvData.location}
-    linkedin={cvData.linkedin}
-    github={cvData.github}
-    website={cvData.website}
-    summary={cvData.summary}
-    achievements={cvData.outlier_achievements}
-    education={{
-      degree: cvData.education[0]?.degree ?? '',
-      specialism: cvData.education[0]?.specialism ?? '',
-      institution: cvData.education[0]?.institution ?? '',
-      year: cvData.education[0]?.year ?? 0,
-    }}
-  />
+  <!-- Two-column asymmetric layout -->
+  <div class="cv-layout">
+    <!-- Left Column: Sticky Sidebar (33%) -->
+    <Sidebar
+      name={cvData.name}
+      role={cvData.role}
+      email={cvData.email}
+      location={cvData.location}
+      linkedin={cvData.linkedin}
+      github={cvData.github}
+      website={cvData.website}
+      achievements={cvData.outlier_achievements}
+      education={{
+        degree: cvData.education[0]?.degree ?? '',
+        degree_title: cvData.education[0]?.degree_title ?? '',
+        score_short: cvData.education[0]?.score_short ?? '',
+        specialism: cvData.education[0]?.specialism ?? '',
+        institution: cvData.education[0]?.institution ?? '',
+        year: cvData.education[0]?.year ?? 0,
+      }}
+      skillCategories={skillCategories}
+    />
 
-  <!-- Flagship Projects - Engineering Deep-Dive -->
-  <Section title="Flagship Projects" id="projects" sectionNumber="01">
-    <div class="space-y-fluid-lg">
-      {cvData.projects.slice(0, 4).map((project, index) => (
-        <div data-print={index >= 2 ? 'hide' : undefined}>
-          <ProjectCard
-            title={project.project_title}
-            status={project.status as 'Live' | 'Still live' | 'Completed' | 'Active' | 'Success'}
-            role={project.role}
-            stack={project.stack_and_tools}
-            premise={project.the_premise}
-            technicalDetails={project.technical_meat}
-            impact={project.impact_and_acclaim}
-          />
+    <!-- Right Column: Scrolling Main Content (66%) -->
+    <div class="main-column">
+      <!-- Profile -->
+      <Section title="Profile" id="profile">
+        <p class="text-fluid-sm text-muted-foreground leading-relaxed">
+          {cvData.summary}
+        </p>
+      </Section>
+
+      <!-- Projects -->
+      <Section title="Projects" id="projects">
+        <div class="projects-list">
+          {cvData.projects.slice(0, 4).map((project, index) => (
+            <div class="border-t border-border pt-fluid-md pb-fluid-sm first:border-t-0 first:pt-0" data-print={index >= 2 ? 'hide' : undefined}>
+              <ProjectCard
+                title={project.project_title}
+                status={project.status as 'Live' | 'Still live' | 'Completed' | 'Active' | 'Success'}
+                role={project.role}
+                stack={project.stack_and_tools}
+                premise={project.the_premise}
+                technicalDetails={project.technical_meat}
+                impact={project.impact_and_acclaim}
+              />
+            </div>
+          ))}
         </div>
-      ))}
+      </Section>
+
+      <!-- Experience -->
+      <Timeline title="Experience" id="experience">
+        {cvData.work_history.map((job) => (
+          <TimelineEntry
+            company={job.company}
+            role={job.role}
+            tenure={job.tenure}
+            summary={job.summary}
+            impact={job.impact}
+            techStack={job.tech_stack}
+          />
+        ))}
+      </Timeline>
+
+      <!-- Cultural Leadership -->
+      <LeadershipGrid items={leadershipItems} />
     </div>
-  </Section>
-
-  <!-- Work History - The Principal Era -->
-  <Timeline title="Work History" id="experience" sectionNumber="02">
-    {cvData.work_history.map((job) => (
-      <TimelineEntry
-        company={job.company}
-        role={job.role}
-        tenure={job.tenure}
-        summary={job.summary}
-        impact={job.impact}
-        techStack={job.tech_stack}
-      />
-    ))}
-  </Timeline>
-
-  <!-- Skills Terminal -->
-  <SkillsTerminal categories={skillCategories} />
-
-  <!-- Cultural Leadership -->
-  <LeadershipGrid items={leadershipItems} />
+  </div>
 </Layout>
+
+<style>
+  /* Two-column asymmetric layout with independent scrolling */
+  .cv-layout {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: var(--spacing-fluid-xs);
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .main-column {
+    min-width: 0; /* Prevent grid blowout */
+    overflow-y: auto;
+    padding: var(--spacing-fluid-lg) var(--spacing-fluid-lg) var(--spacing-fluid-xl) 0;
+  }
+
+  /* Responsive: Stack on smaller screens (normal scrolling) */
+  @media (max-width: 1024px) {
+    .cv-layout {
+      grid-template-columns: 1fr;
+      height: auto;
+      overflow: visible;
+    }
+
+    .main-column {
+      overflow-y: visible;
+      padding: var(--spacing-fluid-md);
+    }
+  }
+
+  /* Print: Single column for better page flow */
+  @media print {
+    .cv-layout {
+      display: block;
+      height: auto;
+      overflow: visible;
+    }
+
+    .main-column {
+      margin-top: 0.5rem;
+      overflow: visible;
+      padding: 0;
+    }
+  }
+</style>
