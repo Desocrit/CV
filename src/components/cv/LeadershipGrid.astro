@@ -1,4 +1,6 @@
 ---
+import Section from '../ui/Section.astro';
+
 interface LeadershipItem {
   icon: 'users' | 'book' | 'code' | 'star';
   title: string;
@@ -7,10 +9,9 @@ interface LeadershipItem {
 
 interface Props {
   items: LeadershipItem[];
-  sectionNumber?: string;
 }
 
-const { items, sectionNumber = '04' } = Astro.props;
+const { items } = Astro.props;
 
 const icons = {
   users: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z',
@@ -24,53 +25,44 @@ const toSnakeCase = (str: string) =>
   str.toUpperCase().replace(/\s+/g, '_');
 ---
 
-<section aria-labelledby="leadership-heading" class="mt-fluid-lg mb-fluid-md" data-print="hide">
-  <!-- Section header - // PREFIX NUMBERED format -->
-  <h2
-    id="leadership-heading"
-    class="mb-fluid-sm flex items-baseline gap-2 text-foreground border-b border-border pb-fluid-xs"
-  >
-    <span class="section-prefix font-mono text-fluid-xs tracking-wider" aria-hidden="true">
-      // {sectionNumber}
-    </span>
-    <span class="font-mono text-fluid-sm tracking-wide">CULTURAL_LEADERSHIP</span>
-  </h2>
+<div data-print="hide">
+  <Section title="Impact" id="leadership">
+    <ul class="leadership-grid grid sm:grid-cols-2">
+      {items.map((item) => (
+        <li class="group">
+          <div class="leadership-item flex items-start">
+            <svg
+              class="leadership-icon mt-1 h-4 w-4 shrink-0"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={icons[item.icon]} />
+            </svg>
 
-  <!-- Grid of leadership items -->
-  <ul class="grid gap-6 sm:grid-cols-2">
-    {items.map((item) => (
-      <li class="group">
-        <div class="flex items-start gap-3">
-          <!-- Icon - purple accent -->
-          <svg
-            class="leadership-icon mt-1 h-4 w-4 shrink-0"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={icons[item.icon]} />
-          </svg>
-
-          <div>
-            <!-- Micro-label title -->
-            <h3 class="font-mono text-fluid-2xs text-foreground uppercase tracking-wider">{toSnakeCase(item.title)}</h3>
-            <p class="mt-1 text-fluid-xs leading-relaxed text-muted-foreground">{item.description}</p>
+            <div>
+              <h3 class="font-mono text-fluid-2xs text-foreground uppercase tracking-wider">{toSnakeCase(item.title)}</h3>
+              <p class="mt-1 text-fluid-xs leading-relaxed text-muted-foreground">{item.description}</p>
+            </div>
           </div>
-        </div>
-      </li>
-    ))}
-  </ul>
-</section>
+        </li>
+      ))}
+    </ul>
+  </Section>
+</div>
 
 <style>
-  /* Section prefix - comment green */
-  .section-prefix {
-    color: var(--color-accent-green);
+  .leadership-grid {
+    gap: var(--spacing-fluid-md);
+  }
+
+  .leadership-item {
+    gap: var(--spacing-fluid-sm);
   }
 
   /* Icons - purple accent */
   .leadership-icon {
-    color: var(--color-accent-purple-muted);
+    color: var(--color-accent-purple);
   }
 </style>

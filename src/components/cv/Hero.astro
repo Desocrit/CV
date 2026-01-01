@@ -10,6 +10,8 @@ interface Achievement {
 
 interface Education {
   degree: string;
+  degree_title: string;
+  score_short: string;
   specialism: string;
   institution: string;
   year: number;
@@ -53,7 +55,7 @@ const { name, role, email, location, linkedin, github, website, summary, achieve
 
   <!-- Role / Location / Education -->
   <p class="text-fluid-2xs font-light text-foreground opacity-70 tracking-wide">
-    {role}<span class="tag-separator mx-2">//</span>{location}<span class="tag-separator mx-2">//</span>{education.degree} ({education.specialism})<span class="tag-separator mx-2">//</span>{education.institution} {education.year}
+    {role}<span class="tag-separator mx-2">//</span>{location}<span class="tag-separator mx-2">//</span>{education.degree_title} {education.degree} ({education.specialism}), {education.score_short}<span class="tag-separator mx-2">//</span>{education.institution}
   </p>
 
   <!-- Links -->
@@ -116,9 +118,9 @@ const { name, role, email, location, linkedin, github, website, summary, achieve
 </header>
 
 <style>
-  /* Tag separator - green accent */
+  /* Tag separator - purple accent */
   .tag-separator {
-    color: var(--color-accent-green-muted);
+    color: var(--color-accent-purple);
   }
 
   @media print {

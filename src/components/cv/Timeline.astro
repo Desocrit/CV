@@ -1,57 +1,16 @@
 ---
+import Section from '../ui/Section.astro';
+
 interface Props {
   id?: string;
   title: string;
-  sectionNumber?: string;
 }
 
-const { id, title, sectionNumber } = Astro.props;
-const headingId = id ? `${id}-heading` : undefined;
-
-// Convert title to SCREAMING_SNAKE_CASE for Linear-docs aesthetic
-const formatTitle = (str: string) =>
-  str.toUpperCase().replace(/\s+/g, '_');
+const { id, title } = Astro.props;
 ---
 
-<section
-  id={id}
-  aria-labelledby={headingId}
-  class="mt-fluid-lg mb-fluid-md"
->
-  <!-- Section header - // PREFIX NUMBERED format -->
-  <h2
-    id={headingId}
-    class="mb-fluid-sm flex items-baseline gap-2 text-foreground border-b border-border pb-fluid-xs"
-  >
-    <span class="section-prefix font-mono text-fluid-xs tracking-wider" aria-hidden="true">
-      //{sectionNumber ? ` ${sectionNumber}` : ''}
-    </span>
-    <span class="font-mono text-fluid-sm tracking-wide">{formatTitle(title)}</span>
-  </h2>
-
-  <!-- Timeline entries - Clean separation -->
+<Section id={id} title={title}>
   <ol class="relative space-y-fluid-sm">
     <slot />
   </ol>
-</section>
-
-<style>
-  /* Section prefix - comment green */
-  .section-prefix {
-    color: var(--accent-green);
-  }
-
-  @media print {
-    .section-prefix {
-      display: none !important;
-    }
-
-    /* Add spacing around section divider (h2 border) */
-    section h2 {
-      margin-top: 0.4rem !important;
-      margin-bottom: 0.3rem !important;
-      padding-bottom: 0.15rem !important;
-      border-bottom: 1px solid #ccc !important;
-    }
-  }
-</style>
+</Section>
