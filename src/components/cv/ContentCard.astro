@@ -1,0 +1,231 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  tag?: string;
+  label?: string;
+  technologies?: string[];
+  headline: string;
+  bulletPoints: string[];
+  details?: string;
+}
+
+const { title, subtitle, tag, label, technologies = [], headline, bulletPoints, details } = Astro.props;
+
+// Convert label to SCREAMING_CASE for display
+const labelText = label?.toUpperCase().replace(/\s+/g, '_').replace(/'/g, '');
+
+// Highlight metrics (numbers, percentages, multipliers) in bullet points
+const highlightMetrics = (text: string): string => {
+  return text.replace(
+    /(\d+(?:\.\d+)?(?:\s*[xX%])?|\d+(?:,\d{3})*(?:\+)?)/g,
+    '<span class="metric-highlight">$1</span>'
+  );
+};
+---
+
+<article class="content-card group">
+  <div class="card-grid">
+    <!-- Left Column: Title, Subtitle, Tag, Label, Technologies -->
+    <div class="card-meta mt-1">
+      <h3 class="text-fluid-base font-medium tracking-tight text-foreground">
+        {title}
+      </h3>
+
+      {tag && (
+        <p class="font-mono text-fluid-2xs text-muted-foreground opacity-60">
+          <time>{tag}</time>
+        </p>
+      )}
+
+      {labelText && (
+        <p class="label-text font-mono text-fluid-2xs uppercase tracking-widest mt-2">
+          {labelText}
+        </p>
+      )}
+
+      {subtitle && (
+        <p class="text-fluid-2xs text-muted-foreground opacity-60 mt-1">
+          {subtitle}
+        </p>
+      )}
+
+      <!-- Tech stack as pills -->
+      {technologies.length > 0 && (
+        <div class="tech-pills mt-3 flex flex-wrap gap-1.5" data-print="hide">
+          {technologies.filter(t => !t.startsWith('TODO')).slice(0, 4).map((item) => (
+            <span class="tech-pill font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 border border-border text-muted-foreground">
+              {item}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <!-- Right Column: Headline, Bullets, Details -->
+    <div class="card-content">
+      <!-- Headline -->
+      <p class="text-fluid-sm text-muted-foreground leading-relaxed">
+        {headline.trim()}
+      </p>
+
+      <!-- Bullet Points -->
+      <ul class="bullet-list mt-fluid-xs space-y-1 font-mono text-fluid-xs">
+        {bulletPoints.map((item) => {
+          const cleanItem = item.replace(/^["']|["']$/g, '');
+          const highlighted = highlightMetrics(cleanItem);
+          return (
+            <li class="flex items-start gap-2 text-muted-foreground">
+              <span class="item-separator shrink-0 mt-0.5" aria-hidden="true">-</span>
+              <span set:html={highlighted} />
+            </li>
+          );
+        })}
+      </ul>
+
+      <!-- Optional Details Toggle -->
+      {details && (
+        <details class="group/details mt-fluid-xs" data-print="hide">
+          <summary class="details-toggle inline-flex cursor-pointer list-none items-center gap-0.5 font-mono text-fluid-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
+            <span class="bracket">[</span>
+            <span class="toggle-text group-open/details:hidden">VIEW_DETAILS</span>
+            <span class="toggle-text hidden group-open/details:inline">HIDE_DETAILS</span>
+            <span class="bracket">]</span>
+          </summary>
+          <div class="details-content mt-fluid-xs pl-3 border-l-2 text-fluid-xs leading-relaxed whitespace-pre-line">
+            {details.trim()}
+          </div>
+        </details>
+      )}
+    </div>
+  </div>
+</article>
+
+<style>
+  /* Two-column grid layout matching Experience style */
+  .card-grid {
+    display: grid;
+    grid-template-columns: minmax(140px, 180px) 1fr;
+    gap: var(--spacing-fluid-md);
+  }
+
+  /* Label text - purple accent */
+  .label-text {
+    color: var(--color-accent-purple);
+  }
+
+  /* Metric highlighting - purple accent */
+  .metric-highlight {
+    color: var(--color-accent-purple);
+  }
+
+  /* Tech pills styling */
+  .tech-pill {
+    border-radius: 0;
+  }
+
+  /* Item separator - purple accent */
+  .item-separator {
+    color: var(--color-accent-purple);
+  }
+
+  /* Remove default marker */
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::marker {
+    display: none;
+    content: '';
+  }
+
+  /* Details toggle - purple accent for CTAs */
+  .details-toggle {
+    color: var(--color-accent-purple);
+  }
+
+  .details-toggle:hover {
+    color: var(--color-accent-purple);
+    filter: brightness(1.2);
+  }
+
+  .details-toggle .bracket {
+    color: var(--color-accent-purple);
+  }
+
+  .details-toggle .toggle-text {
+    color: var(--color-accent-purple);
+  }
+
+  /* Details content panel */
+  .details-content {
+    border-color: var(--color-accent-purple);
+    color: var(--color-muted-foreground);
+  }
+
+  /* Responsive: Stack on smaller screens */
+  @media (max-width: 640px) {
+    .card-grid {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-fluid-xs);
+    }
+  }
+
+  /* Print: Compact display with bullet points */
+  @media print {
+    .content-card {
+      padding-top: 0.3rem;
+      padding-bottom: 0.3rem;
+    }
+
+    .card-grid {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+
+    .label-text {
+      color: #333 !important;
+    }
+
+    .metric-highlight {
+      color: #333 !important;
+      font-weight: 600;
+    }
+
+    details {
+      display: block;
+    }
+
+    summary {
+      display: none;
+    }
+
+    details > div {
+      display: block !important;
+      padding-left: 0;
+      margin-top: 0.25rem;
+      border: none;
+    }
+
+    .details-content {
+      color: #333 !important;
+      border-color: #ccc !important;
+    }
+
+    /* Convert to vertical bullet list */
+    .bullet-list {
+      padding-left: 1rem !important;
+    }
+
+    .bullet-list li {
+      display: list-item !important;
+      list-style-type: disc !important;
+      margin: 0.1rem 0 !important;
+    }
+
+    /* Hide the separator */
+    .item-separator {
+      display: none !important;
+    }
+  }
+</style>
