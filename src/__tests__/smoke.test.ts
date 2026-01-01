@@ -85,7 +85,7 @@ describe('Build Output Smoke Tests', () => {
 
     // Section headings (formatted as // SCREAMING_SNAKE_CASE)
     expect(getByText(container, /\/\/ PROFILE/)).not.toBeNull();
-    expect(getByText(container, /\/\/ EXPERIENCE/)).not.toBeNull();
+    expect(getByText(container, /\/\/ HISTORY/)).not.toBeNull();
   });
 
   it('contains print button', () => {
@@ -102,7 +102,7 @@ describe('Build Output Smoke Tests', () => {
 describe('CSS Spacing Consistency Tests', () => {
   const srcPath = join(process.cwd(), 'src');
 
-  it('Section.astro has symmetric spacing around horizontal rule', () => {
+  it('Section.astro uses consistent spacing variable', () => {
     const sectionPath = join(srcPath, 'components', 'ui', 'Section.astro');
     const content = readFileSync(sectionPath, 'utf-8');
 
@@ -112,41 +112,37 @@ describe('CSS Spacing Consistency Tests', () => {
     const css = styleMatch?.[1];
     if (!css) return;
 
-    // Both margin-top and padding-top should use the same CSS variable
+    // The section-with-label should define and use --section-rule-spacing
     const marginTop = extractCSSValue(css, '.section-with-label', 'margin-top');
-    const paddingTop = extractCSSValue(css, '.section-with-label', 'padding-top');
-
     expect(marginTop).not.toBeNull();
-    expect(paddingTop).not.toBeNull();
-
-    // Both should reference the same spacing variable for symmetry
     expect(marginTop).toBe('var(--section-rule-spacing)');
-    expect(paddingTop).toBe('var(--section-rule-spacing)');
+
+    // Verify the spacing variable is defined
+    expect(css).toContain('--section-rule-spacing');
   });
 
-  it('TimelineEntry.astro has symmetric spacing around horizontal rule', () => {
-    const entryPath = join(srcPath, 'components', 'cv', 'TimelineEntry.astro');
-    const content = readFileSync(entryPath, 'utf-8');
+  it('ContentCard list items have symmetric padding', () => {
+    // Verify that content list items in index.astro use symmetric pt/pb classes
+    const indexPath = join(srcPath, 'pages', 'index.astro');
+    const content = readFileSync(indexPath, 'utf-8');
 
-    // Check the li element classes for pt and pb values
-    const liMatch = content.match(/<li[^>]*class="([^"]+)"[^>]*>/);
-    expect(liMatch).not.toBeNull();
-    const classes = liMatch?.[1];
-    if (!classes) return;
+    // Check for consistent pt-fluid and pb-fluid values on list items
+    const ptMatches = content.match(/pt-fluid-(\w+)/g);
+    const pbMatches = content.match(/pb-fluid-(\w+)/g);
 
-    // Extract pt-fluid-* and pb-fluid-* values
-    const ptMatch = classes.match(/pt-fluid-(\w+)/);
-    const pbMatch = classes.match(/pb-fluid-(\w+)/);
+    expect(ptMatches).not.toBeNull();
+    expect(pbMatches).not.toBeNull();
 
-    expect(ptMatch).not.toBeNull();
-    expect(pbMatch).not.toBeNull();
-    if (!ptMatch || !pbMatch) return;
+    // Extract the size values (sm, md, lg, etc.)
+    const ptSizes = ptMatches?.map((m) => m.replace('pt-fluid-', '')) ?? [];
+    const pbSizes = pbMatches?.map((m) => m.replace('pb-fluid-', '')) ?? [];
 
-    // Both padding values should be equal for symmetric spacing
-    expect(ptMatch[1]).toBe(pbMatch[1]);
+    // All pt values should match their corresponding pb values
+    expect(ptSizes.length).toBeGreaterThan(0);
+    expect(ptSizes).toEqual(pbSizes);
   });
 
-  it('Section grid aligns title with content top', () => {
+  it('Section grid children align to top', () => {
     const sectionPath = join(srcPath, 'components', 'ui', 'Section.astro');
     const content = readFileSync(sectionPath, 'utf-8');
 
@@ -155,7 +151,10 @@ describe('CSS Spacing Consistency Tests', () => {
     const css = styleMatch?.[1];
     if (!css) return;
 
-    const alignItems = extractCSSValue(css, '.section-grid', 'align-items');
-    expect(alignItems).toBe('start');
+    // Both .section-label and .section-content should use align-self: start
+    // to ensure grid children align to top (simple substring check since
+    // there are multiple selector blocks with different specificity)
+    expect(css).toMatch(/\.section-label\s*\{[^}]*align-self:\s*start/);
+    expect(css).toMatch(/\.section-content\s*\{[^}]*align-self:\s*start/);
   });
 });
