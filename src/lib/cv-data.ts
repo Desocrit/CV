@@ -45,6 +45,9 @@ export const skillsSchema = z.object({
 
 export const educationSchema = z.object({
   degree: nonEmptyString,
+  degree_title: nonEmptyString.optional(),
+  score_short: nonEmptyString.optional(),
+  score_long: nonEmptyString.optional(),
   specialism: nonEmptyString.optional(),
   institution: nonEmptyString,
   year: z.number().int().min(1900).max(2100),

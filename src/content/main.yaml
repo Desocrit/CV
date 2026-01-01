@@ -4,13 +4,14 @@ role: Principal Engineer
 location: London, UK
 email: cjasaunders@outlook.com
 website: https://cs-cv.vercel.app/
-github: https://github.com/Desocrit
+github: https://github.com/csaunders-ldt
+work_github: https://github.com/csaunders-ldt
 linkedin: https://www.linkedin.com/in/christopher-saunders-48b092110/
 
 # Abstract
 summary: >
   High impact, high velocity engineer, with deep expertise in AI and infrastructure, and a
-  proven track record of transforming engineering culture, across testing, AI initiatives, and infrastructure standards.
+  proven track record of transforming engineering culture, across testing, AI, and infrastructure standards.
 
 outlier_achievements:
   - metric: Throughput
@@ -18,13 +19,13 @@ outlier_achievements:
     description: Increased system throughput by 1000x for the London Marathon ballot.
   - metric: Cost Savings
     headline: $500k
-    description: Directly orchestrated infrastructure cost reductions through surgical code and database optimization.
+    description: Orchestrated infrastructure cost reductions via surgical code and database optimization.
   - metric: Test Coverage
     headline: 35%
-    description: Built a bespoke 'Systems Test' framework providing local integration testing across microservices.
+    description: Built a custom 'Systems Test' framework for local integration testing across microservices.
 
 projects:
-  - project_title: Nova & AI Strategy
+  - project_title: Nova
     stack_and_tools: [AI SDK, mem0, MongoDB, MCP, RAG]
     the_premise: Defined and executed the company’s transition to an Agentic Operating System.
     technical_meat: |
@@ -33,10 +34,10 @@ projects:
     impact_and_acclaim:
       - Achieved 95% WAU conversion rate.
       - Catalyzed a full company-wide strategic pivot toward AI-first engineering.
-    role: Architect & Lead Infrastructure Builder
+    role: Lead Engineer
     status: Resulted in a company-wide pivot.
 
-  - project_title: Monorepo Standardization
+  - project_title: Monorepo
     stack_and_tools: [Turborepo, Protobuf, GHA, ESLint]
     the_premise: Consolidated 22 diverged microservices into a unified, high-standard monorepo.
     technical_meat: |
@@ -45,10 +46,10 @@ projects:
     impact_and_acclaim:
       - Reduced average PRs per change from five to one.
       - Standardized 100% strict TypeScript adoption across the organization.
-    role: Technical Designer & Lead Contributor
+    role: Lead Contributor
     status: Structural game-changer.
 
-  - project_title: The Checkout Rebuild
+  - project_title: Checkout v2
     stack_and_tools: [NextJS, GraphQL, Recoil]
     the_premise: Rebuilt the core checkout engine with a focus on accessibility and keyboard-navigable architecture.
     technical_meat: |
@@ -64,28 +65,27 @@ work_history:
   - company: Let's Do This
     role: Principal Engineer
     tenure: 2020 — Present
-    summary: Leading the platform and infrastructure org responsible for high-scale system stability.
+    summary: Massive contributions across the entire org, across infrastructure, AI and product
     impact:
-      - Orchestrated infrastructure cost reductions totaling over $500k annually.
-      - Increased system throughput by 1000x for peak load events.
-      - Consistently highest contribution volume in company history by a significant margin.
-      - Mentored multiple engineers to promotion; including every IC6 engineer.
-    tech_stack: [MongoDB, Postgres, GRPC, GraphQL, SQS]
+      - Orchestrated infrastructure cost reductions totaling over $500k annually
+      - Increased system throughput by 1000x for peak load events
+      - Highest velocity engineer in the company across all major metrics
+    tech_stack: [MongoDB, MongoDB, GRPC, GraphQL]
 
   - company: Singletrack
     role: Senior Engineer
     tenure: Nov 2017 — Jan 2021
-    summary: Developed bespoke systems for financial clients, operating across the full stack.
+    summary: Developed bespoke systems for financial clients, operating across the full stack
     impact:
-      - Developed a custom component-based framework to support building client apps.
+      - Developed a custom component-based framework to support building client apps
       - Used Service Workers to make the entire website work offline
-      - Fully automated legacy manual data migration tasks, reducing operational overhead.
+      - Fully automated legacy manual data migration tasks using a custom framework
     tech_stack: [Python, Ruby on Rails, Java, Postgres]
 
   - company: RateSetter
     role: Software Developer
     tenure: Feb 2016 — Nov 2017
-    summary: Developed peer-to-peer moneylending software within a high-compliance market.
+    summary: Developed peer-to-peer moneylending software within a high-compliance market
     impact:
       - Maintained and scaled the core P2P lending platform
       - Helped build and migrate to a microservices based system
@@ -95,8 +95,8 @@ work_history:
 skills:
   technical_specialties:
     - Optimizing systems for performance at scale
-    - Infrastructure-as-Code (IaC) and Cloud Governance
-    - Deep Database Optimization (MongoDB/Postgres)
+    - IAC and Cloud Governance
+    - Deep Database Optimization
     - Architecture for Distributed Systems
   organizational_leverage:
     - Technical Strategy & Vision (AI & Monorepo Standards)
@@ -109,7 +109,10 @@ skills:
     - Fully automated AI-driven coding systems
 
 education:
-  - degree: 1st MEng Computer Science
+  - degree: Computer Science
+    degree_title: MEng
+    score_short: 1st
+    score_long: First Class Honours
     specialism: Data Science and AI
     institution: Southampton University
     year: 2015
