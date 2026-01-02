@@ -38,7 +38,7 @@ projects:
     status: Resulted in a company-wide pivot.
 
   - project_title: Monorepo
-    subtitle: Codebase standardisation
+    subtitle: Standardisation
     stack_and_tools: [Turborepo, Protobuf, GHA, ESLint]
     the_premise: Consolidated 22 diverged microservices into a unified, high-standard monorepo.
     technical_meat: |
@@ -52,7 +52,7 @@ projects:
     status: Structural game-changer.
 
   - project_title: Checkout v2
-    subtitle: Complete rebuild
+    subtitle: Total rebuild
     stack_and_tools: [NextJS, GraphQL, Recoil]
     the_premise: Rebuilt the core checkout engine with a focus on accessibility and keyboard-navigable architecture.
     technical_meat: |
