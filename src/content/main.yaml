@@ -60,7 +60,7 @@ projects:
       Authored the architectural approach that enabled a major refactor previously considered impossible.
     impact_and_acclaim:
       - Zero incidents for the first 90 days of production.
-      - Successfully processed three consecutive London Marathon ballots with zero downtime.
+      - Handled three consecutive London Marathon ballots with zero downtime.
     role: Project Lead
     status: Processed 3 Marathons.
 
@@ -86,7 +86,7 @@ work_history:
     tech_stack: [Python, Ruby on Rails, Java, Postgres]
 
   - company: RateSetter
-    role: Software Developer
+    role: Developer
     tenure: Feb 2016 — Nov 2017
     summary: Developed peer-to-peer moneylending software within a high-compliance market
     impact:
