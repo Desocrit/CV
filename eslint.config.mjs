@@ -56,6 +56,6 @@ export default tseslint.config(
 
   // Ignores
   {
-    ignores: ['dist/**', '.astro/**', 'node_modules/**', '*.config.*'],
+    ignores: ['dist/**', '.astro/**', '.vercel/**', 'node_modules/**', '*.config.*', 'scripts/**'],
   }
 );

@@ -28,7 +28,8 @@ function extractCSSValue(css: string, selector: string, property: string): strin
 }
 
 describe('Build Output Smoke Tests', () => {
-  const distPath = join(process.cwd(), 'dist', 'index.html');
+  // Vercel adapter outputs to .vercel/output/static
+  const distPath = join(process.cwd(), '.vercel', 'output', 'static', 'index.html');
 
   it('build output exists', () => {
     expect(existsSync(distPath)).toBe(true);
@@ -83,9 +84,9 @@ describe('Build Output Smoke Tests', () => {
     // Skip link for accessibility
     expect(document.querySelector('a[href="#main-content"]')).not.toBeNull();
 
-    // Section headings (formatted as // SCREAMING_SNAKE_CASE)
-    expect(getByText(container, /\/\/ PROFILE/)).not.toBeNull();
-    expect(getByText(container, /\/\/ HISTORY/)).not.toBeNull();
+    // Section headings (SCREAMING_SNAKE_CASE in section-title-text spans)
+    expect(getByText(container, 'PROFILE')).not.toBeNull();
+    expect(getByText(container, 'HISTORY')).not.toBeNull();
   });
 
   it('contains print button', () => {
