@@ -1,14 +1,14 @@
 {
   "hooks": {
-    "PostToolUse": [
+    "Stop": [
       {
-        "matcher": "Edit|Write|NotebookEdit",
+        "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "npm run lint 2>&1 || true",
-            "blocking": false,
-            "timeout": 30000
+            "command": "npm run check",
+            "blocking": true,
+            "timeout": 180000
           }
         ]
       }
