@@ -1,0 +1,107 @@
+---
+// Subtle "glitch in the matrix" effect for section titles
+// Occasionally flickers a few letters to random characters
+---
+
+<script>
+  const GLITCH_CHARS = '!@#$%^&*()_+-=[]{}|;:,.<>?0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const INITIAL_DELAY = 7500; // 7.5 seconds before first glitch
+  const MIN_INTERVAL = 1500; // 1.5 seconds minimum between glitches
+  const MAX_INTERVAL = 3500; // 3.5 seconds maximum between glitches
+  const GLITCH_DURATION = 300; // How long the glitch lasts
+  const GLITCH_FRAMES = 5; // Number of glitch frames
+
+  // Track elements currently being animated to prevent race conditions
+  const animatingElements = new WeakSet<HTMLElement>();
+
+  function getRandomChar(): string {
+    return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)] ?? '?';
+  }
+
+  function glitchText(element: HTMLElement): void {
+    // Prevent overlapping animations on the same element
+    if (animatingElements.has(element)) return;
+
+    // Get the stored original text (set at initialization)
+    const original = element.dataset['originalText'];
+    if (!original) return;
+
+    animatingElements.add(element);
+
+    // Pick 2-4 random positions to glitch
+    const numGlitches = 2 + Math.floor(Math.random() * 3);
+    const positions = new Set<number>();
+    while (positions.size < numGlitches && positions.size < original.length) {
+      const pos = Math.floor(Math.random() * original.length);
+      // Skip underscores and spaces
+      if (original[pos] !== '_' && original[pos] !== ' ') {
+        positions.add(pos);
+      }
+    }
+
+    const posArray = Array.from(positions);
+    let frame = 0;
+
+    const animate = () => {
+      if (frame >= GLITCH_FRAMES) {
+        // Restore from the stored original (guaranteed correct)
+        element.textContent = original;
+        animatingElements.delete(element);
+        return;
+      }
+
+      // Create glitched version
+      const chars = original.split('');
+      posArray.forEach(pos => {
+        chars[pos] = getRandomChar();
+      });
+      element.textContent = chars.join('');
+      frame++;
+
+      setTimeout(animate, GLITCH_DURATION / GLITCH_FRAMES);
+    };
+
+    animate();
+  }
+
+  function scheduleNextGlitch(titles: HTMLElement[]): void {
+    const delay = MIN_INTERVAL + Math.random() * (MAX_INTERVAL - MIN_INTERVAL);
+
+    setTimeout(() => {
+      // Pick a random title to glitch
+      const target = titles[Math.floor(Math.random() * titles.length)];
+      if (target) {
+        glitchText(target);
+      }
+      scheduleNextGlitch(titles);
+    }, delay);
+  }
+
+  function init(): void {
+    const titles = Array.from(
+      document.querySelectorAll('.section-title-text')
+    ) as HTMLElement[];
+
+    if (titles.length === 0) return;
+
+    // Store original text on each element ONCE at initialization
+    // This ensures we always have the true original, even during race conditions
+    titles.forEach(el => {
+      el.dataset['originalText'] = el.textContent || '';
+    });
+
+    // Wait before starting glitch effects
+    setTimeout(() => {
+      scheduleNextGlitch(titles);
+    }, INITIAL_DELAY);
+  }
+
+  // Respect reduced motion preferences
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // Skip glitch effect entirely for users who prefer reduced motion
+  } else if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>

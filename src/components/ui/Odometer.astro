@@ -1,0 +1,123 @@
+---
+/**
+ * Odometer Component
+ * Displays a number with a rolling/counting-up animation on page load.
+ * Animation is disabled for print media.
+ */
+
+interface Props {
+  value: string;
+  class?: string;
+}
+
+const { value, class: className = '' } = Astro.props;
+
+// Parse the value to extract numeric parts and prefixes/suffixes
+// Examples: "1000x" -> { prefix: "", number: 1000, suffix: "x" }
+//           "$500k" -> { prefix: "$", number: 500, suffix: "k" }
+//           "2800"  -> { prefix: "", number: 2800, suffix: "" }
+const parseValue = (val: string) => {
+  const match = val.match(/^([^\d]*)(\d+)([^\d]*)$/);
+  if (!match) return { prefix: '', number: 0, suffix: '', raw: val };
+  return {
+    prefix: match[1] ?? '',
+    number: parseInt(match[2] ?? '0', 10),
+    suffix: match[3] ?? '',
+    raw: val
+  };
+};
+
+const parsed = parseValue(value);
+---
+
+<span
+  class:list={['odometer-value', className]}
+  data-odometer
+  data-target={parsed.number}
+  data-prefix={parsed.prefix}
+  data-suffix={parsed.suffix}
+  data-raw={parsed.raw}
+>
+  <!-- Initial state shows the full value for SSR/print/no-JS -->
+  <span class="odometer-prefix">{parsed.prefix}</span>
+  <span class="odometer-number">{parsed.number}</span>
+  <span class="odometer-suffix">{parsed.suffix}</span>
+</span>
+
+<style>
+  .odometer-value {
+    display: inline-flex;
+    align-items: baseline;
+  }
+
+  .odometer-prefix,
+  .odometer-suffix {
+    /* Prefixes and suffixes don't animate */
+  }
+
+  /* Print: no animation, just show the value */
+  @media print {
+    .odometer-value {
+      /* Value is already shown correctly via SSR */
+    }
+  }
+</style>
+
+<script is:inline>
+  // Odometer animation - runs once on page load
+  (function() {
+    // Guard against multiple executions
+    if (window.__odometerInit) return;
+    window.__odometerInit = true;
+
+    // Check for reduced motion preference
+    var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    // Easing function (ease-out cubic)
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    function animateOdometer(el) {
+      var target = parseInt(el.getAttribute('data-target') || '0', 10);
+      var numberSpan = el.querySelector('.odometer-number');
+
+      if (!numberSpan || target === 0) return;
+
+      var duration = 1200;
+      var startTime = performance.now();
+
+      // Start from 0
+      numberSpan.textContent = '0';
+
+      function animate(currentTime) {
+        var elapsed = currentTime - startTime;
+        var progress = Math.min(elapsed / duration, 1);
+        var easedProgress = easeOutCubic(progress);
+
+        var currentValue = Math.round(easedProgress * target);
+        numberSpan.textContent = currentValue.toString();
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          numberSpan.textContent = target.toString();
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    function initOdometers() {
+      var odometers = document.querySelectorAll('[data-odometer]');
+      odometers.forEach(animateOdometer);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initOdometers);
+    } else {
+      initOdometers();
+    }
+  })();
+</script>

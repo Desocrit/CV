@@ -10,7 +10,7 @@ interface Props {
 const { href, external = false, onClick, class: className = '', ...attrs } = Astro.props;
 
 const isButton = !href;
-const baseClass = 'sidebar-link inline-flex items-center gap-2 text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
+const baseClass = 'sidebar-link flex items-center gap-2 flex-nowrap text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
 ---
 
 {isButton ? (
@@ -37,6 +37,10 @@ const baseClass = 'sidebar-link inline-flex items-center gap-2 text-muted-foregr
 <style>
   .sidebar-link {
     transition: color 0.2s ease;
+  }
+
+  .sidebar-link :global(svg) {
+    flex-shrink: 0;
   }
 
   /* Underline animation on text span */

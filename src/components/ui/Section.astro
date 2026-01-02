@@ -8,7 +8,6 @@ interface Props {
 const { title, id, class: className = '' } = Astro.props;
 const headingId = id ? `${id}-heading` : undefined;
 
-// Convert title to SCREAMING_SNAKE_CASE for consistency with other sections
 const formatTitle = (str: string) =>
   str.toUpperCase().replace(/\s+/g, '_');
 ---
@@ -18,14 +17,15 @@ const formatTitle = (str: string) =>
   id={id}
   aria-labelledby={headingId}
 >
-  <!-- Section layout: mini label column + content -->
   <div class="section-grid">
-    <!-- Left: Section label (sticky navigation marker) -->
     <nav class="section-label" aria-hidden="true">
-      <span class="section-title font-mono text-fluid-2xs">// {formatTitle(title)}</span>
+      <span class="section-title font-mono text-fluid-2xs">
+        <span class="section-prefix" aria-hidden="true">// </span>
+        <span class="section-title-text">{formatTitle(title)}</span>
+      </span>
+      <span class="section-title-print">{title}</span>
     </nav>
 
-    <!-- Right: Section content -->
     <div class="section-content">
       <h2 id={headingId} class="sr-only">{title}</h2>
       <slot />
@@ -40,17 +40,14 @@ const formatTitle = (str: string) =>
     margin-bottom: var(--spacing-fluid-md);
   }
 
-  /* First section doesn't need top margin */
   .section-with-label:first-child {
     margin-top: 0;
   }
 
-  /* First section label doesn't need top padding */
   .section-with-label:first-child .section-label {
     padding-top: 0;
   }
 
-  /* 12-column internal grid: Label (2 cols) + Content (10 cols) */
   .section-grid {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -59,7 +56,7 @@ const formatTitle = (str: string) =>
 
   .section-label {
     grid-column: span 2;
-    align-self: start; /* Critical for sticky to work in grid */
+    align-self: start;
     position: sticky;
     top: calc(-1 * var(--spacing-fluid-lg));
     z-index: 10;
@@ -75,7 +72,6 @@ const formatTitle = (str: string) =>
     padding-top: var(--spacing-fluid-sm);
   }
 
-  /* First section content doesn't need top border */
   .section-with-label:first-child .section-content {
     border-top: none;
     padding-top: 0;
@@ -89,12 +85,14 @@ const formatTitle = (str: string) =>
     white-space: nowrap;
   }
 
-  /* Light mode: use primary foreground color */
+  .section-title-print {
+    display: none;
+  }
+
   [data-theme='light'] .section-title {
     color: var(--color-foreground);
   }
 
-  /* Responsive: Stack on smaller screens */
   @media (max-width: 768px) {
     .section-grid {
       display: flex;
@@ -103,7 +101,7 @@ const formatTitle = (str: string) =>
     }
 
     .section-label {
-      position: static; /* Remove sticky on mobile */
+      position: static;
       margin-top: 0;
       margin-bottom: var(--spacing-fluid-sm);
       padding: 0;
@@ -127,32 +125,47 @@ const formatTitle = (str: string) =>
     }
   }
 
-  /* Print styles */
   @media print {
     .section-with-label {
-      margin-top: 0.4rem;
-      margin-bottom: 0.3rem;
+      margin-top: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-with-label:first-child {
+      margin-top: 0;
     }
 
     .section-grid {
-      grid-template-columns: 5rem 1fr;
-      gap: 0.5rem;
+      display: block;
     }
 
     .section-label {
-      grid-column: auto;
-      position: static; /* Remove sticky for print */
+      display: block;
+      margin-bottom: 0.25rem;
+      padding-top: 0;
+      background: transparent;
     }
 
     .section-content {
-      grid-column: auto;
+      display: block;
       border-top: none;
       padding-top: 0;
     }
 
     .section-title {
-      color: #333 !important;
-      font-size: 7pt;
+      display: none;
+    }
+
+    .section-title-print {
+      display: block;
+      color: #1a1a1a;
+      font-family: var(--font-sans);
+      font-size: 9pt;
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: 0;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 0.2rem;
     }
   }
 </style>
