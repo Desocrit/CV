@@ -6,7 +6,6 @@ import ContentCard from '../components/cv/ContentCard.astro';
 import LeadershipGrid from '../components/cv/LeadershipGrid.astro';
 import { cvData } from '../lib/cv-data';
 
-// Transform skills data for Sidebar component
 const skillCategories = [
   {
     name: 'technical_specialties',
@@ -25,10 +24,8 @@ const skillCategories = [
   },
 ];
 
-// Pass impact_nodes directly to component
 const impactNodes = cvData.impact_nodes;
 
-// Transform data for Layout JSON-LD
 const socialLinks = [
   { platform: 'LinkedIn', url: cvData.linkedin },
   { platform: 'GitHub', url: cvData.github },
@@ -66,9 +63,7 @@ const educationData = cvData.education.map((edu) => ({
   education={educationData}
   knowsAbout={cvData.meta.keywords}
 >
-  <!-- Two-column asymmetric layout -->
   <div class="cv-layout">
-    <!-- Left Column: Sticky Sidebar (33%) -->
     <Sidebar
       name={cvData.name}
       role={cvData.role}
@@ -89,20 +84,17 @@ const educationData = cvData.education.map((edu) => ({
       skillCategories={skillCategories}
     />
 
-    <!-- Right Column: Scrolling Main Content (66%) -->
     <div class="main-column">
-      <!-- Profile -->
       <Section title="Profile" id="profile">
         <p class="text-fluid-sm text-muted-foreground leading-relaxed">
           {cvData.summary}
         </p>
       </Section>
 
-      <!-- Projects -->
       <Section title="Projects" id="projects">
         <div class="content-list">
-          {cvData.projects.slice(0, 4).map((project, index) => (
-            <div class="border-t border-border pt-fluid-sm pb-fluid-sm first:border-t-0 first:pt-0" data-print={index >= 2 ? 'hide' : undefined}>
+          {cvData.projects.slice(0, 4).map((project) => (
+            <div class="content-item border-t border-border pt-fluid-sm pb-fluid-sm first:border-t-0 first:pt-0">
               <ContentCard
                 title={project.project_title}
                 tag={project.subtitle}
@@ -116,11 +108,10 @@ const educationData = cvData.education.map((edu) => ({
         </div>
       </Section>
 
-      <!-- Experience -->
-      <Section title="History" id="experience">
+      <Section title="History" id="history">
         <div class="content-list">
           {cvData.work_history.map((job) => (
-            <div class="border-t border-border pt-fluid-sm pb-fluid-sm first:border-t-0 first:pt-0">
+            <div class="content-item border-t border-border pt-fluid-sm pb-fluid-sm first:border-t-0 first:pt-0">
               <ContentCard
                 title={job.role}
                 tag={job.tenure}
@@ -134,14 +125,12 @@ const educationData = cvData.education.map((edu) => ({
         </div>
       </Section>
 
-      <!-- Impact -->
       <LeadershipGrid nodes={impactNodes} />
     </div>
   </div>
 </Layout>
 
 <style>
-  /* Two-column asymmetric layout */
   .cv-layout {
     display: grid;
     grid-template-columns: 380px 1fr;
@@ -150,14 +139,12 @@ const educationData = cvData.education.map((edu) => ({
     overflow: hidden;
   }
 
-  /* Main content column */
   .main-column {
-    min-width: 0; /* Prevent grid blowout */
+    min-width: 0;
     overflow-y: auto;
     padding: var(--spacing-fluid-lg) var(--spacing-fluid-lg) var(--spacing-fluid-xl) 0;
   }
 
-  /* Responsive: Stack on smaller screens (normal scrolling) */
   @media (max-width: 1024px) {
     .cv-layout {
       grid-template-columns: 1fr;
@@ -172,11 +159,10 @@ const educationData = cvData.education.map((edu) => ({
     }
   }
 
-  /* Print: Professional two-column layout */
   @media print {
     .cv-layout {
       display: grid;
-      grid-template-columns: 200px 1fr;
+      grid-template-columns: 210px 1fr;
       gap: 1.5rem;
       height: auto;
       overflow: visible;
@@ -186,6 +172,18 @@ const educationData = cvData.education.map((edu) => ({
       margin-top: 0;
       overflow: visible;
       padding: 0;
+    }
+
+    .content-item {
+      border-top: none !important;
+      padding-top: 0.2rem !important;
+      padding-bottom: 0.2rem !important;
+    }
+
+    .content-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
     }
   }
 </style>
