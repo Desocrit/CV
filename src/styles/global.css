@@ -1,12 +1,26 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
-  /* Geist Font Family - Swiss Grid Minimalism */
   --font-sans: 'Geist', 'system-ui', 'sans-serif';
   --font-mono: 'Geist Mono', 'Consolas', monospace;
 
-  /* Fluid typography scale - More dramatic for authority */
   --text-fluid-2xs: clamp(0.625rem, 0.6rem + 0.125vw, 0.6875rem);
   --text-fluid-xs: clamp(0.6875rem, 0.65rem + 0.19vw, 0.75rem);
   --text-fluid-sm: clamp(0.8125rem, 0.75rem + 0.31vw, 0.9375rem);
@@ -18,7 +32,6 @@
   --text-fluid-4xl: clamp(2.75rem, 2.3rem + 2.25vw, 4rem);
   --text-fluid-5xl: clamp(3.5rem, 2.8rem + 3.5vw, 5rem);
 
-  /* Fluid spacing - Generous whitespace for Swiss Grid feel */
   --spacing-fluid-xs: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem);
   --spacing-fluid-sm: clamp(0.75rem, 0.6rem + 0.75vw, 1.25rem);
   --spacing-fluid-md: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
@@ -26,7 +39,6 @@
   --spacing-fluid-xl: clamp(4rem, 3.2rem + 4vw, 6rem);
   --spacing-fluid-2xl: clamp(6rem, 4.8rem + 6vw, 10rem);
 
-  /* Noir Theme - Tokyo Night Foundation */
   --color-background: #050505;
   --color-foreground: #f2f2f2;
 
@@ -52,36 +64,29 @@
   --color-destructive: #7f1d1d;
   --color-destructive-foreground: #f2f2f2;
 
-  /* Subtle borders - Blueprint precision */
   --color-border: rgba(255, 255, 255, 0.06);
   --color-border-subtle: rgba(255, 255, 255, 0.03);
   --color-input: rgba(255, 255, 255, 0.1);
   --color-ring: #f2f2f2;
 
-  /* Accent - Minimal, only when needed */
   --color-achievement: #f2f2f2;
   --color-achievement-foreground: #050505;
 
-  /* Terminal aesthetic - Refined */
   --color-terminal-bg: #050505;
   --color-terminal-text: #888888;
   --color-terminal-prompt: #888888;
   --color-terminal-accent: #f2f2f2;
 
-  /* Status - Monochromatic */
   --color-status-live: #f2f2f2;
   --color-status-completed: #888888;
   --color-status-active: #888888;
 
-  /* Tokyo Night Accents - Minimal palette */
   --color-accent-purple: #9d7cd8;
   --color-accent-green: #37BF51;
 
-  /* Tracking utilities */
   --tracking-widest-plus: 0.2em;
 }
 
-/* Light theme override - Balanced Ink */
 [data-theme='light'] {
   --color-background: #F2F2F0;
   --color-foreground: #323234;
@@ -118,24 +123,22 @@
   --color-terminal-prompt: #5A5A5E;
   --color-terminal-accent: #323234;
 
-  /* Light mode accents - Balanced Ink */
   --color-accent-purple: #6E56AF;
   --color-accent-green: #323234;
 }
 
-/* Specific light-mode weight overrides */
 [data-theme='light'] h1,
 [data-theme='light'] h2 {
-  font-weight: 600; /* Semibold for headers */
+  font-weight: 600;
 }
 
 [data-theme='light'] .mono-marker {
-  font-weight: 500; /* Medium for // Gutter Markers */
-  letter-spacing: -0.01em; /* Tighten slightly for density */
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 [data-theme='light'] .metadata-spec {
-  font-weight: 400; /* Solid regular for university/tech tags */
+  font-weight: 400;
 }
 
 @layer base {
@@ -152,26 +155,23 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on, 'zero' on;
-    overflow: hidden; /* Prevent body scroll - layout handles it */
+    overflow: hidden;
   }
 
-  /* Mobile: restore normal scrolling */
   @media (max-width: 1024px) {
     body {
       overflow: auto;
     }
   }
 
-  /* Hide scrollbar but allow scrolling */
   .scrollbar-hidden {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
   .scrollbar-hidden::-webkit-scrollbar {
-    display: none; /* Chrome/Safari/Opera */
+    display: none;
   }
 
-  /* Swiss Grid Typography - Tight tracking for headers */
   h1 {
     font-size: var(--text-fluid-4xl);
     font-weight: 500;
@@ -200,24 +200,20 @@
     letter-spacing: -0.01em;
   }
 
-  /* Relaxed line height for body text */
   p {
     line-height: 1.7;
   }
 
-  /* Enhanced focus styles for AAA compliance */
   :focus-visible {
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
   }
 
-  /* Selection colors */
   ::selection {
     background-color: var(--color-foreground);
     color: var(--color-background);
   }
 
-  /* Skip link for keyboard navigation */
   .skip-link {
     position: absolute;
     top: -40px;
@@ -239,12 +235,10 @@
 }
 
 @layer components {
-  /* Tracking utility - wider than widest */
   .tracking-widest-plus {
     letter-spacing: var(--tracking-widest-plus);
   }
 
-  /* Minimal badge - Fine borders only */
   .badge {
     display: inline-flex;
     align-items: center;
@@ -268,7 +262,6 @@
     border-color: var(--color-border);
   }
 
-  /* Terminal aesthetic - Refined minimal */
   .terminal {
     background-color: var(--color-terminal-bg);
     color: var(--color-terminal-text);
@@ -286,7 +279,6 @@
     color: var(--color-terminal-accent);
   }
 
-  /* Micro-typography for labels */
   .micro-label {
     font-family: var(--font-mono);
     font-size: 0.625rem;
@@ -296,7 +288,6 @@
     color: var(--color-muted-foreground);
   }
 
-  /* Large metric display */
   .metric-display {
     font-family: var(--font-mono);
     font-size: var(--text-fluid-2xl);
@@ -306,7 +297,6 @@
     color: var(--color-foreground);
   }
 
-  /* Subtle hover link */
   .link-subtle {
     color: var(--color-muted-foreground);
     text-decoration: none;
@@ -333,127 +323,142 @@
     width: 100%;
   }
 
-  /* Section divider */
   .section-divider {
     height: 1px;
     background: var(--color-border);
     border: none;
   }
 
-  /* Grid container for 12-column layout */
   .grid-12 {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     gap: var(--spacing-fluid-md);
   }
+
 }
 
-/* Print-specific styles - Primary output target: STRICT ONE PAGE A4 */
+@media not print {
+  .print-only {
+    display: none;
+  }
+}
+
+@media print {
+  .screen-only {
+    display: none;
+  }
+}
+
 @media print {
   @page {
     size: A4;
-    margin: 0.8cm 1.2cm;
+    margin: 1.5cm 1.8cm;
   }
 
-  /* Force light theme for print */
   :root {
-    --color-background: #ffffff !important;
-    --color-foreground: #000000 !important;
-    --color-card: #ffffff !important;
-    --color-card-foreground: #000000 !important;
-    --color-border: #cccccc !important;
-    --color-muted-foreground: #333333 !important;
-    --color-achievement: #000000 !important;
-    --color-terminal-bg: transparent !important;
-    --color-terminal-text: #000000 !important;
+    --color-background: #ffffff;
+    --color-foreground: #1a1a1a;
+    --color-card: #ffffff;
+    --color-card-foreground: #1a1a1a;
+    --color-border: #e0e0e0;
+    --color-muted-foreground: #4a4a4a;
+    --color-muted-foreground-light: #666666;
+    --color-achievement: #1a1a1a;
+    --color-terminal-bg: transparent;
+    --color-terminal-text: #1a1a1a;
+    --color-accent-purple: #1a1a1a;
+    --color-accent-green: #1a1a1a;
   }
 
   html {
-    font-size: 9pt !important;
-    line-height: 1.25 !important;
+    font-size: 9pt;
+    line-height: 1.4;
   }
 
   body {
-    color: #000 !important;
-    background: #fff !important;
-    padding: 0 !important;
-    margin: 0 !important;
+    color: #1a1a1a;
+    background: #fff;
+    padding: 0;
+    margin: 0;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+    overflow: visible;
   }
 
   main {
-    padding: 0 !important;
-    max-width: none !important;
-  }
-
-  /* Aggressive spacing reduction */
-  section {
-    margin-bottom: 0.3rem !important;
-    padding-bottom: 0 !important;
-  }
-
-  header {
-    margin-bottom: 0.4rem !important;
-    padding-bottom: 0.3rem !important;
+    padding: 0;
+    max-width: none;
   }
 
   h1 {
-    font-size: 14pt !important;
-    margin: 0 0 0.1rem 0 !important;
-    letter-spacing: -0.02em !important;
+    font-size: 16pt;
+    font-weight: 600;
+    margin: 0 0 0.1rem 0;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    text-transform: none;
   }
 
   h2 {
-    font-size: 11pt !important;
-    margin: 0.2rem 0 0.1rem 0 !important;
+    font-size: 9pt;
+    font-weight: 600;
+    margin: 0 0 0.2rem 0;
+    letter-spacing: 0;
+    text-transform: none;
+    color: #1a1a1a;
   }
 
   h3 {
-    font-size: 10pt !important;
-    margin: 0 !important;
+    font-size: 9pt;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0;
+    text-transform: none;
   }
 
   h4 {
-    font-size: 9pt !important;
-    margin: 0 !important;
+    font-size: 8.5pt;
+    font-weight: 500;
+    margin: 0;
+    text-transform: none;
   }
 
   p {
-    margin: 0.1rem 0 !important;
+    margin: 0.1rem 0;
+    line-height: 1.4;
   }
 
-  /* Hide non-essential elements */
+  section {
+    margin-bottom: 0.5rem;
+    padding-bottom: 0;
+  }
+
+  .sidebar-column header {
+    margin-bottom: 0.5rem;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
   .no-print,
   .theme-toggle,
   .terminal-header,
   .skip-link,
   [data-print='hide'] {
-    display: none !important;
+    display: none;
   }
 
-  /* Show print-only elements */
   [data-print='only'] {
-    display: block !important;
+    display: block;
   }
 
-  /* Force single-column layout for all grids */
-  .grid,
-  [class*='grid-'] {
-    grid-template-columns: 1fr !important;
-  }
-
-  /* Remove all sticky positioning */
   * {
-    position: static !important;
+    position: static;
   }
 
-  /* Restore relative for positioned children that need it */
   .relative {
-    position: relative !important;
+    position: relative;
   }
 
-  /* Prevent orphans and widows */
   p,
   li,
   h1,
@@ -466,7 +471,6 @@
     widows: 3;
   }
 
-  /* Keep headings with their content */
   h1,
   h2,
   h3,
@@ -477,7 +481,6 @@
     page-break-after: avoid;
   }
 
-  /* Prevent breaking inside important elements */
   article,
   section,
   blockquote,
@@ -488,100 +491,84 @@
     page-break-inside: avoid;
   }
 
-  /* Keep list items together when possible */
   li {
     break-inside: avoid;
     page-break-inside: avoid;
   }
 
-  /* Remove all decorative elements */
   * {
-    box-shadow: none !important;
-    text-shadow: none !important;
-    transition: none !important;
-    animation: none !important;
+    box-shadow: none;
+    text-shadow: none;
+    transition: none;
+    animation: none;
   }
 
-  /* Card simplification */
   article {
-    border: none !important;
-    background: none !important;
-    padding: 0.2rem 0 !important;
+    border: none;
+    background: none;
+    padding: 0.25rem 0;
   }
 
-  /* Timeline simplification */
-  ol[role='list'],
-  ol.relative {
-    border: none !important;
-    padding-left: 0 !important;
-  }
-
-  /* Timeline dots hidden */
-  .timeline-entry::before,
-  div[aria-hidden='true']:has(.rounded-full) {
-    display: none !important;
-  }
-
-  /* Terminal becomes simple text */
   .terminal {
-    background: none !important;
-    border: none !important;
-    padding: 0 !important;
+    background: none;
+    border: none;
+    padding: 0;
   }
 
   .terminal-prompt::before,
   .terminal-output::before {
-    content: none !important;
+    content: none;
   }
 
-  /* Section headers - remove decoration */
-  h2 span[aria-hidden='true'] {
-    display: none !important;
-  }
-
-  /* Badges simplified for print */
   .badge {
-    border: none !important;
-    background: none !important;
-    padding: 0 !important;
-    font-size: 9pt !important;
+    border: none;
+    background: none;
+    padding: 0;
+    font-size: 8pt;
+    text-transform: none;
   }
 
-  /* Links - don't show URL */
+  a {
+    color: #1a1a1a;
+    text-decoration: none;
+  }
+
   a::after {
-    content: none !important;
+    content: none;
   }
 
-  /* Address block compact */
   address {
-    margin-top: 0.2rem !important;
+    margin-top: 0.3rem;
+    font-style: normal;
   }
 
-  /* Achievement grid spacing */
-  .achievement-grid {
-    margin-top: 0.3rem !important;
-  }
-
-  /* Grid gaps reduced */
-  .grid {
-    gap: 0.3rem !important;
-  }
-
-  /* Reduce margins on all elements */
   ul,
   ol {
-    margin: 0 !important;
-    padding-left: 0.5rem !important;
+    margin: 0.2rem 0;
+    padding-left: 1rem;
   }
 
   li {
-    margin: 0 !important;
-    padding: 0 !important;
+    margin: 0.1rem 0;
+    padding: 0;
+    line-height: 1.4;
   }
 
-  /* Education section compact */
-  article.relative {
-    border: none !important;
-    padding-left: 0 !important;
+  .uppercase,
+  [class*='uppercase'] {
+    text-transform: none;
+  }
+
+  .metric-display {
+    font-size: 11pt;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  .micro-label {
+    font-size: 7pt;
+    text-transform: none;
+    letter-spacing: 0.02em;
+    color: #666;
   }
 }
