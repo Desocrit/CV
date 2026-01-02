@@ -1,4 +1,6 @@
 ---
+import Odometer from '../ui/Odometer.astro';
+
 interface Achievement {
   metric: string;
   headline: string;
@@ -25,12 +27,12 @@ const toSnakeCase = (str: string) =>
   <div class="flex flex-col md:flex-row md:justify-between gap-8">
     {achievements.map((achievement) => (
       <div class="flex flex-col gap-1 items-center text-center">
-        <!-- Metric: Large Geist Mono in White -->
+        <!-- Metric: Large Geist Mono in White with odometer animation -->
         <data
           value={achievement.headline}
           class="font-mono text-fluid-xl font-semibold tracking-tight text-foreground whitespace-nowrap leading-none"
         >
-          {achievement.headline}
+          <Odometer value={achievement.headline} />
         </data>
         <!-- Label: Small-caps Geist Mono in Purple -->
         <span class="achievement-label font-mono text-[10px] uppercase tracking-[0.15em] mt-0.5">

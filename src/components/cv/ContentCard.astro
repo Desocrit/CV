@@ -33,19 +33,20 @@ const highlightMetrics = (text: string): string => {
       </h3>
 
       {tag && (
-        <p class="font-mono text-fluid-2xs text-muted-foreground opacity-60">
+        <p class="font-mono text-fluid-2xs text-muted-foreground">
           <span>{tag}</span>
         </p>
       )}
 
-      {labelText && (
+      {label && (
         <p class="label-text font-mono text-fluid-2xs uppercase tracking-widest mt-2">
-          {labelText}
+          <span class="screen-only">{labelText}</span>
+          <span class="print-only">{label}</span>
         </p>
       )}
 
       {subtitle && (
-        <p class="text-fluid-2xs text-muted-foreground opacity-60 mt-1">
+        <p class="text-fluid-2xs text-muted-foreground mt-1">
           {subtitle}
         </p>
       )}
@@ -124,6 +125,15 @@ const highlightMetrics = (text: string): string => {
     border-radius: 0;
   }
 
+  /* Screen/Print visibility utilities */
+  .print-only {
+    display: none;
+  }
+
+  .screen-only {
+    display: inline;
+  }
+
   /* Item separator - purple accent */
   .item-separator {
     color: var(--color-accent-purple);
@@ -171,27 +181,59 @@ const highlightMetrics = (text: string): string => {
     }
   }
 
-  /* Print: Compact display with bullet points */
+  /* ===== PRINT STYLES - Professional Content Cards ===== */
   @media print {
+    /* Screen/Print visibility toggles */
+    .print-only {
+      display: inline !important;
+    }
+
+    .screen-only {
+      display: none !important;
+    }
+
     .content-card {
       padding-top: 0.3rem;
       padding-bottom: 0.3rem;
+      border-bottom: none;
     }
 
+    .content-card:last-child {
+      border-bottom: none;
+    }
+
+    /* Maintain two-column layout in cards for compact display */
     .card-grid {
-      grid-template-columns: 1fr;
-      gap: 0.25rem;
+      grid-template-columns: 115px 1fr;
+      gap: 0.6rem;
     }
 
+    /* Card meta - left column */
+    .card-meta {
+      margin-top: 0 !important;
+    }
+
+    .card-meta h3 {
+      font-size: 9pt !important;
+      font-weight: 600 !important;
+    }
+
+    /* Label text - professional, not uppercase */
     .label-text {
-      color: #333 !important;
+      color: #4a4a4a !important;
+      text-transform: none !important;
+      font-size: 8pt !important;
+      letter-spacing: 0 !important;
+      margin-top: 0.15rem !important;
     }
 
+    /* Metric highlighting - use weight instead of color */
     .metric-highlight {
-      color: #333 !important;
-      font-weight: 600;
+      color: #1a1a1a !important;
+      font-weight: 700;
     }
 
+    /* Details section - expand for print */
     details {
       display: block;
     }
@@ -203,29 +245,41 @@ const highlightMetrics = (text: string): string => {
     details > div {
       display: block !important;
       padding-left: 0;
-      margin-top: 0.25rem;
+      margin-top: 0.2rem;
       border: none;
     }
 
     .details-content {
-      color: #333 !important;
-      border-color: #ccc !important;
+      color: #4a4a4a !important;
+      border-color: transparent !important;
+      font-size: 8pt !important;
+      padding-left: 0 !important;
     }
 
-    /* Convert to vertical bullet list */
+    /* Bullet list styling */
     .bullet-list {
-      padding-left: 1rem !important;
+      padding-left: 0.8rem !important;
+      margin-top: 0.15rem !important;
     }
 
     .bullet-list li {
       display: list-item !important;
       list-style-type: disc !important;
-      margin: 0.1rem 0 !important;
+      margin: 0.05rem 0 !important;
+      font-size: 8pt !important;
+      color: #4a4a4a !important;
     }
 
-    /* Hide the separator */
+    /* Hide the dash separator */
     .item-separator {
       display: none !important;
+    }
+
+    /* Headline text */
+    .card-content > p:first-child {
+      font-size: 9pt !important;
+      line-height: 1.4 !important;
+      color: #333 !important;
     }
   }
 </style>
