@@ -1,14 +1,9 @@
 import { parse } from 'yaml';
 import { z } from 'astro:content';
 
-// Import raw YAML
 const yamlContent = await import('../content/main.yaml?raw').then(
   (m) => m.default
 );
-
-// =============================================================================
-// SCHEMAS
-// =============================================================================
 
 const nonEmptyString = z.string().min(1);
 
@@ -68,7 +63,6 @@ export const impactNodeSchema = z.object({
 });
 
 export const cvSchema = z.object({
-  // Profile
   name: nonEmptyString,
   role: nonEmptyString,
   location: nonEmptyString,
@@ -76,41 +70,21 @@ export const cvSchema = z.object({
   website: z.string().url(),
   github: z.string().url(),
   linkedin: z.string().url(),
-
-  // Summary
   summary: nonEmptyString,
-
-  // Achievements
   outlier_achievements: z.array(outlierAchievementSchema),
-
-  // Experience
   projects: z.array(projectSchema),
   work_history: z.array(workHistorySchema),
-
-  // Skills
   skills: skillsSchema,
-
-  // Education
   education: z.array(educationSchema),
-
-  // Impact nodes (for Impact section)
   impact_nodes: z.array(impactNodeSchema),
-
-  // Meta
   meta: z.object({
     keywords: z.array(nonEmptyString),
   }),
-
-  // Loose details (for unrefined content)
   loose_details: z.object({
     achievements: z.array(nonEmptyString),
     war_stories: z.array(nonEmptyString),
   }),
 });
-
-// =============================================================================
-// EXPORTED DATA
-// =============================================================================
 
 export type CVData = z.infer<typeof cvSchema>;
 export type Project = z.infer<typeof projectSchema>;

@@ -1,10 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-// =============================================================================
-// SHARED SCHEMAS
-// =============================================================================
-
 const dateString = z
   .string()
   .min(1)
@@ -19,10 +15,6 @@ const employmentType = z.enum([
   'freelance',
   'internship',
 ]);
-
-// =============================================================================
-// EXPERIENCE
-// =============================================================================
 
 const experience = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/experience' }),
@@ -41,10 +33,6 @@ const experience = defineCollection({
   }),
 });
 
-// =============================================================================
-// EDUCATION
-// =============================================================================
-
 const education = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/education' }),
   schema: z.object({
@@ -59,9 +47,5 @@ const education = defineCollection({
     draft: z.boolean().default(false),
   }),
 });
-
-// =============================================================================
-// EXPORT
-// =============================================================================
 
 export const collections = { experience, education };
