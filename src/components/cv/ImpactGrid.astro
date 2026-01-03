@@ -1,0 +1,217 @@
+---
+import type { ImpactNode } from '../../lib/cv-data';
+import Section from '../ui/Section.astro';
+
+interface Props {
+  nodes: ImpactNode[];
+}
+
+const { nodes } = Astro.props;
+---
+
+<div data-print="hide" class="impact-section">
+  <Section title="Impact" id="impact">
+    <div class="impact-grid">
+      {nodes.map((node) => (
+        <div class:list={['impact-card-wrapper', `impact-card-wrapper--${node.color}`]}>
+          <button
+            class="impact-card"
+            type="button"
+            aria-label={`Learn more about ${node.title}`}
+            data-prompt={node.prompt}
+          >
+            <div class="card-content">
+              <span class="card-header">[ {node.header} ]</span>
+              <h3 class="card-title">{node.title}</h3>
+              <p class="card-description">{node.description}</p>
+            </div>
+            <span class="card-cta" aria-hidden="true">
+              [<span class="cta-arrow">&nbsp;&gt;&nbsp;</span>]
+            </span>
+          </button>
+        </div>
+      ))}
+    </div>
+  </Section>
+</div>
+
+<style>
+  .impact-section {
+    margin-bottom: var(--spacing-fluid-md);
+  }
+
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  /* Wrapper for border animation */
+  .impact-card-wrapper {
+    --card-accent: var(--color-accent-green);
+    position: relative;
+    background: var(--color-background);
+  }
+
+  .impact-card-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: conic-gradient(
+      from var(--border-angle, 0deg),
+      transparent 0%,
+      transparent 25%,
+      var(--card-accent) 50%,
+      transparent 75%,
+      transparent 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 0;
+  }
+
+  .impact-card-wrapper:hover::before {
+    opacity: 1;
+    animation: spin-border 3s linear infinite;
+  }
+
+  @keyframes spin-border {
+    to {
+      --border-angle: 360deg;
+    }
+  }
+
+  /* Register custom property for animation */
+  @property --border-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+
+  /* Color variants */
+  .impact-card-wrapper--green  { --card-accent: var(--color-accent-green); }
+  .impact-card-wrapper--purple { --card-accent: var(--color-accent-purple); }
+  .impact-card-wrapper--blue   { --card-accent: var(--color-accent-blue); }
+  .impact-card-wrapper--orange { --card-accent: var(--color-accent-orange); }
+  .impact-card-wrapper--red    { --card-accent: var(--color-accent-red); }
+  .impact-card-wrapper--cyan   { --card-accent: var(--color-accent-cyan); }
+
+  .impact-card {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-background);
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+  }
+
+  .impact-card:focus-visible {
+    outline: 1px solid var(--card-accent);
+    outline-offset: 2px;
+  }
+
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .card-header {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 400;
+    color: var(--card-accent);
+    opacity: 0.5;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.25rem;
+    transition: opacity 0.15s ease;
+  }
+
+  .impact-card-wrapper:hover .card-header {
+    opacity: 1;
+  }
+
+  .card-title {
+    font-family: var(--font-sans);
+    font-size: var(--text-fluid-sm);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-foreground);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .card-description {
+    font-size: 11px;
+    font-style: italic;
+    color: var(--color-muted-foreground);
+    margin: 0.25rem 0 0 0;
+    line-height: 1.4;
+  }
+
+  .card-cta {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--card-accent);
+    opacity: 0.5;
+    transition: opacity 0.15s ease;
+    margin-left: 1rem;
+  }
+
+  .impact-card-wrapper:hover .card-cta {
+    opacity: 1;
+  }
+
+  /* Section title color on hover - using :has() */
+  .impact-section:has(.impact-card-wrapper--green:hover) :global(.section-title) {
+    color: var(--color-accent-green);
+  }
+  .impact-section:has(.impact-card-wrapper--blue:hover) :global(.section-title) {
+    color: var(--color-accent-blue);
+  }
+  .impact-section:has(.impact-card-wrapper--purple:hover) :global(.section-title) {
+    color: var(--color-accent-purple);
+  }
+  .impact-section:has(.impact-card-wrapper--orange:hover) :global(.section-title) {
+    color: var(--color-accent-orange);
+  }
+  .impact-section:has(.impact-card-wrapper--red:hover) :global(.section-title) {
+    color: var(--color-accent-red);
+  }
+  .impact-section:has(.impact-card-wrapper--cyan:hover) :global(.section-title) {
+    color: var(--color-accent-cyan);
+  }
+
+  /* Responsive: stack on mobile */
+  @media (max-width: 640px) {
+    .impact-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const impactCard = target.closest('.impact-card');
+
+    if (impactCard instanceof HTMLButtonElement) {
+      const prompt = impactCard.dataset['prompt'];
+      if (prompt) {
+        window.dispatchEvent(
+          new CustomEvent('open-rag-terminal', {
+            detail: { initialQuery: prompt },
+          })
+        );
+      }
+    }
+  });
+</script>
