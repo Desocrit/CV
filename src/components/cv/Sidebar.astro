@@ -31,17 +31,16 @@ interface Props {
   linkedin: string;
   github: string;
   website: string;
+  profile: string;
   achievements: Achievement[];
   education: Education;
   skillCategories: SkillCategory[];
 }
 
-const { name, role, email, location, linkedin, github, website: _website, achievements, education, skillCategories } = Astro.props;
+const { name, role, email, location, linkedin, github, website: _website, profile, achievements, education, skillCategories } = Astro.props;
 
 const toSnakeCase = (str: string) =>
   str.toUpperCase().replace(/\s+/g, '_');
-
-const flatSkills = skillCategories.flatMap(cat => cat.skills).slice(0, 3);
 ---
 
 <aside class="sidebar-column scrollbar-hidden">
@@ -111,26 +110,16 @@ const flatSkills = skillCategories.flatMap(cat => cat.skills).slice(0, 3);
     </address>
   </nav>
 
-  <section class="mb-fluid-md" aria-label="Education">
-    <h2 class="sidebar-section-title">Education</h2>
-    <div class="spec-block mt-fluid-xs">
-      <p class="font-sans text-fluid-xs text-muted-foreground">
-        {education.degree_title} {education.degree}
-      </p>
-      <p class="edu-meta font-mono text-[10px] uppercase tracking-wider text-muted-foreground mt-1">
-        <span class="screen-only">{education.institution} <span class="spec-separator" aria-hidden="true">//</span> {education.year}</span>
-        <span class="print-only">{education.institution} · {education.year}</span>
-      </p>
-      <p class="edu-meta font-mono text-[10px] uppercase tracking-wider text-muted-foreground mt-0.5">
-        <span class="screen-only">{education.specialism} <span class="spec-separator" aria-hidden="true">//</span> {education.score_short}</span>
-        <span class="print-only">{education.specialism} · {education.score_short}</span>
-      </p>
-    </div>
+  <section class="mb-fluid-md" aria-label="Profile">
+    <h2 class="sidebar-section-title">Profile</h2>
+    <p class="profile-text text-fluid-2xs text-muted-foreground leading-relaxed mt-fluid-xs">
+      {profile}
+    </p>
   </section>
 
-  <section class="mb-fluid-md" aria-label="Key Achievements">
-    <h2 class="sidebar-section-title">Achievements</h2>
-    <div class="mt-fluid-xs space-y-fluid-sm">
+  <section class="achievements-section mb-fluid-md" aria-label="Key Achievements">
+    <h2 class="sidebar-section-title achievements-title">Achievements</h2>
+    <div class="achievements-list mt-fluid-xs space-y-fluid-sm">
       {achievements.map((achievement) => (
         <div class="achievement-item">
           <div class="flex items-baseline gap-2">
@@ -153,19 +142,26 @@ const flatSkills = skillCategories.flatMap(cat => cat.skills).slice(0, 3);
     </div>
   </section>
 
-  <section aria-label="Skills">
+  <section class="mb-fluid-md" aria-label="Education">
+    <h2 class="sidebar-section-title">Education</h2>
+    <div class="spec-block mt-fluid-xs">
+      <p class="font-sans text-fluid-xs text-muted-foreground">
+        {education.degree_title} {education.degree}
+      </p>
+      <p class="edu-meta font-mono text-[10px] uppercase tracking-wider text-muted-foreground mt-1">
+        <span class="screen-only">{education.institution} <span class="spec-separator" aria-hidden="true">//</span> {education.year}</span>
+        <span class="print-only">{education.institution} · {education.year}</span>
+      </p>
+      <p class="edu-meta font-mono text-[10px] uppercase tracking-wider text-muted-foreground mt-0.5">
+        <span class="screen-only">{education.specialism} <span class="spec-separator" aria-hidden="true">//</span> {education.score_short}</span>
+        <span class="print-only">{education.specialism} · {education.score_short}</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="print-only" aria-label="Skills">
     <h2 class="sidebar-section-title">Skills</h2>
-
-    <ul class="skills-list-screen mt-fluid-xs space-y-0.5 text-fluid-2xs screen-only">
-      {flatSkills.map((skill) => (
-        <li class="flex items-center gap-1.5 text-muted-foreground">
-          <span class="skill-separator" aria-hidden="true">-</span>
-          <span>{skill}</span>
-        </li>
-      ))}
-    </ul>
-
-    <div class="skills-categories mt-fluid-xs space-y-fluid-sm print-only">
+    <div class="skills-categories mt-fluid-xs space-y-fluid-sm">
       {skillCategories.map((category) => (
         <div class="skill-category">
           <h3 class="skill-category-title font-mono text-[9px] uppercase tracking-wider text-muted-foreground mb-1">
@@ -227,6 +223,17 @@ const flatSkills = skillCategories.flatMap(cat => cat.skills).slice(0, 3);
     color: var(--color-muted-foreground-light);
   }
 
+  /* Fixed width for text containers to prevent reflow on resize */
+  .profile-text,
+  .achievement-item p {
+    max-width: 40ch;
+  }
+
+  /* Remove margin from last visible section (when followed by print-only) */
+  section:has(+ .print-only) {
+    margin-bottom: 0;
+  }
+
   .sidebar-section-title {
     font-family: var(--font-mono);
     font-size: var(--text-fluid-2xs);
@@ -240,8 +247,9 @@ const flatSkills = skillCategories.flatMap(cat => cat.skills).slice(0, 3);
     width: fit-content;
   }
 
+  /* Achievement styling - white numbers, purple labels */
   .achievement-headline {
-    color: var(--color-accent-purple);
+    color: var(--color-foreground);
   }
 
   .achievement-label {
@@ -368,6 +376,12 @@ const flatSkills = skillCategories.flatMap(cat => cat.skills).slice(0, 3);
     .skills-list li {
       font-size: 8pt;
       margin: 0.1rem 0;
+    }
+
+    .profile-text {
+      font-size: 8pt;
+      line-height: 1.5;
+      color: #4a4a4a;
     }
   }
 </style>

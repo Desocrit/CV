@@ -1,16 +1,21 @@
 ---
+import TechTag from '../ui/TechTag.astro';
+import type { TechTag as TechTagType } from '../../lib/cv-data';
+
 interface Props {
   title: string;
   subtitle?: string;
   tag?: string;
   label?: string;
-  technologies?: string[];
+  technologies?: TechTagType[];
   headline: string;
   bulletPoints: string[];
   details?: string;
+  prompt?: string;
+  useTerminal?: boolean;
 }
 
-const { title, subtitle, tag, label, technologies = [], headline, bulletPoints, details } = Astro.props;
+const { title, subtitle, tag, label, technologies = [], headline, bulletPoints, details, prompt, useTerminal = false } = Astro.props;
 
 // Convert label to SCREAMING_CASE for display
 const labelText = label?.toUpperCase().replace(/\s+/g, '_').replace(/'/g, '');
@@ -51,33 +56,31 @@ const highlightMetrics = (text: string): string => {
         </p>
       )}
 
-      <!-- Tech stack as pills -->
+      <!-- Tech stack as diagnostic nodes -->
       {technologies.length > 0 && (
-        <div class="tech-pills mt-3 flex flex-wrap gap-1.5" data-print="hide">
-          {technologies.filter(t => !t.startsWith('TODO')).slice(0, 4).map((item) => (
-            <span class="tech-pill font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 border border-border text-muted-foreground">
-              {item}
-            </span>
+        <div class="tech-tags mt-fluid-xs flex flex-wrap gap-1.5" data-print="hide">
+          {technologies.filter(t => !t.name.startsWith('TODO')).slice(0, 4).map((tech) => (
+            <TechTag name={tech.name} url={tech.url} tooltip={tech.tooltip} />
           ))}
         </div>
       )}
     </div>
 
     <!-- Right Column: Headline, Bullets, Details -->
-    <div class="card-content">
+    <div class:list={['card-content', { 'card-content--clickable': prompt && useTerminal }]} data-prompt={prompt && useTerminal ? prompt.trim() : undefined}>
       <!-- Headline -->
       <p class="text-fluid-sm text-muted-foreground leading-relaxed">
         {headline.trim()}
       </p>
 
       <!-- Bullet Points -->
-      <ul class="bullet-list mt-fluid-xs space-y-1 font-mono text-fluid-xs">
+      <ul class="bullet-list mt-fluid-xs space-y-1 text-fluid-xs">
         {bulletPoints.map((item) => {
           const cleanItem = item.replace(/^["']|["']$/g, '');
           const highlighted = highlightMetrics(cleanItem);
           return (
-            <li class="flex items-start gap-2 text-muted-foreground">
-              <span class="item-separator shrink-0 mt-0.5" aria-hidden="true">-</span>
+            <li class="flex items-baseline gap-2 text-muted-foreground">
+              <span class="item-separator shrink-0" aria-hidden="true">–</span>
               <span set:html={highlighted} />
             </li>
           );
@@ -85,8 +88,8 @@ const highlightMetrics = (text: string): string => {
       </ul>
 
       <!-- Optional Details Toggle -->
-      {details && (
-        <details class="group/details mt-fluid-xs" data-print="hide">
+      {details && !useTerminal && (
+        <details class="group/details mt-fluid-sm" data-print="hide">
           <summary class="details-toggle inline-flex cursor-pointer list-none items-center gap-0.5 font-mono text-fluid-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
             <span class="bracket">[</span>
             <span class="toggle-text group-open/details:hidden"> VIEW_DETAILS </span>
@@ -98,11 +101,30 @@ const highlightMetrics = (text: string): string => {
           </div>
         </details>
       )}
+
+      <!-- Terminal trigger for projects -->
+      {prompt && useTerminal && (
+        <button
+          type="button"
+          class="terminal-trigger details-toggle inline-flex cursor-pointer items-center gap-0.5 font-mono text-fluid-2xs mt-fluid-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors"
+          data-prompt={prompt.trim()}
+          data-print="hide"
+        >
+          <span class="bracket">[</span>
+          <span class="toggle-text">VIEW_DETAILS</span>
+          <span class="bracket">]</span>
+        </button>
+      )}
     </div>
   </div>
 </article>
 
 <style>
+  /* Default card accent color - can be overridden by parent */
+  .content-card {
+    --card-accent: var(--color-accent-purple);
+  }
+
   /* Two-column grid layout matching Experience style */
   .card-grid {
     display: grid;
@@ -110,19 +132,23 @@ const highlightMetrics = (text: string): string => {
     gap: var(--spacing-fluid-md);
   }
 
-  /* Label text - purple accent */
+  /* Right column content */
+  .card-content {
+    min-width: 0;
+  }
+
+  .card-content--clickable {
+    cursor: pointer;
+  }
+
+  /* Label text - uses card accent color */
   .label-text {
-    color: var(--color-accent-purple);
+    color: var(--card-accent);
   }
 
-  /* Metric highlighting - purple accent */
+  /* Metric highlighting - uses card accent color */
   .metric-highlight {
-    color: var(--color-accent-purple);
-  }
-
-  /* Tech pills styling */
-  .tech-pill {
-    border-radius: 0;
+    color: var(--card-accent);
   }
 
   /* Screen/Print visibility utilities */
@@ -134,9 +160,9 @@ const highlightMetrics = (text: string): string => {
     display: inline;
   }
 
-  /* Item separator - purple accent */
+  /* Item separator - uses card accent color */
   .item-separator {
-    color: var(--color-accent-purple);
+    color: var(--card-accent);
   }
 
   /* Remove default marker */
@@ -149,27 +175,40 @@ const highlightMetrics = (text: string): string => {
     content: '';
   }
 
-  /* Details toggle - purple accent for CTAs */
+  /* Details toggle - subtle lighter muted color */
   .details-toggle {
-    color: var(--color-accent-purple);
+    color: var(--color-muted-foreground-light);
   }
 
   .details-toggle:hover {
-    color: var(--color-accent-purple);
-    filter: brightness(1.2);
+    color: var(--card-accent);
   }
 
   .details-toggle .bracket {
-    color: var(--color-accent-purple);
+    color: var(--color-muted-foreground-light);
   }
 
   .details-toggle .toggle-text {
-    color: var(--color-accent-purple);
+    color: var(--color-muted-foreground-light);
+  }
+
+  .details-toggle:hover .bracket,
+  .details-toggle:hover .toggle-text,
+  .content-card:hover .details-toggle .bracket,
+  .content-card:hover .details-toggle .toggle-text {
+    color: var(--card-accent);
+  }
+
+  /* Terminal trigger button reset */
+  .terminal-trigger {
+    background: none;
+    border: none;
+    padding: 0;
   }
 
   /* Details content panel */
   .details-content {
-    border-color: var(--color-accent-purple);
+    border-color: var(--card-accent);
     color: var(--color-muted-foreground);
   }
 
@@ -283,3 +322,34 @@ const highlightMetrics = (text: string): string => {
     }
   }
 </style>
+
+<script>
+  // Terminal trigger handler - handles both button clicks and card clicks
+  function openTerminal(prompt: string) {
+    window.dispatchEvent(
+      new CustomEvent('open-rag-terminal', {
+        detail: { initialQuery: prompt },
+      })
+    );
+  }
+
+  // Attach click handlers to all terminal triggers
+  document.querySelectorAll('.terminal-trigger').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const prompt = (btn as HTMLElement).dataset['prompt'];
+      if (prompt) openTerminal(prompt);
+    });
+  });
+
+  // Attach click handlers to clickable card content areas
+  document.querySelectorAll('.card-content--clickable').forEach((card) => {
+    card.addEventListener('click', (e) => {
+      // Don't trigger if clicking the button (it has its own handler)
+      if ((e.target as HTMLElement).closest('.terminal-trigger')) return;
+      const prompt = (card as HTMLElement).dataset['prompt'];
+      if (prompt) openTerminal(prompt);
+    });
+  });
+</script>
