@@ -37,7 +37,7 @@ const formatTitle = (str: string) =>
   .section-with-label {
     --section-rule-spacing: var(--spacing-fluid-sm);
     margin-top: var(--section-rule-spacing);
-    margin-bottom: var(--spacing-fluid-md);
+    margin-bottom: var(--spacing-fluid-sm);
   }
 
   .section-with-label:first-child {
@@ -68,12 +68,10 @@ const formatTitle = (str: string) =>
     grid-column: span 10;
     min-width: 0;
     align-self: start;
-    border-top: 1px solid var(--color-border);
     padding-top: var(--spacing-fluid-sm);
   }
 
   .section-with-label:first-child .section-content {
-    border-top: none;
     padding-top: 0;
   }
 
@@ -111,12 +109,10 @@ const formatTitle = (str: string) =>
 
     .section-content {
       width: 100%;
-      border-top: 1px solid var(--color-border);
       padding-top: var(--spacing-fluid-sm);
     }
 
     .section-with-label:first-child .section-content {
-      border-top: none;
       padding-top: 0;
     }
 

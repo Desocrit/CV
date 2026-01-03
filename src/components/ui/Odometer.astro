@@ -40,7 +40,7 @@ const parsed = parseValue(value);
 >
   <!-- Initial state shows the full value for SSR/print/no-JS -->
   <span class="odometer-prefix">{parsed.prefix}</span>
-  <span class="odometer-number">{parsed.number}</span>
+  <span class="odometer-number" style={`min-width: ${String(parsed.number).length}ch`}>{parsed.number}</span>
   <span class="odometer-suffix">{parsed.suffix}</span>
 </span>
 
@@ -48,6 +48,14 @@ const parsed = parseValue(value);
   .odometer-value {
     display: inline-flex;
     align-items: baseline;
+  }
+
+  .odometer-number {
+    /* Use tabular figures for consistent digit widths */
+    font-variant-numeric: tabular-nums;
+    /* Prevent layout shift by reserving space */
+    display: inline-block;
+    text-align: right;
   }
 
   .odometer-prefix,
@@ -83,26 +91,37 @@ const parsed = parseValue(value);
       const target = parseInt(el.getAttribute('data-target') || '0', 10);
       const numberSpan = el.querySelector('.odometer-number');
 
-      if (!numberSpan || target === 0) return;
+      if (!numberSpan || target <= 0 || isNaN(target)) return;
 
       const duration = 1200;
-      const startTime = performance.now();
+      // Store start time as null, capture on first frame for accurate timing
+      let startTime = null;
+
+      // Reserve width based on target to prevent layout shift
+      const targetStr = target.toString();
+      numberSpan.style.display = 'inline-block';
+      numberSpan.style.minWidth = targetStr.length + 'ch';
 
       // Start from 0
       numberSpan.textContent = '0';
 
       function animate(currentTime) {
+        // Capture start time on first frame to avoid timing drift
+        if (startTime === null) {
+          startTime = currentTime;
+        }
+
         const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
+        const progress = Math.min(Math.max(elapsed / duration, 0), 1);
         const easedProgress = easeOutCubic(progress);
 
-        const currentValue = Math.round(easedProgress * target);
+        const currentValue = Math.max(0, Math.round(easedProgress * target));
         numberSpan.textContent = currentValue.toString();
 
         if (progress < 1) {
           requestAnimationFrame(animate);
         } else {
-          numberSpan.textContent = target.toString();
+          numberSpan.textContent = targetStr;
         }
       }
 
