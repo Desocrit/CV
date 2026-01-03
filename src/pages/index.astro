@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Sidebar from '../components/cv/Sidebar.astro';
 import Section from '../components/ui/Section.astro';
 import ContentCard from '../components/cv/ContentCard.astro';
-import LeadershipGrid from '../components/cv/LeadershipGrid.astro';
+import ImpactGrid from '../components/cv/ImpactGrid.astro';
 import { cvData } from '../lib/cv-data';
 
 const skillCategories = [
@@ -44,8 +44,8 @@ const workExperiences = cvData.work_history.map((exp) => {
 
 const educationData = cvData.education.map((edu) => ({
   institution: edu.institution,
-  degree: edu.degree,
-  field: '',
+  degree: edu.degree_title ?? edu.degree,
+  field: edu.specialism ?? edu.degree,
   startDate: String(edu.year),
   endDate: String(edu.year),
 }));
@@ -58,10 +58,12 @@ const educationData = cvData.education.map((edu) => ({
   jobTitle={cvData.role}
   email={cvData.email}
   location={cvData.location}
+  website={cvData.website}
   socialLinks={socialLinks}
   workExperiences={workExperiences}
   education={educationData}
   knowsAbout={cvData.meta.keywords}
+  summary={cvData.summary}
 >
   <div class="cv-layout">
     <Sidebar
@@ -72,6 +74,7 @@ const educationData = cvData.education.map((edu) => ({
       linkedin={cvData.linkedin}
       github={cvData.github}
       website={cvData.website}
+      profile={cvData.summary}
       achievements={cvData.outlier_achievements}
       education={{
         degree: cvData.education[0]?.degree ?? '',
@@ -85,47 +88,48 @@ const educationData = cvData.education.map((edu) => ({
     />
 
     <div class="main-column">
-      <Section title="Profile" id="profile">
-        <p class="text-fluid-sm text-muted-foreground leading-relaxed">
-          {cvData.summary}
-        </p>
-      </Section>
-
-      <Section title="Projects" id="projects">
-        <div class="content-list">
-          {cvData.projects.slice(0, 4).map((project) => (
-            <div class="content-item border-t border-border pt-fluid-sm pb-fluid-sm first:border-t-0 first:pt-0">
-              <ContentCard
-                title={project.project_title}
-                tag={project.subtitle}
-                technologies={project.stack_and_tools}
-                headline={project.the_premise}
-                bulletPoints={project.impact_and_acclaim}
-                details={project.technical_meat}
-              />
+      <div class="main-content">
+        <div class="projects-section">
+          <Section title="Projects" id="projects">
+            <div class="content-list">
+              {cvData.projects.slice(0, 4).map((project) => (
+                <div class="content-item border-t border-border pt-fluid-sm pb-fluid-sm first:border-t-0 first:pt-0">
+                  <ContentCard
+                    title={project.project_title}
+                    tag={project.subtitle}
+                    technologies={project.stack_and_tools}
+                    headline={project.the_premise}
+                    bulletPoints={project.impact_and_acclaim}
+                    prompt={project.prompt}
+                    useTerminal={true}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          </Section>
         </div>
-      </Section>
 
-      <Section title="History" id="history">
-        <div class="content-list">
-          {cvData.work_history.map((job) => (
-            <div class="content-item border-t border-border pt-fluid-sm pb-fluid-sm first:border-t-0 first:pt-0">
-              <ContentCard
-                title={job.role}
-                tag={job.tenure}
-                label={job.company}
-                technologies={job.tech_stack}
-                headline={job.summary}
-                bulletPoints={job.impact}
-              />
+        <ImpactGrid nodes={impactNodes} />
+
+        <div class="history-section">
+          <Section title="History" id="history">
+            <div class="content-list">
+              {cvData.work_history.map((job) => (
+                <div class="content-item border-t border-border pt-fluid-sm pb-fluid-sm first:border-t-0 first:pt-0">
+                  <ContentCard
+                    title={job.role}
+                    tag={job.tenure}
+                    label={job.company}
+                    technologies={job.tech_stack}
+                    headline={job.summary}
+                    bulletPoints={job.impact}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          </Section>
         </div>
-      </Section>
-
-      <LeadershipGrid nodes={impactNodes} />
+      </div>
     </div>
   </div>
 </Layout>
@@ -142,7 +146,11 @@ const educationData = cvData.education.map((edu) => ({
   .main-column {
     min-width: 0;
     overflow-y: auto;
-    padding: var(--spacing-fluid-lg) var(--spacing-fluid-lg) var(--spacing-fluid-xl) 0;
+  }
+
+  .main-content {
+    max-width: 80ch;
+    padding: var(--spacing-fluid-lg);
   }
 
   @media (max-width: 1024px) {
@@ -155,8 +163,54 @@ const educationData = cvData.education.map((edu) => ({
 
     .main-column {
       overflow-y: visible;
+    }
+
+    .main-content {
       padding: var(--spacing-fluid-md);
     }
+  }
+
+  /* Projects section color cycling: green → purple → blue → green */
+  .projects-section .content-item:nth-child(1) :global(.content-card) { --card-accent: var(--color-accent-green); }
+  .projects-section .content-item:nth-child(2) :global(.content-card) { --card-accent: var(--color-accent-purple); }
+  .projects-section .content-item:nth-child(3) :global(.content-card) { --card-accent: var(--color-accent-blue); }
+  .projects-section .content-item:nth-child(4) :global(.content-card) { --card-accent: var(--color-accent-green); }
+
+  /* History section color cycling: green → purple → blue */
+  .history-section .content-item:nth-child(1) :global(.content-card) { --card-accent: var(--color-accent-green); }
+  .history-section .content-item:nth-child(2) :global(.content-card) { --card-accent: var(--color-accent-purple); }
+  .history-section .content-item:nth-child(3) :global(.content-card) { --card-accent: var(--color-accent-blue); }
+
+  /* Section title hover effects - Projects */
+  .projects-section:has(.content-item:nth-child(1):hover) :global(.section-title) {
+    color: var(--color-accent-green);
+    transition: color 0.15s ease;
+  }
+  .projects-section:has(.content-item:nth-child(2):hover) :global(.section-title) {
+    color: var(--color-accent-purple);
+    transition: color 0.15s ease;
+  }
+  .projects-section:has(.content-item:nth-child(3):hover) :global(.section-title) {
+    color: var(--color-accent-blue);
+    transition: color 0.15s ease;
+  }
+  .projects-section:has(.content-item:nth-child(4):hover) :global(.section-title) {
+    color: var(--color-accent-green);
+    transition: color 0.15s ease;
+  }
+
+  /* Section title hover effects - History */
+  .history-section:has(.content-item:nth-child(1):hover) :global(.section-title) {
+    color: var(--color-accent-green);
+    transition: color 0.15s ease;
+  }
+  .history-section:has(.content-item:nth-child(2):hover) :global(.section-title) {
+    color: var(--color-accent-purple);
+    transition: color 0.15s ease;
+  }
+  .history-section:has(.content-item:nth-child(3):hover) :global(.section-title) {
+    color: var(--color-accent-blue);
+    transition: color 0.15s ease;
   }
 
   @media print {
@@ -171,6 +225,10 @@ const educationData = cvData.education.map((edu) => ({
     .main-column {
       margin-top: 0;
       overflow: visible;
+    }
+
+    .main-content {
+      max-width: none;
       padding: 0;
     }
 

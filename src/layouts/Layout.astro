@@ -1,8 +1,7 @@
 ---
 import '../styles/global.css';
 import GlitchEffect from '../components/ui/GlitchEffect.astro';
-// TODO: Re-enable when RAG terminal is ready
-// import TerminalWrapper from '../components/ui/terminal/TerminalWrapper';
+import TerminalWrapper from '../components/ui/terminal/TerminalWrapper';
 
 interface SocialLink {
   platform: string;
@@ -34,11 +33,13 @@ interface Props {
   email?: string;
   location?: string;
   url?: string;
+  website?: string;
   image?: string;
   socialLinks?: SocialLink[];
   workExperiences?: WorkExperience[];
   education?: Education[];
   knowsAbout?: string[];
+  summary?: string;
 }
 
 const {
@@ -49,11 +50,13 @@ const {
   email,
   location,
   url = Astro.url.href,
+  website,
   image = '/og-image.png',
   socialLinks = [],
   workExperiences = [],
   education = [],
   knowsAbout = [],
+  summary,
 } = Astro.props;
 
 // Build JSON-LD structured data
@@ -62,6 +65,7 @@ const jsonLd = {
   '@type': 'Person',
   name,
   ...(jobTitle && { jobTitle }),
+  ...(summary && { description: summary }),
   ...(email && { email: `mailto:${email}` }),
   ...(location && {
     address: {
@@ -69,7 +73,7 @@ const jsonLd = {
       addressLocality: location,
     },
   }),
-  url,
+  url: website ?? url,
   ...(socialLinks.length > 0 && {
     sameAs: socialLinks.map((link) => link.url),
   }),
@@ -142,6 +146,16 @@ const jsonLd = {
         }
       })();
     </script>
+
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js').catch(function(error) {
+            console.warn('SW registration failed:', error);
+          });
+        });
+      }
+    </script>
   </head>
   <body class="bg-background text-foreground antialiased">
     <a href="#main-content" class="skip-link"> Skip to main content </a>
@@ -154,8 +168,7 @@ const jsonLd = {
       <slot />
     </main>
 
-    <!-- TODO: Re-enable when RAG terminal is ready -->
-    <!-- <TerminalWrapper client:only="react" /> -->
+    <TerminalWrapper client:only="react" />
 
     <GlitchEffect />
   </body>
