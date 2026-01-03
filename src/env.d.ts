@@ -2,7 +2,7 @@
 
 interface ImportMetaEnv {
   readonly DATABASE_URL: string;
-  readonly AI_GATEWAY_KEY: string;
+  readonly AI_GATEWAY_API_KEY: string;
 }
 
 interface ImportMeta {
