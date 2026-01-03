@@ -7,6 +7,27 @@ const yamlContent = await import('../content/main.yaml?raw').then(
 
 const nonEmptyString = z.string().min(1);
 
+// Tech tag with name, canonical URL, and optional sassy tooltip
+export const techTagSchema = z.object({
+  name: nonEmptyString,
+  url: z.string().url(),
+  tooltip: nonEmptyString.optional(),
+});
+
+export type TechTag = z.infer<typeof techTagSchema>;
+
+// Tokyo Night-inspired terminal palette
+export const impactColorSchema = z.enum([
+  'green',   // existing accent-green
+  'purple',  // existing accent-purple
+  'blue',    // Tokyo Night blue
+  'orange',  // Tokyo Night orange
+  'red',     // Tokyo Night red
+  'cyan',    // Tokyo Night cyan
+]);
+
+export type ImpactColor = z.infer<typeof impactColorSchema>;
+
 export const outlierAchievementSchema = z.object({
   metric: nonEmptyString,
   headline: nonEmptyString,
@@ -16,12 +37,13 @@ export const outlierAchievementSchema = z.object({
 export const projectSchema = z.object({
   project_title: nonEmptyString,
   subtitle: nonEmptyString.optional(),
-  stack_and_tools: z.array(nonEmptyString),
+  stack_and_tools: z.array(techTagSchema),
   the_premise: nonEmptyString,
   technical_meat: nonEmptyString,
   impact_and_acclaim: z.array(nonEmptyString),
   role: nonEmptyString.optional(),
   status: nonEmptyString,
+  prompt: nonEmptyString.optional(),
 });
 
 export const workHistorySchema = z.object({
@@ -30,7 +52,7 @@ export const workHistorySchema = z.object({
   tenure: nonEmptyString,
   summary: nonEmptyString,
   impact: z.array(nonEmptyString),
-  tech_stack: z.array(nonEmptyString),
+  tech_stack: z.array(techTagSchema),
 });
 
 export const skillsSchema = z.object({
@@ -51,15 +73,11 @@ export const educationSchema = z.object({
 });
 
 export const impactNodeSchema = z.object({
-  pillar: nonEmptyString,
-  items: z.array(
-    z.object({
-      primary: nonEmptyString,
-      detail: nonEmptyString,
-      action: nonEmptyString.optional(),
-      drilldown: nonEmptyString.optional(),
-    })
-  ),
+  header: nonEmptyString,
+  title: nonEmptyString,
+  description: nonEmptyString,
+  prompt: nonEmptyString,
+  color: impactColorSchema,
 });
 
 export const cvSchema = z.object({
