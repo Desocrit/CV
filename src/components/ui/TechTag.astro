@@ -1,0 +1,93 @@
+---
+/**
+ * TechTag - Instrumented Diagnostic Node
+ *
+ * Interactive technology tag with micro-animation linking to
+ * canonical literature or frontier overviews.
+ */
+interface Props {
+  name: string;
+  url: string;
+  tooltip?: string;
+  class?: string;
+}
+
+const { name, url, tooltip, class: className = '' } = Astro.props;
+---
+
+<a
+  href={url}
+  target="_blank"
+  rel="noopener noreferrer"
+  class:list={['tech-tag', className]}
+  title={tooltip}
+>
+  <span class="tech-tag-text">{name}</span>
+  <span class="tech-tag-sweep" aria-hidden="true"></span>
+</a>
+
+<style>
+  /* Match original: font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 border border-border text-muted-foreground */
+  .tech-tag {
+    --tag-accent: var(--card-accent, var(--color-accent-purple));
+
+    position: relative;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.125rem 0.5rem;
+    border: 1px solid var(--color-border);
+    color: var(--color-muted-foreground);
+    text-decoration: none;
+  }
+
+  .tech-tag-text {
+    pointer-events: none;
+  }
+
+  /* The Glimmer - spotlight sweep on border, hover only */
+  .tech-tag-sweep {
+    position: absolute;
+    inset: -1px;
+    padding: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--tag-accent) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    background-position: 200% 0;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .tech-tag:hover .tech-tag-sweep {
+    animation: glimmer 400ms linear forwards;
+  }
+
+  @keyframes glimmer {
+    0% {
+      opacity: 1;
+      background-position: 200% 0;
+    }
+    100% {
+      opacity: 0;
+      background-position: -100% 0;
+    }
+  }
+
+  .tech-tag:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+</style>
