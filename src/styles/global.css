@@ -84,6 +84,12 @@
   --color-accent-purple: #9d7cd8;
   --color-accent-green: #37BF51;
 
+  /* Tokyo Night terminal palette */
+  --color-accent-blue: #7aa2f7;
+  --color-accent-orange: #ff9e64;
+  --color-accent-red: #f7768e;
+  --color-accent-cyan: #73daca;
+
   --tracking-widest-plus: 0.2em;
 }
 
@@ -123,8 +129,14 @@
   --color-terminal-prompt: #5A5A5E;
   --color-terminal-accent: #323234;
 
-  --color-accent-purple: #6E56AF;
+  --color-accent-purple: #1e3a5f;
   --color-accent-green: #323234;
+
+  /* Tokyo Night light variants */
+  --color-accent-blue: #2e5a9e;
+  --color-accent-orange: #b86a3a;
+  --color-accent-red: #a14459;
+  --color-accent-cyan: #3a8a7a;
 }
 
 [data-theme='light'] h1,
@@ -135,6 +147,11 @@
 [data-theme='light'] .mono-marker {
   font-weight: 500;
   letter-spacing: -0.01em;
+}
+
+[data-theme='light'] .font-mono,
+[data-theme='light'] [class*="font-mono"] {
+  font-weight: 500;
 }
 
 [data-theme='light'] .metadata-spec {
@@ -366,7 +383,7 @@
     --color-achievement: #1a1a1a;
     --color-terminal-bg: transparent;
     --color-terminal-text: #1a1a1a;
-    --color-accent-purple: #1a1a1a;
+    --color-accent-purple: #1e3a5f;
     --color-accent-green: #1a1a1a;
   }
 
@@ -383,6 +400,11 @@
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
     overflow: visible;
+  }
+
+  .font-mono,
+  [class*="font-mono"] {
+    font-weight: 500;
   }
 
   main {
