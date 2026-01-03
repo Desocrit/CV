@@ -85,7 +85,7 @@ describe('Build Output Smoke Tests', () => {
     expect(document.querySelector('a[href="#main-content"]')).not.toBeNull();
 
     // Section headings (SCREAMING_SNAKE_CASE in section-title-text spans)
-    expect(getByText(container, 'PROFILE')).not.toBeNull();
+    expect(getByText(container, 'PROJECTS')).not.toBeNull();
     expect(getByText(container, 'HISTORY')).not.toBeNull();
   });
 
