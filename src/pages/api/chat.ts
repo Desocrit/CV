@@ -1,127 +1,89 @@
 import type { APIRoute } from 'astro';
 import { neon } from '@neondatabase/serverless';
-import { createOpenAI } from '@ai-sdk/openai';
-import { streamText, embed } from 'ai';
+import { createGatewayProvider } from '@ai-sdk/gateway';
+
+import {
+  chatRequestSchema,
+  createMessageAdapter,
+  createCVAgent,
+} from '../../lib/agent';
 
 export const prerender = false;
 
-interface EmbeddingResult {
-  content: string;
-  metadata: { node_id?: string };
-  similarity: number;
+// ============================================================================
+// Error Responses
+// ============================================================================
+
+function errorResponse(message: string, status: number, details?: unknown): Response {
+  return new Response(
+    JSON.stringify({
+      error: message,
+      ...(details !== undefined && { details }),
+    }),
+    {
+      status,
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
 }
 
-interface ChatMessage {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
+function configurationError(): Response {
+  return errorResponse('Missing required configuration', 500);
 }
 
-const SYSTEM_PROMPT = `You are a high-tier technical architect assistant embedded in Chris Saunders' CV system. You have access to his professional history, technical achievements, and career documentation.
+function validationError(issues: unknown): Response {
+  return errorResponse('Invalid request format', 400, issues);
+}
 
-PERSONALITY:
-- Clinical, precise, and data-driven
-- Respond with technical accuracy and professional insight
-- Always cite your sources using [NODE_XX] format when referencing CV content
+function internalError(error: unknown): Response {
+  console.error('[chat] Internal error:', error);
+  return errorResponse(
+    'Internal server error',
+    500,
+    error instanceof Error ? error.message : 'Unknown error'
+  );
+}
 
-RESTRICTIONS:
-- Only answer questions related to Chris's professional background, skills, projects, and career
-- For personal or off-topic queries, respond: "ERR_403_ACCESS_DENIED: Query outside authorized scope. Please limit queries to professional context."
-- If asked for career advice, base responses on the documented experience and institutional strategy pillars
-- Never fabricate information - only use the context provided
-
-FORMAT:
-- Keep responses concise and terminal-appropriate
-- Use technical language consistent with the CV's tone
-- Reference specific achievements, metrics, or projects when relevant`;
+// ============================================================================
+// API Route Handler
+// ============================================================================
 
 export const POST: APIRoute = async ({ request }) => {
+  // 1. Validate environment configuration
+  const databaseUrl = import.meta.env.DATABASE_URL;
+  const apiKey = import.meta.env.AI_GATEWAY_API_KEY;
+
+  if (!databaseUrl || !apiKey) {
+    return configurationError();
+  }
+
   try {
-    const { messages } = (await request.json()) as { messages: ChatMessage[] };
+    // 2. Parse and validate request body
+    const body = await request.json();
+    const parseResult = chatRequestSchema.safeParse(body);
 
-    if (!messages || !Array.isArray(messages)) {
-      return new Response(JSON.stringify({ error: 'Invalid request body' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    if (!parseResult.success) {
+      return validationError(parseResult.error.issues);
     }
 
-    const databaseUrl = import.meta.env.DATABASE_URL;
-    const aiGatewayKey = import.meta.env.AI_GATEWAY_KEY;
+    // 3. Adapt messages from UIMessage to ModelMessage format
+    const adapter = createMessageAdapter();
+    const modelMessages = await adapter.toModelMessages(parseResult.data.messages);
 
-    if (!databaseUrl || !aiGatewayKey) {
-      return new Response(
-        JSON.stringify({ error: 'Missing environment configuration' }),
-        {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
+    if (modelMessages.length === 0) {
+      return validationError('No valid messages in request');
     }
 
-    // Get the latest user message for embedding
-    const lastUserMessage = messages.filter((m) => m.role === 'user').pop();
-
-    if (!lastUserMessage) {
-      return new Response(JSON.stringify({ error: 'No user message found' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    // Create OpenAI client via AI Gateway
-    const openai = createOpenAI({
-      apiKey: aiGatewayKey,
-      baseURL: 'https://gateway.ai.vercel.com/v1/openai',
-    });
-
-    // Generate embedding for the query
-    const { embedding } = await embed({
-      model: openai.embedding('text-embedding-3-small'),
-      value: lastUserMessage.content,
-    });
-
-    // Query Neon for similar content
+    // 4. Create agent with dependencies
+    const provider = createGatewayProvider({ apiKey });
     const sql = neon(databaseUrl);
-    const results = (await sql`
-      SELECT content, metadata, 1 - (embedding <=> ${JSON.stringify(embedding)}::vector) as similarity
-      FROM cv_embeddings
-      ORDER BY embedding <=> ${JSON.stringify(embedding)}::vector
-      LIMIT 5
-    `) as EmbeddingResult[];
+    const agent = createCVAgent({ provider, sql });
 
-    // Build context from retrieved documents
-    const context = results
-      .filter((r) => r.similarity > 0.3)
-      .map((r) => `[NODE_${r.metadata.node_id || 'UNKNOWN'}]: ${r.content}`)
-      .join('\n\n');
-
-    // Augment the messages with retrieved context
-    const augmentedMessages: ChatMessage[] = [
-      {
-        role: 'system',
-        content: `${SYSTEM_PROMPT}\n\n---\nRETRIEVED CONTEXT:\n${context || 'No relevant context found in the database.'}`,
-      },
-      ...messages,
-    ];
-
-    // Stream response from LLM
-    const result = streamText({
-      model: openai('gpt-4o-mini'),
-      messages: augmentedMessages,
-    });
+    // 5. Stream response
+    const result = agent.stream({ messages: modelMessages });
 
     return result.toTextStreamResponse();
   } catch (error) {
-    console.error('Chat API error:', error);
-    return new Response(
-      JSON.stringify({
-        error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
+    return internalError(error);
   }
 };

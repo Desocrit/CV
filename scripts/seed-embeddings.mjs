@@ -8,7 +8,7 @@
  * 1. Create the cv_embeddings table in Neon (see SQL below)
  * 2. Set environment variables:
  *    - DATABASE_URL: Your Neon connection string
- *    - OPENAI_API_KEY: Your OpenAI API key
+ *    - VERCEL_AI_GATEWAY_API_KEY: Your Vercel AI Gateway key
  *
  * SQL to create table:
  * ```sql
@@ -24,54 +24,41 @@
  * CREATE INDEX ON cv_embeddings USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
  * ```
  *
- * Usage:
- * ```bash
- * DATABASE_URL=your_url OPENAI_API_KEY=your_key node scripts/seed-embeddings.mjs
+ * Usage (Windows CMD):
+ * ```cmd
+ * set DATABASE_URL=your_url && set VERCEL_AI_GATEWAY_API_KEY=your_key && node scripts/seed-embeddings.mjs
  * ```
  */
 
 import { neon } from '@neondatabase/serverless';
 import { readFileSync } from 'fs';
 import { parse } from 'yaml';
+import { openai } from '@ai-sdk/openai';
+import { embed } from 'ai';
 
 const DATABASE_URL = process.env.DATABASE_URL;
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 if (!DATABASE_URL) {
   console.error('ERROR: DATABASE_URL environment variable is required');
   process.exit(1);
 }
 
-if (!OPENAI_API_KEY) {
-  console.error('ERROR: OPENAI_API_KEY environment variable is required');
+if (!process.env.AI_GATEWAY_API_KEY) {
+  console.error('ERROR: AI_GATEWAY_API_KEY environment variable is required');
   process.exit(1);
 }
 
 const sql = neon(DATABASE_URL);
 
 /**
- * Generate embedding using OpenAI's text-embedding-3-small model
+ * Generate embedding using AI SDK via Vercel AI Gateway
  */
 async function generateEmbedding(text) {
-  const response = await fetch('https://api.openai.com/v1/embeddings', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${OPENAI_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'text-embedding-3-small',
-      input: text,
-    }),
+  const { embedding } = await embed({
+    model: 'text-embedding-3-small',
+    value: text,
   });
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`OpenAI API error: ${error}`);
-  }
-
-  const data = await response.json();
-  return data.data[0].embedding;
+  return embedding;
 }
 
 /**
@@ -102,10 +89,11 @@ function parseContentIntoChunks(yamlContent) {
   // Projects
   if (data.projects) {
     data.projects.forEach((project, i) => {
+      const techStack = project.stack_and_tools.map(t => t.name).join(', ');
       chunks.push({
         node_id: `03_${String(i).padStart(2, '0')}`,
         category: 'project',
-        content: `Project: ${project.project_title} (${project.subtitle}). Role: ${project.role}. Stack: ${project.stack_and_tools.join(', ')}. Premise: ${project.the_premise} Technical details: ${project.technical_meat} Impact: ${project.impact_and_acclaim.join('. ')} Status: ${project.status}`,
+        content: `Project: ${project.project_title} (${project.subtitle || ''}). Role: ${project.role || 'N/A'}. Stack: ${techStack}. Premise: ${project.the_premise} Technical details: ${project.technical_meat} Impact: ${project.impact_and_acclaim.join('. ')} Status: ${project.status}`,
       });
     });
   }
@@ -113,10 +101,11 @@ function parseContentIntoChunks(yamlContent) {
   // Work history
   if (data.work_history) {
     data.work_history.forEach((job, i) => {
+      const techStack = job.tech_stack.map(t => t.name).join(', ');
       chunks.push({
         node_id: `04_${String(i).padStart(2, '0')}`,
         category: 'work_history',
-        content: `Work experience at ${job.company} as ${job.role} (${job.tenure}). Summary: ${job.summary}. Key impact: ${job.impact.join('. ')}. Tech stack: ${job.tech_stack.join(', ')}.`,
+        content: `Work experience at ${job.company} as ${job.role} (${job.tenure}). Summary: ${job.summary}. Key impact: ${job.impact.join('. ')}. Tech stack: ${techStack}.`,
       });
     });
   }
@@ -150,13 +139,11 @@ function parseContentIntoChunks(yamlContent) {
   // Impact nodes
   if (data.impact_nodes) {
     data.impact_nodes.forEach((node, i) => {
-      node.items.forEach((item, j) => {
-        chunks.push({
-          node_id: `07_${String(i).padStart(2, '0')}_${String(j).padStart(2, '0')}`,
-          category: 'impact',
-          pillar: node.pillar,
-          content: `Impact (${node.pillar}): ${item.primary}. ${item.detail}`,
-        });
+      chunks.push({
+        node_id: `07_${String(i).padStart(2, '0')}`,
+        category: 'impact',
+        header: node.header,
+        content: `Impact (${node.header}): ${node.title}. ${node.description}. RAG prompt: ${node.prompt}`,
       });
     });
   }
@@ -209,11 +196,13 @@ async function seedEmbeddings() {
       const embedding = await generateEmbedding(chunk.content);
 
       // Insert into database
+      const metadata = { node_id: chunk.node_id, category: chunk.category };
+      if (chunk.header) metadata.header = chunk.header;
       await sql`
         INSERT INTO cv_embeddings (content, metadata, embedding)
         VALUES (
           ${chunk.content},
-          ${JSON.stringify({ node_id: chunk.node_id, category: chunk.category, pillar: chunk.pillar })},
+          ${JSON.stringify(metadata)},
           ${JSON.stringify(embedding)}::vector
         )
       `;
