@@ -80,7 +80,7 @@ const highlightMetrics = (text: string): string => {
           const highlighted = highlightMetrics(cleanItem);
           return (
             <li class="flex items-baseline gap-2 text-muted-foreground">
-              <span class="item-separator shrink-0" aria-hidden="true">–</span>
+              <span class="item-separator shrink-0" aria-hidden="true">~</span>
               <span set:html={highlighted} />
             </li>
           );

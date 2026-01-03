@@ -13,9 +13,9 @@ export default function TerminalWrapper() {
   const [initialQuery, setInitialQuery] = useState<string | undefined>();
   const [nodeId, setNodeId] = useState<string | undefined>();
 
-  const handleOpen = useCallback((event: TerminalOpenEvent) => {
-    setInitialQuery(event.detail?.initialQuery);
-    setNodeId(event.detail?.nodeId);
+  const handleOpen = useCallback((event?: TerminalOpenEvent) => {
+    setInitialQuery(event?.detail?.initialQuery);
+    setNodeId(event?.detail?.nodeId);
     setIsOpen(true);
   }, []);
 
@@ -25,17 +25,25 @@ export default function TerminalWrapper() {
     setNodeId(undefined);
   }, []);
 
+  // Simple reopen handler for FAB (no query/nodeId needed)
+  const handleReopen = useCallback(() => {
+    setIsOpen(true);
+  }, []);
+
   useEffect(() => {
     window.addEventListener('open-rag-terminal', handleOpen as EventListener);
+    window.addEventListener('terminal:open', handleReopen);
     return () => {
       window.removeEventListener('open-rag-terminal', handleOpen as EventListener);
+      window.removeEventListener('terminal:open', handleReopen);
     };
-  }, [handleOpen]);
+  }, [handleOpen, handleReopen]);
 
   return (
     <RAGTerminal
       isOpen={isOpen}
       onClose={handleClose}
+      onOpen={handleReopen}
       initialQuery={initialQuery}
       nodeId={nodeId}
     />

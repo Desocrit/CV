@@ -21,6 +21,7 @@ marked.setOptions({
 interface RAGTerminalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpen?: () => void;
   initialQuery?: string;
   nodeId?: string;
 }
@@ -54,6 +55,7 @@ let hasBootedThisSession = false;
 export default function RAGTerminal({
   isOpen,
   onClose,
+  onOpen,
   initialQuery,
   nodeId,
 }: RAGTerminalProps) {
@@ -65,6 +67,8 @@ export default function RAGTerminal({
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [pendingQuery, setPendingQuery] = useState<string | null>(null);
+  const [isClosing, setIsClosing] = useState(false);
+  const [hasEverOpened, setHasEverOpened] = useState(hasBootedThisSession);
 
   const terminalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -81,6 +85,15 @@ export default function RAGTerminal({
 
   const isLoading = status === 'submitted' || status === 'streaming';
 
+  // Handle closing with CRT fade-out animation
+  const handleClose = useCallback(() => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsClosing(false);
+      onClose();
+    }, 150);
+  }, [onClose]);
+
   // Set pending query when initialQuery changes
   useEffect(() => {
     if (initialQuery && isOpen) {
@@ -92,6 +105,7 @@ export default function RAGTerminal({
   // Boot sequence with forensic data (only runs once per session)
   useEffect(() => {
     if (isOpen && bootPhase === 'idle' && !hasBootedThisSession) {
+      setHasEverOpened(true);
       setBootPhase('booting');
       setBootMessages([]);
 
@@ -111,6 +125,7 @@ export default function RAGTerminal({
       }, 900);
     } else if (isOpen && hasBootedThisSession) {
       // Already booted, just ensure we're ready and focused
+      setHasEverOpened(true);
       setBootPhase('ready');
       inputRef.current?.focus();
     }
@@ -145,14 +160,14 @@ export default function RAGTerminal({
   // Keyboard handler for escape
   useEffect(() => {
     const handleKeyDown = (e: globalThis.KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
+      if (e.key === 'Escape' && isOpen && !isClosing) {
+        handleClose();
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [isOpen, isClosing, handleClose]);
 
   // Handle input key events for history navigation
   const handleInputKeyDown = useCallback(
@@ -217,14 +232,97 @@ export default function RAGTerminal({
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  // Handle FAB click - use onOpen if provided, otherwise dispatch custom event
+  const handleFabClick = useCallback(() => {
+    if (onOpen) {
+      onOpen();
+    } else {
+      // Dispatch custom event for parent components to listen to
+      window.dispatchEvent(new CustomEvent('terminal:open'));
+    }
+  }, [onOpen]);
+
+  // Show floating icon when closed but has been opened before
+  if (!isOpen && !isClosing) {
+    return hasEverOpened ? (
+      <button
+        className="terminal-floating-icon"
+        onClick={handleFabClick}
+        aria-label="Reopen terminal"
+      >
+        <span className="floating-icon-pulse" />
+        <span className="floating-icon-text">&gt;_</span>
+        <style>{`
+          .terminal-floating-icon {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: rgba(5, 5, 8, 0.95);
+            border: 1px solid rgba(55, 191, 81, 0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            color: #37BF51;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 40;
+            transition: all 0.2s ease;
+            box-shadow:
+              0 4px 12px rgba(0, 0, 0, 0.3),
+              0 0 20px rgba(55, 191, 81, 0.1);
+          }
+
+          .terminal-floating-icon:hover {
+            border-color: rgba(55, 191, 81, 0.6);
+            box-shadow:
+              0 4px 16px rgba(0, 0, 0, 0.4),
+              0 0 30px rgba(55, 191, 81, 0.2);
+            transform: translateY(-2px);
+          }
+
+          .floating-icon-pulse {
+            position: absolute;
+            inset: -1px;
+            border-radius: 8px;
+            border: 1px solid rgba(55, 191, 81, 0.4);
+            animation: floatingPulse 2s ease-in-out infinite;
+          }
+
+          @keyframes floatingPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.05); }
+          }
+
+          .floating-icon-text {
+            position: relative;
+            z-index: 1;
+          }
+
+          @media (max-width: 768px) {
+            .terminal-floating-icon {
+              bottom: 1rem;
+              right: 1rem;
+              width: 40px;
+              height: 40px;
+              font-size: 12px;
+            }
+          }
+        `}</style>
+      </button>
+    ) : null;
+  }
 
   return (
     <>
       {/* Main terminal container - inline bottom panel */}
       <div
         ref={terminalRef}
-        className="rag-terminal"
+        className={`rag-terminal ${isClosing ? 'terminal-closing' : ''}`}
         role="dialog"
         aria-label="Forensic Analysis Terminal"
         aria-modal="true"
@@ -240,11 +338,11 @@ export default function RAGTerminal({
             <span>FORENSIC_ANALYSIS_CONSOLE</span>
           </div>
           <div className="terminal-header-actions">
-            <span className="terminal-status">
+            <span className={`terminal-status ${!isLoading ? 'terminal-status-ready' : ''}`}>
               {isLoading ? '[PROCESSING]' : '[READY]'}
             </span>
             <button
-              onClick={onClose}
+              onClick={handleClose}
               className="terminal-close"
               aria-label="Close terminal"
             >
@@ -377,14 +475,27 @@ export default function RAGTerminal({
           }
 
           :global(body.terminal-open #main-content) {
-            height: 60vh !important;
+            height: calc(100vh - 40vh) !important;
             overflow-y: auto !important;
+            padding-bottom: 1rem !important;
+          }
+
+          /* Add spacer to sidebar so user can scroll to see all content */
+          :global(body.terminal-open .sidebar-column) {
+            padding-bottom: calc(40vh + 2rem) !important;
+          }
+
+          /* Dim gutter markers (// PROJECTS, // IMPACT) when terminal is active */
+          :global(body.terminal-open .section-label) {
+            opacity: 0.3 !important;
+            transition: opacity 0.3s ease;
           }
 
           .rag-terminal {
             position: fixed;
             bottom: 0;
-            left: 0;
+            /* Position in main content area - sidebar is 380px on desktop */
+            left: 380px;
             right: 0;
             height: 40vh;
             min-height: 280px;
@@ -394,6 +505,7 @@ export default function RAGTerminal({
             flex-direction: column;
             background: rgba(5, 5, 8, 0.98);
             border-top: 1px solid rgba(55, 191, 81, 0.3);
+            border-left: 1px solid rgba(55, 191, 81, 0.15);
             font-family: var(--font-mono);
             font-size: 11px;
             color: #888;
@@ -413,6 +525,27 @@ export default function RAGTerminal({
             to {
               transform: translateY(0);
               opacity: 1;
+            }
+          }
+
+          /* CRT power-off animation - slides down */
+          .terminal-closing {
+            animation: crtPowerOff 0.15s ease-in forwards;
+          }
+
+          @keyframes crtPowerOff {
+            0% {
+              opacity: 1;
+              transform: translateY(0);
+              filter: brightness(1);
+            }
+            30% {
+              filter: brightness(1.3);
+            }
+            100% {
+              opacity: 0;
+              transform: translateY(100%);
+              filter: brightness(0.5);
             }
           }
 
@@ -509,6 +642,22 @@ export default function RAGTerminal({
             color: #555;
             font-size: 9px;
             letter-spacing: 0.1em;
+          }
+
+          .terminal-status-ready {
+            color: #37BF51;
+            animation: statusPulse 2s ease-in-out infinite;
+          }
+
+          @keyframes statusPulse {
+            0%, 100% {
+              opacity: 1;
+              text-shadow: 0 0 4px rgba(55, 191, 81, 0.5);
+            }
+            50% {
+              opacity: 0.6;
+              text-shadow: 0 0 8px rgba(55, 191, 81, 0.8);
+            }
           }
 
           .terminal-close {
@@ -826,15 +975,21 @@ export default function RAGTerminal({
             color: #37BF51;
           }
 
-          /* Mobile responsive */
-          @media (max-width: 768px) {
+          /* Mobile - stacked layout, terminal goes full width */
+          @media (max-width: 1024px) {
             :global(body.terminal-open #main-content) {
               height: 50vh !important;
             }
 
+            :global(body.terminal-open .sidebar-column) {
+              padding-bottom: 0 !important;
+            }
+
             .rag-terminal {
+              left: 0;
               height: 50vh;
               min-height: 240px;
+              border-left: none;
             }
 
             .terminal-sidebar {
