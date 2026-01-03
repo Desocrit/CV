@@ -9,8 +9,8 @@ linkedin: https://www.linkedin.com/in/christopher-saunders-48b092110/
 
 # Abstract
 summary: >
-  High impact, high velocity engineer, with deep expertise in AI and infrastructure, and a
-  proven track record of transforming engineering culture, and leading large strategic initiatives.
+  Deep expertise in AI systems and infrastructure at scale.
+  Drives culture transformation and strategic initiatives.
 
 outlier_achievements:
   - metric: Throughput
@@ -26,54 +26,107 @@ outlier_achievements:
 projects:
   - project_title: Nova
     subtitle: Flagship AI product
-    stack_and_tools: [AI SDK, mem0, MongoDB, MCP, RAG]
-    the_premise: Defined and executed the company’s transition to an Agentic Operating System.
+    stack_and_tools:
+      - name: AI SDK
+        url: https://sdk.vercel.ai/docs/introduction
+        tooltip: Vercel's gift to the agentic masses
+      - name: mem0
+        url: https://mem0.ai/research
+        tooltip: Because LLMs have the memory of a goldfish
+      - name: MongoDB
+        url: https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1
+        tooltip: The database for startups who fear schemas
+      - name: MCP
+        url: https://modelcontextprotocol.io/introduction
+        tooltip: Anthropic's protocol for AI world domination
+      - name: RAG
+        url: https://arxiv.org/abs/2005.11401
+        tooltip: Ctrl+F for robots
+    the_premise: Drove a company-wide pivot to an Agentic Operating System
     technical_meat: |
-      Developed an 'experiment-first' architecture for model-agnostic tool execution. 
+      Developed an 'experiment-first' architecture for model-agnostic tool execution.
       Built custom MCP server backends to support headless execution across Web, Slack, and Linear.
     impact_and_acclaim:
       - Achieved 95% WAU conversion rate.
-      - Catalyzed a full company-wide strategic pivot toward AI-first engineering.
+      - Catalyzed a full company-wide strategic pivot to AI-first engineering.
     role: Lead Engineer
     status: Resulted in a company-wide pivot.
+    prompt: Tell me about the Nova project - the Agentic OS architecture, MCP implementation, and how it achieved 95% WAU.
 
   - project_title: Monorepo
     subtitle: Standardisation
-    stack_and_tools: [Turborepo, Protobuf, GHA, ESLint]
-    the_premise: Consolidated 22 diverged microservices into a unified, high-standard monorepo.
+    stack_and_tools:
+      - name: Turborepo
+        url: https://turbo.build/repo/docs/core-concepts
+        tooltip: npm workspaces on steroids
+      - name: Protobuf
+        url: https://developers.google.com/protocol-buffers/docs/overview
+        tooltip: JSON's faster, angrier cousin
+      - name: GHA
+        url: https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions
+        tooltip: YAML hell, but make it CI/CD
+      - name: ESLint
+        url: https://eslint.org/docs/latest/use/core-concepts
+        tooltip: Your code's most pedantic critic
+    the_premise: Consolidated 22 microservices into a standardized monorepo
     technical_meat: |
-      Authored de-facto standards for CI/CD, TypeScript, and package architecture. 
+      Authored de-facto standards for CI/CD, TypeScript, and package architecture.
       Introduced validation pipelines and mandatory READMEs for all backend packages.
     impact_and_acclaim:
       - Reduced average PRs per change from five to one.
-      - Reached 100% strict TypeScript adoption across the organization.
-      - Wrote and enforced standards for ESLint, CI and constraints.
+      - Achieved 100% strict TypeScript with unified ESLint and CI standards.
     role: Lead Contributor
     status: Structural game-changer.
+    prompt: Explain the monorepo consolidation - how did Chris standardize 22 microservices and enforce 100% strict TypeScript?
 
   - project_title: Checkout v2
     subtitle: Total rebuild
-    stack_and_tools: [NextJS, GraphQL, Recoil]
-    the_premise: Rebuilt the core checkout engine with a focus on accessibility and keyboard-navigable architecture.
+    stack_and_tools:
+      - name: NextJS
+        url: https://nextjs.org/docs/app/building-your-application/routing
+        tooltip: React with mass-market opinions
+      - name: GraphQL
+        url: https://engineering.fb.com/2015/09/14/core-infra/graphql-a-data-query-language/
+        tooltip: REST's over-engineered replacement
+      - name: Recoil
+        url: https://recoiljs.org/docs/introduction/motivation
+        tooltip: Facebook's apology for Redux
+      - name: Stripe
+        url: https://stripe.com/docs/payments/payment-intents
+        tooltip: The 3% tax on internet commerce
+    the_premise: Rebuilt checkout from scratch to fix several core problems
     technical_meat: |
       Implemented strict accessibility-first testing patterns that became the organization's primary frontend testing methodology.
       Authored the architectural approach that enabled a major refactor previously considered impossible.
     impact_and_acclaim:
       - Zero incidents for the first 90 days of production.
-      - Handled three consecutive London Marathon ballots with zero downtime.
+      - Handled three London Marathon ballots with zero downtime.
     role: Project Lead
     status: Processed 3 Marathons.
+    prompt: Deep dive on Checkout v2 - the accessibility-first testing patterns, zero-incident launch, and London Marathon load handling.
 
 work_history:
   - company: Let's Do This
     role: Principal Engineer
     tenure: Feb 2021 — Present
-    summary: Massive contributions across the entire org, across infrastructure, AI and product
+    summary: Built most of the core infrastructure, checkout and flagship AI product
     impact:
       - Orchestrated infrastructure cost reductions totaling over $500k annually
       - Increased system throughput by 1000x for peak load events
       - Highest velocity engineer in the company across all major metrics
-    tech_stack: [MongoDB, MongoDB, GRPC, GraphQL]
+    tech_stack:
+      - name: TypeScript
+        url: https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes-func.html
+        tooltip: JavaScript for mass adoption
+      - name: MongoDB
+        url: https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1
+        tooltip: The database for startups who fear schemas
+      - name: gRPC
+        url: https://grpc.io/blog/principles/
+        tooltip: HTTP/2's favourite child
+      - name: GraphQL
+        url: https://engineering.fb.com/2015/09/14/core-infra/graphql-a-data-query-language/
+        tooltip: REST's over-engineered replacement
 
   - company: Singletrack
     role: Senior Engineer
@@ -83,7 +136,19 @@ work_history:
       - Developed a custom component-based framework to support building client apps
       - Used Service Workers to make the entire website work offline
       - Fully automated legacy manual data migration tasks using a custom framework
-    tech_stack: [Python, Ruby on Rails, Java, Postgres]
+    tech_stack:
+      - name: Python
+        url: https://peps.python.org/pep-0020/
+        tooltip: Executable pseudocode
+      - name: Ruby on Rails
+        url: https://rubyonrails.org/doctrine
+        tooltip: Opinions over configuration
+      - name: Java
+        url: https://www.oracle.com/java/technologies/language-environment.html
+        tooltip: Write once, debug everywhere
+      - name: Postgres
+        url: https://www.postgresql.org/docs/current/history.html
+        tooltip: The database your DBA actually respects
 
   - company: RateSetter
     role: Developer
@@ -93,7 +158,16 @@ work_history:
       - Maintained and scaled the core P2P lending platform
       - Helped build and migrate to a microservices based system
       - Built a decision engine to help with loan approval
-    tech_stack: [C#, .NET, SQL Server]
+    tech_stack:
+      - name: C#
+        url: https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/
+        tooltip: Java with a suit and tie
+      - name: Angular
+        url: https://thenewstack.io/the-angular-renaissance-why-frontend-devs-should-revisit-it/
+        tooltip: Why hello there!
+      - name: SQL Server
+        url: https://www.microsoft.com/en-us/research/publication/hekaton-sql-servers-memory-optimized-oltp-engine/
+        tooltip: When your budget says no to Oracle
 
 skills:
   technical_specialties:
@@ -122,36 +196,41 @@ education:
     notable: Highest overall grade in the BSc.
 
 impact_nodes:
-  - pillar: strategic transformation
-    items:
-      - primary: Catalyzed the company-wide Agentic OS pivot.
-        detail: Achieved 95% WAU conversion rate for flagship AI products; aligned technical roadmaps with executive vision for 2026.
-        # ACTION: Placeholder - needs real link/modal
-        action: VIEW_STRATEGY
-        drilldown: Drilldowns are work in progress, sorry!
-      - primary: Institutionalized 100% strict TypeScript adoption.
-        detail: Standardized monorepo patterns across 22 microservices, effectively eliminating 40% of runtime regressions.
-        action: VIEW_STANDARDS
+  - header: STRATEGIC_PIVOTS
+    title: Agentic OS
+    description: Led company-wide AI pivot, 95% WAU
+    color: green
+    prompt: Describe how Chris led the strategic transformation to an Agentic Operating System, including the technical architecture decisions and business impact.
 
-  - pillar: talent multiplication
-    items:
-      - primary: Engineered a 100% IC6 promotion pipeline for direct reports.
-        detail: Architected the 'Staff+ Fast-Track' mentorship program; institutionalized leadership growth across departmental silos.
-        # ACTION: Placeholder - needs real link/modal
-        action: VIEW_FRAMEWORK
-      - primary: Launched 'Claude Academy' for organizational AI literacy.
-        detail: Established the Engineering Guild to centralize senior expertise and accelerate internal knowledge transfer.
-        action: VIEW_CURRICULUM
+  - header: STRATEGIC_PIVOTS
+    title: 100% TypeScript
+    description: Standardized 22 microservices
+    color: green
+    prompt: Explain Chris's role in institutionalizing strict TypeScript adoption across the monorepo and the engineering culture changes required.
 
-  - pillar: institutional resilience
-    items:
-      - primary: Stabilized operations via Incident Command diagnostic automation.
-        detail: Reduced MTTR by 60% through surgical PagerDuty optimization and cross-functional response protocols.
-        # ACTION: Placeholder - needs real link/modal
-        action: VIEW_POSTMORTEM
-      - primary: Orchestrated $500k+ in annual infrastructure cost savings.
-        detail: Performed surgical code and database optimizations while maintaining 1000x throughput for peak-load events.
-        action: VIEW_METRICS
+  - header: TALENT_MULTIPLICATION
+    title: Claude Academy
+    description: AI literacy program  for engineers
+    color: purple
+    prompt: Detail the Claude Academy initiative, its curriculum, and how it accelerated organizational AI adoption.
+
+  - header: TALENT_MULTIPLICATION
+    title: IC6 Pipeline
+    description: 100% promotion rate for team members
+    color: purple
+    prompt: Describe Chris's mentorship framework and the Staff+ Fast-Track program he architected.
+
+  - header: OPERATIONAL_RESILIENCE
+    title: Incident Command
+    description: Top contributor across incidents
+    color: blue
+    prompt: Explain Chris's incident command improvements, PagerDuty optimizations, and cross-functional response protocols.
+
+  - header: OPERATIONAL_RESILIENCE
+    title: $500k Savings
+    description: DB optimizations, 1000x throughput
+    color: blue
+    prompt: Detail the infrastructure cost reduction strategies Chris implemented and their impact on system performance.
 
 meta:
   keywords: [Principal Engineer, AI Infrastructure Lead, Systems Architect]
