@@ -173,7 +173,7 @@ const educationData = cvData.education.map((edu) => ({
     padding: var(--spacing-fluid-lg);
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1023px) {
     .cv-layout {
       grid-template-columns: 1fr;
       gap: 0;
@@ -215,14 +215,14 @@ const educationData = cvData.education.map((edu) => ({
     --section-accent: var(--color-accent-green);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1023px) {
     .education-section {
       display: block;
     }
   }
 
-  /* Section title hover effects - desktop only (mobile uses scroll-based color) */
-  @media (min-width: 769px) {
+  /* Section title hover effects - lg desktop only (mobile/md use scroll-based color) */
+  @media (min-width: 1200px) {
     /* Projects */
     .projects-section:has(.content-item:nth-child(1):hover) :global(.section-title) {
       color: var(--color-accent-green);

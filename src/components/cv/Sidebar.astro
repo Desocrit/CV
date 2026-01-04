@@ -43,7 +43,7 @@ const toSnakeCase = (str: string) =>
 ---
 
 <aside class="sidebar-column scrollbar-hidden">
-  <header class="site-header mb-fluid-lg lg:mb-fluid-md">
+  <header class="site-header mb-fluid-xs md:mb-fluid-md">
     <!-- Desktop: stacked layout -->
     <div class="header-desktop">
       <h1 class="text-3xl font-medium text-foreground leading-none tracking-tight">{name}</h1>
@@ -60,7 +60,7 @@ const toSnakeCase = (str: string) =>
     </div>
   </header>
 
-  <nav class="social-nav mb-fluid-lg lg:mb-fluid-md" aria-label="Contact links">
+  <nav class="social-nav mb-fluid-lg md:mb-fluid-md" aria-label="Contact links">
     <address class="social-links font-mono text-fluid-2xs not-italic">
       <!-- Desktop: full links with text | Mobile dark: tags | Mobile light: icons only -->
       <a
@@ -120,7 +120,7 @@ const toSnakeCase = (str: string) =>
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
         </svg>
         <span class="link-text">Print</span>
-        <span class="link-tag">> save.pdf</span>
+        <span class="link-tag">&gt; save.pdf</span>
       </button>
 
       <button
@@ -143,20 +143,20 @@ const toSnakeCase = (str: string) =>
     </address>
   </nav>
 
-  <section class="profile-section mb-fluid-lg lg:mb-fluid-md" aria-label="Profile">
-    <h2 class="sidebar-section-title hidden lg:block">Profile</h2>
-    <h2 class="terminal-section-title lg:hidden">&gt; PROFILE</h2>
+  <section class="profile-section mb-fluid-lg md:mb-fluid-md" aria-label="Profile">
+    <h2 class="sidebar-section-title hidden md:block">Profile</h2>
+    <h2 class="terminal-section-title md:hidden">&gt; PROFILE</h2>
     <p class="profile-text text-fluid-2xs text-muted-foreground leading-relaxed mt-fluid-xs">
       {profile}
     </p>
   </section>
 
-  <section class="achievements-section mb-fluid-lg lg:mb-fluid-md" aria-label="Key Achievements">
-    <h2 class="sidebar-section-title achievements-title hidden lg:block">Achievements</h2>
-    <h2 class="terminal-section-title lg:hidden">&gt; ARCHITECTURAL_STATS:</h2>
+  <section class="achievements-section mb-fluid-lg md:mb-fluid-md" aria-label="Key Achievements">
+    <h2 class="sidebar-section-title achievements-title hidden md:block">Achievements</h2>
+    <h2 class="terminal-section-title md:hidden uppercase">&gt; Achievements:</h2>
 
     <!-- Desktop: original layout -->
-    <div class="achievements-list hidden lg:block mt-fluid-xs space-y-fluid-sm">
+    <div class="achievements-list hidden md:block mt-fluid-xs space-y-fluid-sm">
       {achievements.map((achievement) => (
         <div class="achievement-item">
           <div class="flex items-baseline gap-2">
@@ -179,7 +179,7 @@ const toSnakeCase = (str: string) =>
     </div>
 
     <!-- Mobile: two-column grid with aligned metrics -->
-    <div class="achievements-grid grid lg:hidden">
+    <div class="achievements-grid grid md:hidden">
       {achievements.map((achievement) => (
         <div class="achievement-item">
           <data
@@ -246,7 +246,7 @@ const toSnakeCase = (str: string) =>
     padding: var(--spacing-fluid-lg);
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1023px) {
     .sidebar-column {
       height: auto;
       overflow-y: visible;
@@ -318,7 +318,7 @@ const toSnakeCase = (str: string) =>
   }
 
   /* Mobile: horizontal layout with tags/icons */
-  @media (max-width: 768px) {
+  @media (max-width: 1023px) {
     .social-links {
       flex-direction: row;
       flex-wrap: wrap;
@@ -339,14 +339,26 @@ const toSnakeCase = (str: string) =>
       display: none !important;
     }
 
-    /* Dark mode (default): show unix-style tags */
+    /* Dark mode (default): show unix-style tags with brackets */
     .link-tag {
-      display: inline;
+      display: inline-flex;
+      align-items: center;
       font-family: var(--font-mono);
       font-size: var(--text-fluid-2xs);
       color: var(--color-accent-purple);
       letter-spacing: 0;
       transition: filter 0.15s ease;
+    }
+
+    /* Add brackets around tags */
+    .link-tag::before {
+      content: '[';
+      margin-right: 0.125em;
+    }
+
+    .link-tag::after {
+      content: ']';
+      margin-left: 0.125em;
     }
 
     /* Ensure hidden class works (overrides display:inline above) */
@@ -389,16 +401,15 @@ const toSnakeCase = (str: string) =>
     display: none;
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1023px) {
     .header-desktop {
       display: none;
     }
 
     .header-mobile {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 1rem;
+      flex-direction: column;
+      gap: 0.25rem;
     }
 
     .education-section {

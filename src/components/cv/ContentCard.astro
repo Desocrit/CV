@@ -276,7 +276,7 @@ const highlightMetrics = (text: string): string => {
   }
 
   /* Mobile: Only button is clickable, not entire card */
-  @media (max-width: 768px) {
+  @media (max-width: 1023px) {
     .card-content--clickable {
       cursor: default;
     }
@@ -443,7 +443,7 @@ const highlightMetrics = (text: string): string => {
   function initContentCardHandlers() {
     const abortController = new AbortController();
     const { signal } = abortController;
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
 
     // Attach click handlers to all terminal triggers (always works)
     document.querySelectorAll('.terminal-trigger').forEach((btn) => {

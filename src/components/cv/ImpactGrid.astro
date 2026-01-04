@@ -177,8 +177,8 @@ const { nodes } = Astro.props;
     opacity: 1;
   }
 
-  /* Section title color on hover - desktop only (mobile uses scroll-based color) */
-  @media (min-width: 769px) {
+  /* Section title color on hover - lg desktop only (mobile/md use scroll-based color) */
+  @media (min-width: 1200px) {
     .impact-section:has(.impact-card-wrapper--green:hover) :global(.section-title) {
       color: var(--color-accent-green);
     }

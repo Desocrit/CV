@@ -18,6 +18,11 @@
 }
 
 @theme {
+  /* Custom breakpoints: mobile-first */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 1024px;
+  --breakpoint-lg: 1200px;
+
   --font-sans: 'Geist', 'system-ui', 'sans-serif';
   --font-mono: 'Geist Mono', 'Consolas', monospace;
 
@@ -175,7 +180,7 @@
     overflow: hidden;
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1023px) {
     body {
       overflow: auto;
     }
