@@ -1,4 +1,6 @@
 ---
+import ActionButton from './ActionButton.astro';
+
 interface Props {
   title: string;
   id?: string;
@@ -16,15 +18,19 @@ const formatTitle = (str: string) =>
   class:list={['section-with-label', className]}
   id={id}
   aria-labelledby={headingId}
+  data-section-id={id}
 >
   <div class="section-grid">
-    <nav class="section-label" aria-hidden="true">
-      <span class="section-title font-mono text-fluid-2xs">
-        <span class="section-prefix" aria-hidden="true">// </span>
-        <span class="section-title-text">{formatTitle(title)}</span>
-      </span>
-      <span class="section-title-print">{title}</span>
-    </nav>
+    <div class="section-label">
+      <div class="section-label-inner">
+        <span class="section-title font-mono text-fluid-2xs" aria-hidden="true">
+          <span class="section-prefix">// </span>
+          <span class="section-title-text">{formatTitle(title)}</span><span class="section-context"></span>
+        </span>
+        <ActionButton label="^" class="scroll-top-btn" screenReaderLabel="Scroll to top" />
+      </div>
+      <span class="section-title-print" aria-hidden="true">{title}</span>
+    </div>
 
     <div class="section-content">
       <h2 id={headingId} class="sr-only">{title}</h2>
@@ -64,6 +70,12 @@ const formatTitle = (str: string) =>
     padding-top: var(--spacing-fluid-sm);
   }
 
+  .section-label-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .section-content {
     grid-column: span 10;
     min-width: 0;
@@ -83,28 +95,98 @@ const formatTitle = (str: string) =>
     white-space: nowrap;
   }
 
+  /* Print title - always hidden on screen */
   .section-title-print {
-    display: none;
+    display: none !important;
   }
 
-  [data-theme='light'] .section-title {
+  :global([data-theme='light']) .section-title {
     color: var(--color-foreground);
   }
 
+  /* Scroll to top button - hidden on desktop */
+  .scroll-top-btn {
+    display: none !important;
+  }
+
+  /* ===== MOBILE: Terminal Command Bar ===== */
   @media (max-width: 768px) {
+    .section-with-label {
+      --section-accent: var(--color-accent-green);
+    }
+
     .section-grid {
-      display: flex;
+      display: flex !important;
       flex-direction: column;
       gap: 0;
     }
 
     .section-label {
-      position: static;
+      position: sticky !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      z-index: 20;
       margin-top: 0;
-      margin-bottom: var(--spacing-fluid-sm);
+      margin-bottom: 0;
       padding: 0;
-      background-color: transparent;
-      z-index: auto;
+      background-color: var(--color-background);
+    }
+
+    .section-label-inner {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center;
+      justify-content: space-between;
+      /* Full-bleed: escape container padding */
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.75rem var(--spacing-fluid-md);
+      border-top: 1px solid var(--section-accent);
+      border-bottom: 1px solid var(--section-accent);
+    }
+
+    /* First section doesn't need top border */
+    .section-with-label:first-child .section-label-inner {
+      border-top: none;
+    }
+
+    .section-title {
+      display: block;
+      flex-shrink: 0;
+      color: var(--section-accent);
+    }
+
+    /* Context text (e.g., company name) that appears when scrolling */
+    .section-context {
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .section-context:not(:empty) {
+      opacity: 1;
+    }
+
+    .section-context::before {
+      content: '/';
+    }
+
+    .section-context:empty::before {
+      content: none;
+    }
+
+    /* Button inherits section accent color */
+    .scroll-top-btn {
+      display: inline-flex !important;
+      flex-shrink: 0;
+    }
+
+    .scroll-top-btn :global(.bracket),
+    .scroll-top-btn :global(.label) {
+      color: var(--section-accent) !important;
     }
 
     .section-content {
@@ -113,11 +195,14 @@ const formatTitle = (str: string) =>
     }
 
     .section-with-label:first-child .section-content {
-      padding-top: 0;
+      padding-top: var(--spacing-fluid-sm);
     }
 
-    .section-title {
-      display: block;
+    /* Active section styling - color is set dynamically via JS based on topmost card */
+    /* No override here - JS sets --section-accent on the section element */
+
+    :global([data-theme='light']) .section-title {
+      color: var(--section-accent);
     }
   }
 
@@ -140,6 +225,15 @@ const formatTitle = (str: string) =>
       margin-bottom: 0.25rem;
       padding-top: 0;
       background: transparent;
+    }
+
+    .section-label-inner {
+      border: none;
+      padding: 0;
+    }
+
+    .scroll-top-btn {
+      display: none;
     }
 
     .section-content {
@@ -165,3 +259,128 @@ const formatTitle = (str: string) =>
     }
   }
 </style>
+
+<script>
+  function initSectionBehavior() {
+    // Scroll to top functionality
+    document.querySelectorAll('.scroll-top-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+
+    // Active section highlighting (mobile only)
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    if (!isMobile) return;
+
+    const sections = document.querySelectorAll('.section-with-label');
+    if (sections.length === 0) return;
+
+    // Find which section's header is stuck and match color to topmost card
+    function updateActiveSection() {
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        const label = section.querySelector('.section-label') as HTMLElement | null;
+        const sectionEl = section as HTMLElement;
+
+        // We're "inside" this section if its top is at/above viewport and bottom is below
+        const isActive = rect.top <= 10 && rect.bottom > 50;
+
+        if (isActive) {
+          label?.classList.add('is-active');
+
+          // Find the topmost card in this section (supports both ContentCard and ImpactGrid)
+          // For 2-column grids, we want the first card (leftmost) in the current row
+          const cards = section.querySelectorAll('.content-card, .impact-card-wrapper');
+          let activeCard: Element | null = null;
+          let highestTop = -Infinity;
+
+          cards.forEach((card) => {
+            const cardRect = card.getBoundingClientRect();
+            // Card is in the header zone if top <= threshold AND still visible
+            if (cardRect.top <= 80 && cardRect.bottom > 0) {
+              // Pick the card with highest top (most recently scrolled into view)
+              // For cards in same row (equal tops), first in DOM wins
+              if (cardRect.top > highestTop) {
+                highestTop = cardRect.top;
+                activeCard = card;
+              }
+            }
+          });
+
+          // Mark active card and remove from others
+          cards.forEach((card) => card.classList.remove('is-active-card'));
+
+          // Get the card's accent color and apply to section header
+          if (activeCard) {
+            const card = activeCard as Element;
+            card.classList.add('is-active-card');
+            const cardAccent = getComputedStyle(card).getPropertyValue('--card-accent').trim();
+            if (cardAccent) {
+              sectionEl.style.setProperty('--section-accent', cardAccent);
+            }
+
+            // Extract context text and show in header
+            // Supports both ContentCard and ImpactGrid structures
+            const contextSpan = section.querySelector('.section-context') as HTMLElement | null;
+            if (contextSpan) {
+              let contextText = '';
+
+              // ImpactGrid: card-header contains category like "[ STRATEGIC_PIVOTS ]"
+              const impactHeader = card.querySelector('.card-header');
+              // ContentCard: label (company name) or h3 title (project name)
+              const labelEl = card.querySelector('.label-text .screen-only');
+              const titleEl = card.querySelector('.card-meta h3');
+
+              if (impactHeader) {
+                // Extract text from "[ CATEGORY ]" format - strip brackets and spaces
+                contextText = impactHeader.textContent?.trim().replace(/^\[\s*|\s*\]$/g, '') || '';
+              } else if (labelEl) {
+                contextText = labelEl.textContent?.trim() || '';
+              } else if (titleEl) {
+                contextText = titleEl.textContent?.trim().toUpperCase().replace(/\s+/g, '_') || '';
+              }
+
+              contextSpan.textContent = contextText;
+            }
+          }
+        } else {
+          label?.classList.remove('is-active');
+          // Reset to default green and clear context
+          sectionEl.style.setProperty('--section-accent', 'var(--color-accent-green)');
+          const contextSpan = section.querySelector('.section-context') as HTMLElement | null;
+          if (contextSpan) contextSpan.textContent = '';
+          // Clear active card states
+          const cards = section.querySelectorAll('.content-card, .impact-card-wrapper');
+          cards.forEach((card) => card.classList.remove('is-active-card'));
+        }
+      });
+    }
+
+    // Throttled scroll handler
+    let ticking = false;
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateActiveSection();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    updateActiveSection(); // Initial check
+  }
+
+  // Initialize on DOMContentLoaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSectionBehavior);
+  } else {
+    initSectionBehavior();
+  }
+
+  // Re-initialize after Astro page transitions
+  document.addEventListener('astro:page-load', initSectionBehavior);
+</script>

@@ -92,7 +92,9 @@ async function staleWhileRevalidate(request) {
   // But if we have stale cache, return it as fallback
   if (cachedResponse) {
     // Return stale cache but still revalidate
-    fetchPromise.catch(() => {}); // Prevent unhandled rejection
+    fetchPromise.catch((err) => {
+      console.warn('[SW] Background revalidation failed:', err.message || err);
+    });
     return cachedResponse;
   }
 

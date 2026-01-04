@@ -36,12 +36,10 @@ function validationError(issues: unknown): Response {
 }
 
 function internalError(error: unknown): Response {
+  // Log full error details server-side for debugging
   console.error('[chat] Internal error:', error);
-  return errorResponse(
-    'Internal server error',
-    500,
-    error instanceof Error ? error.message : 'Unknown error'
-  );
+  // Return generic message to client - never expose internal error details
+  return errorResponse('Internal server error', 500);
 }
 
 // ============================================================================

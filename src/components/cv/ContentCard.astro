@@ -20,9 +20,21 @@ const { title, subtitle, tag, label, technologies = [], headline, bulletPoints, 
 // Convert label to SCREAMING_CASE for display
 const labelText = label?.toUpperCase().replace(/\s+/g, '_').replace(/'/g, '');
 
+// Escape HTML entities to prevent XSS
+const escapeHtml = (text: string): string => {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+};
+
 // Highlight metrics (numbers, percentages, multipliers) in bullet points
 const highlightMetrics = (text: string): string => {
-  return text.replace(
+  // Escape HTML first to prevent XSS, then apply highlighting
+  const escaped = escapeHtml(text);
+  return escaped.replace(
     /(\d+(?:\.\d+)?(?:\s*[xX%])?|\d+(?:,\d{3})*(?:\+)?)/g,
     '<span class="metric-highlight">$1</span>'
   );
@@ -80,7 +92,7 @@ const highlightMetrics = (text: string): string => {
           const highlighted = highlightMetrics(cleanItem);
           return (
             <li class="flex items-baseline gap-2 text-muted-foreground">
-              <span class="item-separator shrink-0" aria-hidden="true">~</span>
+              <span class="item-separator shrink-0" aria-hidden="true">–</span>
               <span set:html={highlighted} />
             </li>
           );
@@ -218,6 +230,69 @@ const highlightMetrics = (text: string): string => {
       grid-template-columns: 1fr;
       gap: var(--spacing-fluid-xs);
     }
+
+    /* Mobile: Flex layout for card-meta to enable space-between rows */
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0;
+    }
+
+    .card-meta h3 {
+      flex: 0 0 auto;
+      order: 1;
+    }
+
+    /* Tag element (first p): goes to the right for projects */
+    .card-meta > p:first-of-type {
+      order: 2;
+      margin-left: auto;
+      margin-top: 0;
+    }
+
+    /* When label exists (history cards): label goes right, tag goes to next row */
+    .card-meta .label-text {
+      order: 2;
+      margin-left: auto;
+      margin-top: 0 !important;
+    }
+
+    /* Push tag (date) to next row when label exists */
+    .card-meta:has(.label-text) > p:not(.label-text) {
+      order: 3;
+      flex-basis: 100%;
+      margin-left: 0;
+    }
+
+    /* Tech tags: sm spacing above/below, ensure full width on own row */
+    .tech-tags {
+      margin-top: var(--spacing-fluid-sm) !important;
+      margin-bottom: var(--spacing-fluid-sm);
+      flex-basis: 100%;
+      order: 10;
+    }
+  }
+
+  /* Mobile: Only button is clickable, not entire card */
+  @media (max-width: 768px) {
+    .card-content--clickable {
+      cursor: default;
+    }
+
+    /* Light up VIEW_DETAILS button when card is active (matches header color) */
+    .content-card.is-active-card .terminal-trigger,
+    .content-card.is-active-card .details-toggle {
+      color: var(--card-accent);
+    }
+
+    .content-card.is-active-card .terminal-trigger .bracket,
+    .content-card.is-active-card .terminal-trigger .toggle-text,
+    .content-card.is-active-card .details-toggle .bracket,
+    .content-card.is-active-card .details-toggle .toggle-text {
+      color: var(--card-accent);
+    }
   }
 
   /* ===== PRINT STYLES - Professional Content Cards ===== */
@@ -247,14 +322,66 @@ const highlightMetrics = (text: string): string => {
       gap: 0.6rem;
     }
 
-    /* Card meta - left column */
+    /* ========================================================================
+       ORPHAN/WIDOW CONTROL - LaTeX-quality page break handling
+       ======================================================================== */
+
+    /* Card meta (header column) - NEVER break inside */
     .card-meta {
       margin-top: 0 !important;
+      break-inside: avoid;
+      page-break-inside: avoid;
     }
 
     .card-meta h3 {
       font-size: 9pt !important;
       font-weight: 600 !important;
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    /* Headline - keep with header, avoid orphaning */
+    .card-content > p:first-child {
+      font-size: 9pt !important;
+      line-height: 1.4 !important;
+      color: #333 !important;
+      break-before: avoid;
+      page-break-before: avoid;
+      orphans: 3;
+      widows: 3;
+    }
+
+    /* Bullet list - conditional breaking based on item count
+       Short lists (≤4 items): keep together to avoid awkward splits
+       Long lists (>4 items): allow breaking to prevent large white gaps */
+    .bullet-list {
+      padding-left: 0.8rem !important;
+      margin-top: 0.15rem !important;
+    }
+
+    /* Default: keep bullet lists together */
+    .bullet-list:has(li:nth-child(-n+4):last-child) {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    /* Long lists (>4 items): allow page breaks between items */
+    .bullet-list:has(li:nth-child(5)) {
+      break-inside: auto;
+      page-break-inside: auto;
+    }
+
+    /* Individual list items - avoid breaking mid-item */
+    .bullet-list li {
+      display: list-item !important;
+      list-style-type: disc !important;
+      margin: 0.05rem 0 !important;
+      font-size: 8pt !important;
+      color: #4a4a4a !important;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      orphans: 2;
+      widows: 2;
     }
 
     /* Label text - professional, not uppercase */
@@ -295,30 +422,9 @@ const highlightMetrics = (text: string): string => {
       padding-left: 0 !important;
     }
 
-    /* Bullet list styling */
-    .bullet-list {
-      padding-left: 0.8rem !important;
-      margin-top: 0.15rem !important;
-    }
-
-    .bullet-list li {
-      display: list-item !important;
-      list-style-type: disc !important;
-      margin: 0.05rem 0 !important;
-      font-size: 8pt !important;
-      color: #4a4a4a !important;
-    }
-
     /* Hide the dash separator */
     .item-separator {
       display: none !important;
-    }
-
-    /* Headline text */
-    .card-content > p:first-child {
-      font-size: 9pt !important;
-      line-height: 1.4 !important;
-      color: #333 !important;
     }
   }
 </style>
@@ -333,23 +439,44 @@ const highlightMetrics = (text: string): string => {
     );
   }
 
-  // Attach click handlers to all terminal triggers
-  document.querySelectorAll('.terminal-trigger').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const prompt = (btn as HTMLElement).dataset['prompt'];
-      if (prompt) openTerminal(prompt);
-    });
-  });
+  // Initialize event handlers with proper cleanup for Astro view transitions
+  function initContentCardHandlers() {
+    const abortController = new AbortController();
+    const { signal } = abortController;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-  // Attach click handlers to clickable card content areas
-  document.querySelectorAll('.card-content--clickable').forEach((card) => {
-    card.addEventListener('click', (e) => {
-      // Don't trigger if clicking the button (it has its own handler)
-      if ((e.target as HTMLElement).closest('.terminal-trigger')) return;
-      const prompt = (card as HTMLElement).dataset['prompt'];
-      if (prompt) openTerminal(prompt);
+    // Attach click handlers to all terminal triggers (always works)
+    document.querySelectorAll('.terminal-trigger').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const prompt = (btn as HTMLElement).dataset['prompt'];
+        if (prompt) openTerminal(prompt);
+      }, { signal });
     });
-  });
+
+    // Attach click handlers to clickable card content areas (DESKTOP ONLY)
+    // On mobile, only the button should be clickable
+    if (!isMobile) {
+      document.querySelectorAll('.card-content--clickable').forEach((card) => {
+        card.addEventListener('click', (e) => {
+          // Don't trigger if clicking the button (it has its own handler)
+          if ((e.target as HTMLElement).closest('.terminal-trigger')) return;
+          const prompt = (card as HTMLElement).dataset['prompt'];
+          if (prompt) openTerminal(prompt);
+        }, { signal });
+      });
+    }
+
+    // Cleanup on page transition
+    document.addEventListener('astro:before-swap', () => {
+      abortController.abort();
+    }, { once: true });
+  }
+
+  // Initialize on page load
+  initContentCardHandlers();
+
+  // Re-initialize after Astro page transitions
+  document.addEventListener('astro:page-load', initContentCardHandlers);
 </script>

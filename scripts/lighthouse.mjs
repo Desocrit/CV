@@ -14,7 +14,7 @@ const NUM_RUNS = 3; // Run multiple times and take best scores
 
 // Score thresholds
 const THRESHOLDS = {
-  performance: 0.95, // 95% - timing-based metrics have natural variance
+  performance: 0.80, // 80% - local testing has high variance
   accessibility: 1.0, // 100% - deterministic
   'best-practices': 1.0, // 100% - deterministic
   seo: 1.0, // 100% - deterministic

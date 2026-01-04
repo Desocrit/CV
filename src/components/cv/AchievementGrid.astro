@@ -53,6 +53,14 @@ const toSnakeCase = (str: string) =>
     color: var(--color-accent-purple);
   }
 
+  /* Metric hero glow state when in view */
+  .achievement-metric-glow {
+    text-shadow:
+      0 0 8px color-mix(in srgb, var(--color-accent-purple) 40%, transparent),
+      0 0 16px color-mix(in srgb, var(--color-accent-purple) 20%, transparent);
+    transition: text-shadow 0.6s ease-out;
+  }
+
   /* Print: Compact inline display */
   @media print {
     .achievement-grid {
@@ -72,5 +80,38 @@ const toSnakeCase = (str: string) =>
     .achievement-label {
       color: #333 !important;
     }
+
+    .achievement-metric-glow {
+      text-shadow: none;
+    }
   }
 </style>
+
+<script>
+  function initAchievementGlow() {
+    const metrics = document.querySelectorAll('.achievement-grid data');
+    if (metrics.length === 0) return;
+
+    // Respect reduced motion preference
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('achievement-metric-glow');
+          }
+        });
+      },
+      { threshold: 0.5, rootMargin: '0px 0px -10% 0px' }
+    );
+
+    metrics.forEach((metric) => observer.observe(metric));
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAchievementGlow);
+  } else {
+    initAchievementGlow();
+  }
+</script>

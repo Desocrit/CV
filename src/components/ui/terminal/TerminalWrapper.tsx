@@ -1,11 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
 import RAGTerminal from './RAGTerminal';
 
-interface TerminalOpenEvent extends CustomEvent {
-  detail: {
-    initialQuery?: string;
-    nodeId?: string;
-  };
+// Custom event type declarations for terminal events
+interface TerminalOpenEventDetail {
+  initialQuery?: string;
+  nodeId?: string;
+}
+
+// Declare custom events on WindowEventMap for proper TypeScript support
+declare global {
+  interface WindowEventMap {
+    'open-rag-terminal': CustomEvent<TerminalOpenEventDetail>;
+    'terminal:open': CustomEvent<void>;
+  }
 }
 
 export default function TerminalWrapper() {
@@ -13,9 +20,9 @@ export default function TerminalWrapper() {
   const [initialQuery, setInitialQuery] = useState<string | undefined>();
   const [nodeId, setNodeId] = useState<string | undefined>();
 
-  const handleOpen = useCallback((event?: TerminalOpenEvent) => {
-    setInitialQuery(event?.detail?.initialQuery);
-    setNodeId(event?.detail?.nodeId);
+  const handleOpen = useCallback((event: CustomEvent<TerminalOpenEventDetail>) => {
+    setInitialQuery(event.detail?.initialQuery);
+    setNodeId(event.detail?.nodeId);
     setIsOpen(true);
   }, []);
 
@@ -31,10 +38,10 @@ export default function TerminalWrapper() {
   }, []);
 
   useEffect(() => {
-    window.addEventListener('open-rag-terminal', handleOpen as EventListener);
+    window.addEventListener('open-rag-terminal', handleOpen);
     window.addEventListener('terminal:open', handleReopen);
     return () => {
-      window.removeEventListener('open-rag-terminal', handleOpen as EventListener);
+      window.removeEventListener('open-rag-terminal', handleOpen);
       window.removeEventListener('terminal:open', handleReopen);
     };
   }, [handleOpen, handleReopen]);

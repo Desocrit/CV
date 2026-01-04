@@ -70,10 +70,10 @@ const educationData = cvData.education.map((edu) => ({
       name={cvData.name}
       role={cvData.role}
       email={cvData.email}
+      phone={cvData.phone}
       location={cvData.location}
       linkedin={cvData.linkedin}
       github={cvData.github}
-      website={cvData.website}
       profile={cvData.summary}
       achievements={cvData.outlier_achievements}
       education={{
@@ -181,36 +181,39 @@ const educationData = cvData.education.map((edu) => ({
   .history-section .content-item:nth-child(2) :global(.content-card) { --card-accent: var(--color-accent-purple); }
   .history-section .content-item:nth-child(3) :global(.content-card) { --card-accent: var(--color-accent-blue); }
 
-  /* Section title hover effects - Projects */
-  .projects-section:has(.content-item:nth-child(1):hover) :global(.section-title) {
-    color: var(--color-accent-green);
-    transition: color 0.15s ease;
-  }
-  .projects-section:has(.content-item:nth-child(2):hover) :global(.section-title) {
-    color: var(--color-accent-purple);
-    transition: color 0.15s ease;
-  }
-  .projects-section:has(.content-item:nth-child(3):hover) :global(.section-title) {
-    color: var(--color-accent-blue);
-    transition: color 0.15s ease;
-  }
-  .projects-section:has(.content-item:nth-child(4):hover) :global(.section-title) {
-    color: var(--color-accent-green);
-    transition: color 0.15s ease;
-  }
+  /* Section title hover effects - desktop only (mobile uses scroll-based color) */
+  @media (min-width: 769px) {
+    /* Projects */
+    .projects-section:has(.content-item:nth-child(1):hover) :global(.section-title) {
+      color: var(--color-accent-green);
+      transition: color 0.15s ease;
+    }
+    .projects-section:has(.content-item:nth-child(2):hover) :global(.section-title) {
+      color: var(--color-accent-purple);
+      transition: color 0.15s ease;
+    }
+    .projects-section:has(.content-item:nth-child(3):hover) :global(.section-title) {
+      color: var(--color-accent-blue);
+      transition: color 0.15s ease;
+    }
+    .projects-section:has(.content-item:nth-child(4):hover) :global(.section-title) {
+      color: var(--color-accent-green);
+      transition: color 0.15s ease;
+    }
 
-  /* Section title hover effects - History */
-  .history-section:has(.content-item:nth-child(1):hover) :global(.section-title) {
-    color: var(--color-accent-green);
-    transition: color 0.15s ease;
-  }
-  .history-section:has(.content-item:nth-child(2):hover) :global(.section-title) {
-    color: var(--color-accent-purple);
-    transition: color 0.15s ease;
-  }
-  .history-section:has(.content-item:nth-child(3):hover) :global(.section-title) {
-    color: var(--color-accent-blue);
-    transition: color 0.15s ease;
+    /* History */
+    .history-section:has(.content-item:nth-child(1):hover) :global(.section-title) {
+      color: var(--color-accent-green);
+      transition: color 0.15s ease;
+    }
+    .history-section:has(.content-item:nth-child(2):hover) :global(.section-title) {
+      color: var(--color-accent-purple);
+      transition: color 0.15s ease;
+    }
+    .history-section:has(.content-item:nth-child(3):hover) :global(.section-title) {
+      color: var(--color-accent-blue);
+      transition: color 0.15s ease;
+    }
   }
 
   @media print {

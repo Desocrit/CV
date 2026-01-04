@@ -90,10 +90,6 @@ export interface VectorStoreService {
   ): Promise<EmbeddingResult[]>;
 }
 
-export interface MessageAdapter {
-  toModelMessages(uiMessages: unknown[]): Promise<ModelMessage[]>;
-}
-
 // ============================================================================
 // Agent Configuration
 // ============================================================================
@@ -104,6 +100,8 @@ export interface AgentConfig {
   readonly maxToolSteps: number;
   readonly defaultSearchLimit: number;
   readonly similarityThreshold: number;
+  /** Request timeout in milliseconds */
+  readonly requestTimeoutMs: number;
 }
 
 export const DEFAULT_AGENT_CONFIG: AgentConfig = {
@@ -112,4 +110,5 @@ export const DEFAULT_AGENT_CONFIG: AgentConfig = {
   maxToolSteps: 5,
   defaultSearchLimit: 5,
   similarityThreshold: 0.3,
+  requestTimeoutMs: 60000, // 60 second default timeout
 } as const;

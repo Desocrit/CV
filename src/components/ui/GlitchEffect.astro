@@ -77,23 +77,86 @@
     }, delay);
   }
 
-  function init(): void {
-    const titles = Array.from(
-      document.querySelectorAll('.section-title-text')
-    ) as HTMLElement[];
+  // Section titles that should glitch (Nova-related and Emerging Frontier content)
+  // History and Education sections remain stable
+  const GLITCH_SECTIONS = ['PROJECTS', 'IMPACT'];
 
-    if (titles.length === 0) return;
+  // Track if glitch effect is currently active
+  let glitchTimeoutId: number | null = null;
+  let isGlitchActive = false;
+
+  function isDarkMode(): boolean {
+    return document.documentElement.getAttribute('data-theme') !== 'light';
+  }
+
+  function startGlitchEffect(titles: HTMLElement[]): void {
+    if (isGlitchActive || titles.length === 0) return;
+    isGlitchActive = true;
 
     // Store original text on each element ONCE at initialization
     // This ensures we always have the true original, even during race conditions
     titles.forEach(el => {
-      el.dataset['originalText'] = el.textContent || '';
+      if (!el.dataset['originalText']) {
+        el.dataset['originalText'] = el.textContent || '';
+      }
     });
 
     // Wait before starting glitch effects
-    setTimeout(() => {
+    glitchTimeoutId = window.setTimeout(() => {
       scheduleNextGlitch(titles);
     }, INITIAL_DELAY);
+  }
+
+  function stopGlitchEffect(titles: HTMLElement[]): void {
+    isGlitchActive = false;
+
+    // Clear any pending timeout
+    if (glitchTimeoutId !== null) {
+      clearTimeout(glitchTimeoutId);
+      glitchTimeoutId = null;
+    }
+
+    // Restore original text on all elements
+    titles.forEach(el => {
+      const original = el.dataset['originalText'];
+      if (original) {
+        el.textContent = original;
+      }
+      animatingElements.delete(el);
+    });
+  }
+
+  function init(): void {
+    const allTitles = Array.from(
+      document.querySelectorAll('.section-title-text')
+    ) as HTMLElement[];
+
+    // Filter to only titles in allowed sections
+    const titles = allTitles.filter(el => {
+      const text = el.textContent?.trim() || '';
+      return GLITCH_SECTIONS.includes(text);
+    });
+
+    if (titles.length === 0) return;
+
+    // Only start if in dark mode
+    if (isDarkMode()) {
+      startGlitchEffect(titles);
+    }
+
+    // Watch for theme changes
+    const observer = new MutationObserver(() => {
+      if (isDarkMode()) {
+        startGlitchEffect(titles);
+      } else {
+        stopGlitchEffect(titles);
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme']
+    });
   }
 
   // Respect reduced motion preferences

@@ -59,20 +59,41 @@ class UIMessageAdapter implements MessageAdapter {
       ignoreIncompleteToolCalls: true,
     });
 
-    // Filter out messages with empty content (e.g., step-start only messages)
-    // Anthropic API requires all messages to have non-empty content
-    const nonEmptyMessages = modelMessages.filter((msg) => {
-      const content = msg.content;
-      if (typeof content === 'string') {
-        return content.length > 0;
-      }
-      if (Array.isArray(content)) {
-        return content.length > 0;
-      }
-      return false;
-    });
+    // Map messages to InternalModelMessage format
+    // The AI SDK returns messages with content that can be string or array of parts
+    // Our internal format uses simple string content
+    const mappedMessages: InternalModelMessage[] = [];
 
-    return nonEmptyMessages as unknown as InternalModelMessage[];
+    for (const msg of modelMessages) {
+      const content = msg.content;
+      let textContent: string;
+
+      if (typeof content === 'string') {
+        textContent = content;
+      } else if (Array.isArray(content)) {
+        // Extract text from content parts
+        textContent = content
+          .filter((part): part is { type: 'text'; text: string } =>
+            typeof part === 'object' && part !== null && 'type' in part && part.type === 'text' && 'text' in part
+          )
+          .map(part => part.text)
+          .join('');
+      } else {
+        continue; // Skip messages with unsupported content types
+      }
+
+      // Skip empty messages (Anthropic API requires non-empty content)
+      if (textContent.length === 0) {
+        continue;
+      }
+
+      mappedMessages.push({
+        role: msg.role as 'user' | 'assistant' | 'system',
+        content: textContent,
+      });
+    }
+
+    return mappedMessages;
   }
 }
 

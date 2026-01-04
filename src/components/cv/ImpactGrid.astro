@@ -51,6 +51,7 @@ const { nodes } = Astro.props;
   .impact-card-wrapper {
     --card-accent: var(--color-accent-green);
     position: relative;
+    z-index: 1;
     background: var(--color-background);
   }
 
@@ -170,24 +171,32 @@ const { nodes } = Astro.props;
     opacity: 1;
   }
 
-  /* Section title color on hover - using :has() */
-  .impact-section:has(.impact-card-wrapper--green:hover) :global(.section-title) {
-    color: var(--color-accent-green);
+  /* Light up header and CTA when card is active (scroll-triggered) */
+  .impact-card-wrapper.is-active-card .card-header,
+  .impact-card-wrapper.is-active-card .card-cta {
+    opacity: 1;
   }
-  .impact-section:has(.impact-card-wrapper--blue:hover) :global(.section-title) {
-    color: var(--color-accent-blue);
-  }
-  .impact-section:has(.impact-card-wrapper--purple:hover) :global(.section-title) {
-    color: var(--color-accent-purple);
-  }
-  .impact-section:has(.impact-card-wrapper--orange:hover) :global(.section-title) {
-    color: var(--color-accent-orange);
-  }
-  .impact-section:has(.impact-card-wrapper--red:hover) :global(.section-title) {
-    color: var(--color-accent-red);
-  }
-  .impact-section:has(.impact-card-wrapper--cyan:hover) :global(.section-title) {
-    color: var(--color-accent-cyan);
+
+  /* Section title color on hover - desktop only (mobile uses scroll-based color) */
+  @media (min-width: 769px) {
+    .impact-section:has(.impact-card-wrapper--green:hover) :global(.section-title) {
+      color: var(--color-accent-green);
+    }
+    .impact-section:has(.impact-card-wrapper--blue:hover) :global(.section-title) {
+      color: var(--color-accent-blue);
+    }
+    .impact-section:has(.impact-card-wrapper--purple:hover) :global(.section-title) {
+      color: var(--color-accent-purple);
+    }
+    .impact-section:has(.impact-card-wrapper--orange:hover) :global(.section-title) {
+      color: var(--color-accent-orange);
+    }
+    .impact-section:has(.impact-card-wrapper--red:hover) :global(.section-title) {
+      color: var(--color-accent-red);
+    }
+    .impact-section:has(.impact-card-wrapper--cyan:hover) :global(.section-title) {
+      color: var(--color-accent-cyan);
+    }
   }
 
   /* Responsive: stack on mobile */

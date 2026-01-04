@@ -1,17 +1,39 @@
 ---
 interface Props {
   label: string;
+  href?: string;
+  external?: boolean;
   class?: string;
+  screenReaderLabel?: string;
+  'data-print'?: string;
 }
 
-const { label, class: className = '' } = Astro.props;
+const { label, href, external = false, class: className = '', screenReaderLabel, ...attrs } = Astro.props;
+const isLink = !!href;
+const hasCustomLabel = !!screenReaderLabel;
 ---
 
-<button type="button" class:list={['action-button', className]}>
-  <span class="bracket">[</span>
-  <span class="label"> {label} </span>
-  <span class="bracket">]</span>
-</button>
+{isLink ? (
+  <a
+    href={href}
+    class:list={['action-button', className]}
+    target={external ? '_blank' : undefined}
+    rel={external ? 'noopener noreferrer' : undefined}
+    {...attrs}
+  >
+    {hasCustomLabel && <span class="sr-only">{screenReaderLabel}</span>}
+    <span class="bracket" aria-hidden={hasCustomLabel}>[</span>
+    <span class="label" aria-hidden={hasCustomLabel}> {label} </span>
+    <span class="bracket" aria-hidden={hasCustomLabel}>]</span>
+  </a>
+) : (
+  <button type="button" class:list={['action-button', className]} {...attrs}>
+    {hasCustomLabel && <span class="sr-only">{screenReaderLabel}</span>}
+    <span class="bracket" aria-hidden={hasCustomLabel}>[</span>
+    <span class="label" aria-hidden={hasCustomLabel}> {label} </span>
+    <span class="bracket" aria-hidden={hasCustomLabel}>]</span>
+  </button>
+)}
 
 <style>
   .action-button {

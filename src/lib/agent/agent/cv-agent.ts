@@ -91,7 +91,13 @@ export function createCVAgent(deps: CVAgentDependencies): CVAgent {
     stream(options: StreamOptions) {
       const { messages } = options;
 
-      return streamText({
+      // Create abort controller for timeout handling
+      const abortController = new AbortController();
+      const timeoutId = setTimeout(() => {
+        abortController.abort();
+      }, config.requestTimeoutMs);
+
+      const result = streamText({
         model: provider(config.modelId),
         system: CV_SYSTEM_PROMPT,
         messages,
@@ -100,7 +106,11 @@ export function createCVAgent(deps: CVAgentDependencies): CVAgent {
         },
         toolChoice: 'auto',
         stopWhen: stepCountIs(config.maxToolSteps),
+        abortSignal: abortController.signal,
+        onFinish: () => clearTimeout(timeoutId),
       });
+
+      return result;
     },
   };
 }

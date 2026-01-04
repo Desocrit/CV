@@ -8,7 +8,7 @@
  * 1. Create the cv_embeddings table in Neon (see SQL below)
  * 2. Set environment variables:
  *    - DATABASE_URL: Your Neon connection string
- *    - VERCEL_AI_GATEWAY_API_KEY: Your Vercel AI Gateway key
+ *    - AI_GATEWAY_API_KEY: Your Vercel AI Gateway key
  *
  * SQL to create table:
  * ```sql
@@ -26,7 +26,7 @@
  *
  * Usage (Windows CMD):
  * ```cmd
- * set DATABASE_URL=your_url && set VERCEL_AI_GATEWAY_API_KEY=your_key && node scripts/seed-embeddings.mjs
+ * set DATABASE_URL=your_url && set AI_GATEWAY_API_KEY=your_key && node scripts/seed-embeddings.mjs
  * ```
  */
 

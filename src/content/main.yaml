@@ -3,6 +3,7 @@ name: Chris Saunders
 role: Principal Engineer
 location: London, UK
 email: cjasaunders@outlook.com
+phone: "079 3328 1158"
 website: https://cs-cv.vercel.app/
 github: https://github.com/csaunders-ldt
 linkedin: https://www.linkedin.com/in/christopher-saunders-48b092110/
@@ -15,7 +16,7 @@ summary: >
 outlier_achievements:
   - metric: Throughput
     headline: 1000x
-    description: Increased maximum system throughput to scale for the London Marathon
+    description: From 0.2 bookings/s to 200 for the London Marathon
   - metric: Cost Savings
     headline: $500k
     description: Per annum savings due to direct individual contributions
@@ -79,7 +80,7 @@ projects:
     status: Structural game-changer.
     prompt: Explain the monorepo consolidation - how did Chris standardize 22 microservices and enforce 100% strict TypeScript?
 
-  - project_title: Checkout v2
+  - project_title: Checkout
     subtitle: Total rebuild
     stack_and_tools:
       - name: NextJS

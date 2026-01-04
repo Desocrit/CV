@@ -6,11 +6,74 @@ import {
   useMemo,
   type FormEvent,
   type KeyboardEvent as ReactKeyboardEvent,
+  type RefObject,
 } from 'react';
 import { useChat, type UIMessage } from '@ai-sdk/react';
 import { TextStreamChatTransport } from 'ai';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
+
+// Focusable element selector for focus trap
+const FOCUSABLE_SELECTOR =
+  'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+/**
+ * Custom hook to trap focus within a container element
+ * Implements WCAG 2.1 AAA focus management for modal dialogs
+ */
+function useFocusTrap(
+  containerRef: RefObject<HTMLDivElement | null>,
+  isActive: boolean,
+  initialFocusRef?: RefObject<HTMLInputElement | null>
+) {
+  useEffect(() => {
+    if (!isActive || !containerRef.current) return;
+
+    const container = containerRef.current;
+
+    // Focus initial element or first focusable
+    const setInitialFocus = () => {
+      if (initialFocusRef?.current) {
+        initialFocusRef.current.focus();
+      } else {
+        const firstFocusable = container.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
+        firstFocusable?.focus();
+      }
+    };
+
+    // Small delay to ensure DOM is ready
+    const timeoutId = setTimeout(setInitialFocus, 50);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+
+      const focusableElements = container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      // Guard: no focusable elements found
+      if (!firstElement || !lastElement) return;
+
+      // Shift+Tab on first element -> go to last
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement.focus();
+      }
+      // Tab on last element -> go to first
+      else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement.focus();
+      }
+    };
+
+    container.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      clearTimeout(timeoutId);
+      container.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isActive, containerRef, initialFocusRef]);
+}
 
 // Configure marked for terminal output
 marked.setOptions({
@@ -49,8 +112,23 @@ const generateBootSequence = (nodeId?: string): BootMessage[] => {
   ];
 };
 
-// Track if we've booted this session (persists across open/close, resets on page reload)
-let hasBootedThisSession = false;
+// Session storage key for boot state (persists across open/close, resets on page reload)
+const BOOT_SESSION_KEY = 'rag-terminal-booted';
+
+// Check if we've booted this session using sessionStorage
+const getHasBootedThisSession = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  return sessionStorage.getItem(BOOT_SESSION_KEY) === 'true';
+};
+
+const setHasBootedThisSession = (value: boolean): void => {
+  if (typeof window === 'undefined') return;
+  if (value) {
+    sessionStorage.setItem(BOOT_SESSION_KEY, 'true');
+  } else {
+    sessionStorage.removeItem(BOOT_SESSION_KEY);
+  }
+};
 
 export default function RAGTerminal({
   isOpen,
@@ -60,7 +138,7 @@ export default function RAGTerminal({
   nodeId,
 }: RAGTerminalProps) {
   const [bootPhase, setBootPhase] = useState<BootPhase>(
-    hasBootedThisSession ? 'ready' : 'idle'
+    getHasBootedThisSession() ? 'ready' : 'idle'
   );
   const [bootMessages, setBootMessages] = useState<string[]>([]);
   const [input, setInput] = useState('');
@@ -68,13 +146,20 @@ export default function RAGTerminal({
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [pendingQuery, setPendingQuery] = useState<string | null>(null);
   const [isClosing, setIsClosing] = useState(false);
-  const [hasEverOpened, setHasEverOpened] = useState(hasBootedThisSession);
+  const [hasEverOpened, setHasEverOpened] = useState(getHasBootedThisSession());
 
   const terminalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const bootSequenceRef = useRef<BootMessage[]>([]);
   const hasSentInitialQuery = useRef(false);
+  const triggerElementRef = useRef<HTMLElement | null>(null);
+
+  // Unique ID for aria-labelledby
+  const titleId = 'rag-terminal-title';
+
+  // Activate focus trap when terminal is open and ready
+  useFocusTrap(terminalRef, isOpen && bootPhase === 'ready', inputRef);
 
   const transport = useMemo(
     () => new TextStreamChatTransport({ api: '/api/chat' }),
@@ -85,12 +170,18 @@ export default function RAGTerminal({
 
   const isLoading = status === 'submitted' || status === 'streaming';
 
-  // Handle closing with CRT fade-out animation
+  // Handle closing with CRT fade-out animation and focus restoration
   const handleClose = useCallback(() => {
     setIsClosing(true);
+    // Store reference before closing animation
+    const elementToFocus = triggerElementRef.current;
     setTimeout(() => {
       setIsClosing(false);
       onClose();
+      // Restore focus to trigger element (WCAG 2.1 AAA requirement)
+      if (elementToFocus && document.body.contains(elementToFocus)) {
+        elementToFocus.focus();
+      }
     }, 150);
   }, [onClose]);
 
@@ -104,7 +195,8 @@ export default function RAGTerminal({
 
   // Boot sequence with forensic data (only runs once per session)
   useEffect(() => {
-    if (isOpen && bootPhase === 'idle' && !hasBootedThisSession) {
+    const hasBooted = getHasBootedThisSession();
+    if (isOpen && bootPhase === 'idle' && !hasBooted) {
       setHasEverOpened(true);
       setBootPhase('booting');
       setBootMessages([]);
@@ -120,10 +212,10 @@ export default function RAGTerminal({
 
       setTimeout(() => {
         setBootPhase('ready');
-        hasBootedThisSession = true;
+        setHasBootedThisSession(true);
         inputRef.current?.focus();
       }, 900);
-    } else if (isOpen && hasBootedThisSession) {
+    } else if (isOpen && hasBooted) {
       // Already booted, just ensure we're ready and focused
       setHasEverOpened(true);
       setBootPhase('ready');
@@ -232,6 +324,33 @@ export default function RAGTerminal({
     };
   }, [isOpen]);
 
+  // Capture trigger element when terminal opens (for focus restoration)
+  useEffect(() => {
+    if (isOpen) {
+      // Store currently focused element as the trigger
+      triggerElementRef.current = document.activeElement as HTMLElement;
+    }
+  }, [isOpen]);
+
+  // Manage aria-hidden on main content for screen reader accessibility
+  useEffect(() => {
+    const mainContent = document.getElementById('main-content');
+    if (!mainContent) return;
+
+    if (isOpen) {
+      mainContent.setAttribute('aria-hidden', 'true');
+      mainContent.setAttribute('inert', '');
+    } else {
+      mainContent.removeAttribute('aria-hidden');
+      mainContent.removeAttribute('inert');
+    }
+
+    return () => {
+      mainContent.removeAttribute('aria-hidden');
+      mainContent.removeAttribute('inert');
+    };
+  }, [isOpen]);
+
   // Handle FAB click - use onOpen if provided, otherwise dispatch custom event
   const handleFabClick = useCallback(() => {
     if (onOpen) {
@@ -324,7 +443,7 @@ export default function RAGTerminal({
         ref={terminalRef}
         className={`rag-terminal ${isClosing ? 'terminal-closing' : ''}`}
         role="dialog"
-        aria-label="Forensic Analysis Terminal"
+        aria-labelledby={titleId}
         aria-modal="true"
       >
         {/* CRT Scanline overlay */}
@@ -333,8 +452,8 @@ export default function RAGTerminal({
 
         {/* Header */}
         <div className="terminal-header">
-          <div className="terminal-title">
-            <span className="terminal-dot" />
+          <div className="terminal-title" id={titleId}>
+            <span className="terminal-dot" aria-hidden="true" />
             <span>FORENSIC_ANALYSIS_CONSOLE</span>
           </div>
           <div className="terminal-header-actions">
@@ -410,10 +529,14 @@ export default function RAGTerminal({
             </div>
 
             {/* Input */}
-            <form onSubmit={handleSubmit} className="terminal-input-container">
-              <span className="terminal-input-prompt">&gt;</span>
+            <form onSubmit={handleSubmit} className="terminal-input-container" role="search">
+              <label htmlFor="terminal-query-input" className="sr-only">
+                Enter your query
+              </label>
+              <span className="terminal-input-prompt" aria-hidden="true">&gt;</span>
               <input
                 ref={inputRef}
+                id="terminal-query-input"
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -423,8 +546,12 @@ export default function RAGTerminal({
                 disabled={bootPhase !== 'ready'}
                 autoComplete="off"
                 spellCheck="false"
+                aria-describedby="terminal-input-hint"
               />
-              <span className="terminal-cursor-input">_</span>
+              <span id="terminal-input-hint" className="sr-only">
+                Use arrow keys for command history, Escape to close
+              </span>
+              <span className="terminal-cursor-input" aria-hidden="true">_</span>
             </form>
           </div>
 
@@ -556,13 +683,28 @@ export default function RAGTerminal({
             pointer-events: none;
             background: repeating-linear-gradient(
               0deg,
-              rgba(0, 0, 0, 0.03) 0px,
-              rgba(0, 0, 0, 0.03) 1px,
+              rgba(0, 0, 0, 0.015) 0px,
+              rgba(0, 0, 0, 0.015) 1px,
               transparent 1px,
               transparent 2px
             );
             z-index: 100;
             animation: scanlines 8s linear infinite;
+            /* Soften scanlines at edges */
+            mask-image: linear-gradient(
+              to bottom,
+              transparent 0%,
+              black 8%,
+              black 92%,
+              transparent 100%
+            );
+            -webkit-mask-image: linear-gradient(
+              to bottom,
+              transparent 0%,
+              black 8%,
+              black 92%,
+              transparent 100%
+            );
           }
 
           @keyframes scanlines {

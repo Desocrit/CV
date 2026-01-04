@@ -1,8 +1,9 @@
 ---
 /**
  * Odometer Component
- * Displays a number with a rolling/counting-up animation on page load.
- * Animation is disabled for print media.
+ * Displays a number with a forensic "diagnostic scan" animation.
+ * Features a scramble phase followed by count-up, triggered on viewport entry.
+ * Animation is disabled for print media and reduced motion preferences.
  */
 
 interface Props {
@@ -28,6 +29,7 @@ const parseValue = (val: string) => {
 };
 
 const parsed = parseValue(value);
+const digitCount = String(parsed.number).length;
 ---
 
 <span
@@ -37,10 +39,12 @@ const parsed = parseValue(value);
   data-prefix={parsed.prefix}
   data-suffix={parsed.suffix}
   data-raw={parsed.raw}
+  data-digits={digitCount}
+  style={`min-width: ${digitCount + parsed.prefix.length + parsed.suffix.length}ch`}
 >
   <!-- Initial state shows the full value for SSR/print/no-JS -->
   <span class="odometer-prefix">{parsed.prefix}</span>
-  <span class="odometer-number" style={`min-width: ${String(parsed.number).length}ch`}>{parsed.number}</span>
+  <span class="odometer-number">{parsed.number}</span>
   <span class="odometer-suffix">{parsed.suffix}</span>
 </span>
 
@@ -48,12 +52,13 @@ const parsed = parseValue(value);
   .odometer-value {
     display: inline-flex;
     align-items: baseline;
+    /* Prevent layout shift during scramble/count phases */
+    min-width: var(--odometer-width, auto);
   }
 
   .odometer-number {
     /* Use tabular figures for consistent digit widths */
     font-variant-numeric: tabular-nums;
-    /* Prevent layout shift by reserving space */
     display: inline-block;
     text-align: right;
   }
@@ -72,65 +77,134 @@ const parsed = parseValue(value);
 </style>
 
 <script is:inline>
-  // Odometer animation - runs once on page load
+  // Odometer animation with forensic scramble effect
   (function() {
-    // Guard against multiple executions
-    if (window.__odometerInit) return;
-    window.__odometerInit = true;
+    // Guard against multiple executions using data attribute instead of window property
+    if (document.documentElement.dataset.odometerInit) return;
+    document.documentElement.dataset.odometerInit = 'true';
 
     // Check for reduced motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
+
+    // Timing constants
+    const SCRAMBLE_DURATION = 300;
+    const COUNT_DURATION = 900;
 
     // Easing function (ease-out cubic)
     function easeOutCubic(t) {
       return 1 - Math.pow(1 - t, 3);
     }
 
+    // Generate random digits string of specified length
+    function randomDigits(length) {
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += Math.floor(Math.random() * 10);
+      }
+      return result;
+    }
+
     function animateOdometer(el) {
       const target = parseInt(el.getAttribute('data-target') || '0', 10);
       const numberSpan = el.querySelector('.odometer-number');
+      const digitCount = parseInt(el.getAttribute('data-digits') || '1', 10);
 
       if (!numberSpan || target <= 0 || isNaN(target)) return;
 
-      const duration = 1200;
-      // Store start time as null, capture on first frame for accurate timing
-      let startTime = null;
+      // Skip animation for reduced motion - show final value immediately
+      if (prefersReducedMotion) {
+        numberSpan.textContent = target.toString();
+        return;
+      }
 
-      // Reserve width based on target to prevent layout shift
       const targetStr = target.toString();
-      numberSpan.style.display = 'inline-block';
-      numberSpan.style.minWidth = targetStr.length + 'ch';
 
-      // Start from 0
-      numberSpan.textContent = '0';
+      // Phase 1: Scramble (300ms of random digits)
+      let scrambleStart = null;
 
-      function animate(currentTime) {
-        // Capture start time on first frame to avoid timing drift
-        if (startTime === null) {
-          startTime = currentTime;
+      function scramble(currentTime) {
+        if (scrambleStart === null) {
+          scrambleStart = currentTime;
         }
 
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(Math.max(elapsed / duration, 0), 1);
-        const easedProgress = easeOutCubic(progress);
+        const elapsed = currentTime - scrambleStart;
 
-        const currentValue = Math.max(0, Math.round(easedProgress * target));
-        numberSpan.textContent = currentValue.toString();
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
+        if (elapsed < SCRAMBLE_DURATION) {
+          // Show random digits during scramble phase
+          numberSpan.textContent = randomDigits(digitCount);
+          requestAnimationFrame(scramble);
         } else {
-          numberSpan.textContent = targetStr;
+          // Transition to count-up phase
+          startCountUp();
         }
       }
 
-      requestAnimationFrame(animate);
+      // Phase 2: Count-up animation
+      function startCountUp() {
+        let countStart = null;
+
+        function count(currentTime) {
+          if (countStart === null) {
+            countStart = currentTime;
+          }
+
+          const elapsed = currentTime - countStart;
+          const progress = Math.min(Math.max(elapsed / COUNT_DURATION, 0), 1);
+          const easedProgress = easeOutCubic(progress);
+
+          const currentValue = Math.max(0, Math.round(easedProgress * target));
+          numberSpan.textContent = currentValue.toString();
+
+          if (progress < 1) {
+            requestAnimationFrame(count);
+          } else {
+            // Ensure final value is exact
+            numberSpan.textContent = targetStr;
+          }
+        }
+
+        requestAnimationFrame(count);
+      }
+
+      // Start with scramble phase
+      requestAnimationFrame(scramble);
     }
 
     function initOdometers() {
       const odometers = document.querySelectorAll('[data-odometer]');
-      odometers.forEach(animateOdometer);
+
+      // If reduced motion is preferred, just show values without observer
+      if (prefersReducedMotion) {
+        odometers.forEach(function(el) {
+          const target = el.getAttribute('data-target') || '0';
+          const numberSpan = el.querySelector('.odometer-number');
+          if (numberSpan) {
+            numberSpan.textContent = target;
+          }
+        });
+        return;
+      }
+
+      // Use IntersectionObserver to trigger animation when 20% visible
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              animateOdometer(entry.target);
+              observer.unobserve(entry.target);
+            }
+          });
+        }, {
+          threshold: 0.2 // Trigger when 20% visible
+        });
+
+        odometers.forEach(function(el) {
+          observer.observe(el);
+        });
+      } else {
+        // Fallback for browsers without IntersectionObserver
+        odometers.forEach(animateOdometer);
+      }
     }
 
     if (document.readyState === 'loading') {

@@ -85,6 +85,7 @@ export const cvSchema = z.object({
   role: nonEmptyString,
   location: nonEmptyString,
   email: z.string().email(),
+  phone: nonEmptyString.optional(),
   website: z.string().url(),
   github: z.string().url(),
   linkedin: z.string().url(),
@@ -112,5 +113,22 @@ export type Skills = z.infer<typeof skillsSchema>;
 export type Education = z.infer<typeof educationSchema>;
 export type ImpactNode = z.infer<typeof impactNodeSchema>;
 
-const parsed = parse(yamlContent);
-export const cvData = cvSchema.parse(parsed);
+// Parse CV data with graceful error handling
+function parseCVData(): z.infer<typeof cvSchema> {
+  try {
+    const parsed = parse(yamlContent);
+    return cvSchema.parse(parsed);
+  } catch (error) {
+    // Provide helpful error message for debugging
+    const message = error instanceof z.ZodError
+      ? `CV data validation failed:\n${error.errors.map(e => `  - ${e.path.join('.')}: ${e.message}`).join('\n')}`
+      : error instanceof Error
+        ? `CV YAML parsing failed: ${error.message}`
+        : 'Unknown error parsing CV data';
+
+    console.error('[cv-data]', message);
+    throw new Error(`Failed to load CV data. ${message}`);
+  }
+}
+
+export const cvData = parseCVData();
