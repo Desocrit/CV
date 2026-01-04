@@ -6,7 +6,7 @@
  *
  * Prerequisites:
  * 1. Create the cv_embeddings table in Neon (see SQL below)
- * 2. Set environment variables:
+ * 2. Set environment variables in .env:
  *    - DATABASE_URL: Your Neon connection string
  *    - AI_GATEWAY_API_KEY: Your Vercel AI Gateway key
  *
@@ -24,17 +24,23 @@
  * CREATE INDEX ON cv_embeddings USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
  * ```
  *
- * Usage (Windows CMD):
- * ```cmd
- * set DATABASE_URL=your_url && set AI_GATEWAY_API_KEY=your_key && node scripts/seed-embeddings.mjs
+ * Usage:
  * ```
+ * node scripts/seed-embeddings.mjs [--clear]
+ * ```
+ *
+ * Options:
+ *   --clear    Clear existing CV embeddings before inserting (preserves document embeddings)
  */
 
 import { neon } from '@neondatabase/serverless';
 import { readFileSync } from 'fs';
 import { parse } from 'yaml';
-import { openai } from '@ai-sdk/openai';
 import { embed } from 'ai';
+import { config } from 'dotenv';
+
+// Load .env file
+config();
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
@@ -169,10 +175,23 @@ function parseContentIntoChunks(yamlContent) {
   return chunks;
 }
 
+// CV-specific categories (not 'document' from ingest-folder.mjs)
+const CV_CATEGORIES = [
+  'general',
+  'achievement',
+  'project',
+  'work_history',
+  'skills',
+  'education',
+  'impact',
+  'achievements_extra',
+  'war_stories',
+];
+
 /**
  * Main seeding function
  */
-async function seedEmbeddings() {
+async function seedEmbeddings(clearExisting = false) {
   console.log('[SEED] Reading CV content...');
 
   const yamlPath = new URL('../src/content/main.yaml', import.meta.url);
@@ -182,9 +201,11 @@ async function seedEmbeddings() {
   const chunks = parseContentIntoChunks(yamlContent);
   console.log(`[SEED] Found ${chunks.length} chunks to embed`);
 
-  // Clear existing embeddings
-  console.log('[SEED] Clearing existing embeddings...');
-  await sql`TRUNCATE cv_embeddings RESTART IDENTITY`;
+  // Optionally clear existing CV embeddings (preserves document embeddings)
+  if (clearExisting) {
+    console.log('[SEED] Clearing existing CV embeddings...');
+    await sql`DELETE FROM cv_embeddings WHERE metadata->>'category' != 'document'`;
+  }
 
   // Process each chunk
   for (let i = 0; i < chunks.length; i++) {
@@ -217,5 +238,9 @@ async function seedEmbeddings() {
   console.log('[SEED] Done! Embeddings seeded successfully.');
 }
 
+// Parse command line arguments
+const args = process.argv.slice(2);
+const clearFlag = args.includes('--clear');
+
 // Run the seeder
-seedEmbeddings().catch(console.error);
+seedEmbeddings(clearFlag).catch(console.error);

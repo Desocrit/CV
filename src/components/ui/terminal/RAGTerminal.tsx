@@ -979,6 +979,37 @@ export default function RAGTerminal({
             margin: 0.75rem 0;
           }
 
+          /* Table styles */
+          .terminal-response-text table {
+            border-collapse: collapse;
+            margin: 0.5rem 0;
+            font-size: 10px;
+            width: 100%;
+          }
+
+          .terminal-response-text th,
+          .terminal-response-text td {
+            padding: 0.375rem 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(55, 191, 81, 0.15);
+          }
+
+          .terminal-response-text th {
+            color: #37BF51;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid rgba(55, 191, 81, 0.3);
+            background: rgba(55, 191, 81, 0.05);
+          }
+
+          .terminal-response-text td {
+            color: #a0a0a0;
+          }
+
+          .terminal-response-text tr:hover td {
+            background: rgba(55, 191, 81, 0.03);
+          }
+
           .terminal-loading {
             color: #555;
           }
