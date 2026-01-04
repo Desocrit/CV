@@ -1,0 +1,107 @@
+---
+import type { ImpactNode } from '../../lib/cv-data';
+import Section from '../ui/Section.astro';
+
+interface Props {
+  nodes: ImpactNode[];
+}
+
+const { nodes } = Astro.props;
+
+// Group nodes by header
+const groupedNodes = nodes.reduce<Record<string, ImpactNode[]>>((acc, node) => {
+  const existing = acc[node.header];
+  if (existing) {
+    existing.push(node);
+  } else {
+    acc[node.header] = [node];
+  }
+  return acc;
+}, {});
+
+// Get ordered headers (preserve order from original array)
+const orderedHeaders = [...new Set(nodes.map(n => n.header))];
+---
+
+<div class="impact-print-section">
+  <Section title="Impact" id="impact-print">
+    <div class="impact-groups">
+      {orderedHeaders.map((header) => (
+        <div class="impact-group">
+          <h3 class="group-header">{header}</h3>
+          <ul class="group-bullets">
+            {(groupedNodes[header] ?? []).map((node) => (
+              <li class:list={['bullet-item', { 'print-only-bullet': node.print_only }]}>
+                {node.long_description || node.description}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </Section>
+</div>
+
+<style>
+  /* Hide on screen, show only in print */
+  .impact-print-section {
+    display: none;
+  }
+
+  @media print {
+    .impact-print-section {
+      display: block;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin-bottom: 0.6rem;
+    }
+
+    .impact-print-section :global(.section-with-label) {
+      margin-bottom: 0.4rem;
+    }
+
+    .impact-groups {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .impact-group {
+      break-inside: avoid;
+      margin-bottom: 1rem;
+    }
+
+    .group-header {
+      font-family: var(--font-mono);
+      font-size: 7.5pt;
+      font-weight: 600;
+      color: var(--color-foreground);
+      text-transform: capitalize;
+      letter-spacing: 0.02em;
+      margin: 0 0 0.15rem 0;
+    }
+
+    .group-bullets {
+      margin: 0;
+      padding-left: 1rem;
+      list-style-type: disc;
+    }
+
+    .bullet-item {
+      font-family: var(--font-sans);
+      font-size: 7pt;
+      color: var(--color-muted-foreground);
+      line-height: 1.4;
+      margin-bottom: 0.1rem;
+    }
+
+    .bullet-item::marker {
+      color: var(--color-muted-foreground-light);
+    }
+
+    /* Print-only bullets: hidden by default, shown in this print context */
+    .print-only-bullet {
+      display: list-item;
+    }
+  }
+</style>
