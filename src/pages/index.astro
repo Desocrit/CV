@@ -129,6 +129,26 @@ const educationData = cvData.education.map((edu) => ({
             </div>
           </Section>
         </div>
+
+        <div class="education-section">
+          <Section title="Education" id="education">
+            <div class="content-list">
+              <div class="content-item">
+                <ContentCard
+                  title={cvData.education[0]?.degree ?? 'Computer Science'}
+                  tag={cvData.education[0]?.tenure ?? String(cvData.education[0]?.year)}
+                  label={cvData.education[0]?.institution}
+                  technologies={[]}
+                  headline={`${cvData.education[0]?.score_long} from the University of Southampton.`}
+                  bulletPoints={[
+                    `Masters of Engineering in ${cvData.education[0]?.specialism}`,
+                    cvData.education[0]?.notable ?? '',
+                  ].filter(Boolean)}
+                />
+              </div>
+            </div>
+          </Section>
+        </div>
       </div>
     </div>
   </div>
@@ -167,6 +187,7 @@ const educationData = cvData.education.map((edu) => ({
 
     .main-content {
       padding: var(--spacing-fluid-md);
+      padding-top: 0;
     }
   }
 
@@ -180,6 +201,25 @@ const educationData = cvData.education.map((edu) => ({
   .history-section .content-item:nth-child(1) :global(.content-card) { --card-accent: var(--color-accent-green); }
   .history-section .content-item:nth-child(2) :global(.content-card) { --card-accent: var(--color-accent-purple); }
   .history-section .content-item:nth-child(3) :global(.content-card) { --card-accent: var(--color-accent-blue); }
+
+  /* Education section: mobile-only, always green */
+  .education-section {
+    display: none;
+  }
+
+  .education-section :global(.content-card) {
+    --card-accent: var(--color-accent-green);
+  }
+
+  .education-section :global(.section-with-label) {
+    --section-accent: var(--color-accent-green);
+  }
+
+  @media (max-width: 768px) {
+    .education-section {
+      display: block;
+    }
+  }
 
   /* Section title hover effects - desktop only (mobile uses scroll-based color) */
   @media (min-width: 769px) {

@@ -9,6 +9,7 @@ interface Props {
 
 const { title, id, class: className = '' } = Astro.props;
 const headingId = id ? `${id}-heading` : undefined;
+const contentId = id ? `${id}-content` : `section-content-${Math.random().toString(36).slice(2, 9)}`;
 
 const formatTitle = (str: string) =>
   str.toUpperCase().replace(/\s+/g, '_');
@@ -23,16 +24,23 @@ const formatTitle = (str: string) =>
   <div class="section-grid">
     <div class="section-label">
       <div class="section-label-inner">
-        <span class="section-title font-mono text-fluid-2xs" aria-hidden="true">
-          <span class="section-prefix">// </span>
-          <span class="section-title-text">{formatTitle(title)}</span><span class="section-context"></span>
-        </span>
+        <button
+          type="button"
+          class="section-toggle"
+          aria-expanded="true"
+          aria-controls={contentId}
+        >
+          <span class="section-title font-mono text-fluid-2xs" aria-hidden="true">
+            <span class="section-prefix">// </span>
+            <span class="section-title-text">{formatTitle(title)}</span><span class="section-context"></span>
+          </span>
+        </button>
         <ActionButton label="^" class="scroll-top-btn" screenReaderLabel="Scroll to top" />
       </div>
       <span class="section-title-print" aria-hidden="true">{title}</span>
     </div>
 
-    <div class="section-content">
+    <div class="section-content" id={contentId}>
       <h2 id={headingId} class="sr-only">{title}</h2>
       <slot />
     </div>
@@ -72,7 +80,7 @@ const formatTitle = (str: string) =>
 
   .section-label-inner {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
   }
 
@@ -104,10 +112,23 @@ const formatTitle = (str: string) =>
     color: var(--color-foreground);
   }
 
+  /* Typeface alignment fix for sections with larger content titles */
+  .section-with-label[data-section-id='projects'] .section-title,
+  .section-with-label[data-section-id='history'] .section-title {
+    margin-top: 3px;
+  }
+
   /* Scroll to top button - hidden on desktop */
   .scroll-top-btn {
     display: none !important;
   }
+
+  /* Toggle button - not interactive on desktop */
+  .section-toggle {
+    all: unset;
+    display: contents;
+  }
+
 
   /* ===== MOBILE: Terminal Command Bar ===== */
   @media (max-width: 768px) {
@@ -144,7 +165,7 @@ const formatTitle = (str: string) =>
       position: relative;
       left: 50%;
       transform: translateX(-50%);
-      padding: 0.75rem var(--spacing-fluid-md);
+      padding: 0.625rem var(--spacing-fluid-md);
       border-top: 1px solid var(--section-accent);
       border-bottom: 1px solid var(--section-accent);
     }
@@ -178,10 +199,43 @@ const formatTitle = (str: string) =>
       content: none;
     }
 
+    /* Toggle button - interactive on mobile */
+    .section-toggle {
+      all: unset;
+      display: flex;
+      align-items: center;
+      flex: 1;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+
+    /* Expanded touch target without affecting layout */
+    .section-toggle::before {
+      content: '';
+      position: absolute;
+      inset: -0.5rem;
+      z-index: 1;
+    }
+
+    .section-toggle:focus-visible {
+      outline: 2px solid var(--section-accent);
+      outline-offset: 2px;
+    }
+
     /* Button inherits section accent color */
     .scroll-top-btn {
       display: inline-flex !important;
       flex-shrink: 0;
+      position: relative;
+    }
+
+    /* Expanded touch target without affecting layout */
+    .scroll-top-btn::before {
+      content: '';
+      position: absolute;
+      inset: -0.5rem;
+      z-index: 1;
     }
 
     .scroll-top-btn :global(.bracket),
@@ -189,13 +243,15 @@ const formatTitle = (str: string) =>
       color: var(--section-accent) !important;
     }
 
-    .section-content {
+    .section-content,
+    .section-with-label:first-child .section-content {
       width: 100%;
-      padding-top: var(--spacing-fluid-sm);
+      padding-top: var(--spacing-fluid-md);
     }
 
-    .section-with-label:first-child .section-content {
-      padding-top: var(--spacing-fluid-sm);
+    /* Collapsed state */
+    .section-with-label.is-collapsed .section-content {
+      display: none;
     }
 
     /* Active section styling - color is set dynamically via JS based on topmost card */
@@ -266,13 +322,25 @@ const formatTitle = (str: string) =>
     document.querySelectorAll('.scroll-top-btn').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation(); // Prevent toggle when clicking scroll button
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     });
 
-    // Active section highlighting (mobile only)
+    // Mobile-only features
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
     if (!isMobile) return;
+
+    // Accordion toggle functionality (mobile only)
+    document.querySelectorAll('.section-toggle').forEach((toggle) => {
+      toggle.addEventListener('click', () => {
+        const section = (toggle as HTMLElement).closest('.section-with-label');
+        if (!section) return;
+
+        const isCollapsed = section.classList.toggle('is-collapsed');
+        toggle.setAttribute('aria-expanded', String(!isCollapsed));
+      });
+    });
 
     const sections = document.querySelectorAll('.section-with-label');
     if (sections.length === 0) return;

@@ -43,19 +43,24 @@ const toSnakeCase = (str: string) =>
 ---
 
 <aside class="sidebar-column scrollbar-hidden">
-  <header class="mb-fluid-md">
-    <h1 class="text-3xl font-medium text-foreground leading-none tracking-tight">{name}</h1>
+  <header class="site-header mb-fluid-lg lg:mb-fluid-md">
+    <!-- Desktop: stacked layout -->
+    <div class="header-desktop">
+      <h1 class="text-3xl font-medium text-foreground leading-none tracking-tight">{name}</h1>
+      <p class="sidebar-role text-fluid-sm font-light tracking-wide mt-2">{role}</p>
+      <p class="text-fluid-2xs font-mono text-muted-foreground mt-1">{location}</p>
+    </div>
 
-    <p class="sidebar-role text-fluid-sm font-light tracking-wide mt-2">
-      {role}
-    </p>
-
-    <p class="text-fluid-2xs font-mono text-muted-foreground mt-1">
-      {location}
-    </p>
+    <!-- Mobile: compact space-between layout -->
+    <div class="header-mobile">
+      <h1 class="text-xl font-medium text-foreground leading-none tracking-tight">{name}</h1>
+      <p class="header-meta font-mono text-fluid-xs">
+        <span class="meta-separator">//</span> {role.toUpperCase().replace(/\s+/g, '_')}, {(location.split(',')[0] ?? location).toUpperCase()}
+      </p>
+    </div>
   </header>
 
-  <nav class="social-nav mb-fluid-md" aria-label="Contact links">
+  <nav class="social-nav mb-fluid-lg lg:mb-fluid-md" aria-label="Contact links">
     <address class="social-links font-mono text-fluid-2xs not-italic">
       <!-- Desktop: full links with text | Mobile dark: tags | Mobile light: icons only -->
       <a
@@ -67,7 +72,7 @@ const toSnakeCase = (str: string) =>
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
         </svg>
         <span class="link-text">{email}</span>
-        <span class="link-tag">MAIL</span>
+        <span class="link-tag">@</span>
       </a>
 
       <a
@@ -81,7 +86,7 @@ const toSnakeCase = (str: string) =>
           <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
         </svg>
         <span class="link-text">LinkedIn</span>
-        <span class="link-tag">LI</span>
+        <span class="link-tag">/usr/in</span>
       </a>
 
       <div class="print-only print-contact-links">
@@ -102,7 +107,7 @@ const toSnakeCase = (str: string) =>
           <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
         </svg>
         <span class="link-text">GitHub</span>
-        <span class="link-tag">GITHUB</span>
+        <span class="link-tag">/src/gh</span>
       </a>
 
       <button
@@ -115,7 +120,7 @@ const toSnakeCase = (str: string) =>
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
         </svg>
         <span class="link-text">Print</span>
-        <span class="link-tag">PRINT</span>
+        <span class="link-tag">> save.pdf</span>
       </button>
 
       <button
@@ -131,23 +136,27 @@ const toSnakeCase = (str: string) =>
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
         </svg>
         <span class="link-text theme-label">Light Mode</span>
-        <!-- In dark mode: show LIGHT (what clicking will do). In light mode: show DARK -->
-        <span class="link-tag theme-tag-light">LIGHT</span>
-        <span class="link-tag theme-tag-dark hidden">DARK</span>
+        <!-- In dark mode: show /light (what clicking will do). In light mode: show /dark -->
+        <span class="link-tag theme-tag-light">~/light</span>
+        <span class="link-tag theme-tag-dark hidden">~/dark</span>
       </button>
     </address>
   </nav>
 
-  <section class="mb-fluid-md" aria-label="Profile">
-    <h2 class="sidebar-section-title">Profile</h2>
+  <section class="profile-section mb-fluid-lg lg:mb-fluid-md" aria-label="Profile">
+    <h2 class="sidebar-section-title hidden lg:block">Profile</h2>
+    <h2 class="terminal-section-title lg:hidden">&gt; PROFILE</h2>
     <p class="profile-text text-fluid-2xs text-muted-foreground leading-relaxed mt-fluid-xs">
       {profile}
     </p>
   </section>
 
-  <section class="achievements-section mb-fluid-md" aria-label="Key Achievements">
-    <h2 class="sidebar-section-title achievements-title">Achievements</h2>
-    <div class="achievements-list mt-fluid-xs space-y-fluid-sm">
+  <section class="achievements-section mb-fluid-lg lg:mb-fluid-md" aria-label="Key Achievements">
+    <h2 class="sidebar-section-title achievements-title hidden lg:block">Achievements</h2>
+    <h2 class="terminal-section-title lg:hidden">&gt; ARCHITECTURAL_STATS:</h2>
+
+    <!-- Desktop: original layout -->
+    <div class="achievements-list hidden lg:block mt-fluid-xs space-y-fluid-sm">
       {achievements.map((achievement) => (
         <div class="achievement-item">
           <div class="flex items-baseline gap-2">
@@ -168,9 +177,30 @@ const toSnakeCase = (str: string) =>
         </div>
       ))}
     </div>
+
+    <!-- Mobile: two-column grid with aligned metrics -->
+    <div class="achievements-grid grid lg:hidden">
+      {achievements.map((achievement) => (
+        <div class="achievement-item">
+          <data
+            value={achievement.headline}
+            class="achievement-metric font-mono text-fluid-base font-semibold tracking-tight leading-none"
+          >
+            {achievement.headline}
+          </data>
+          <span class="achievement-label font-mono text-[9px] uppercase tracking-[0.12em]">
+            {toSnakeCase(achievement.metric)}
+          </span>
+          <span class="grid-spacer" aria-hidden="true"></span>
+          <p class="achievement-desc text-fluid-2xs text-muted-foreground leading-snug">
+            {achievement.description}
+          </p>
+        </div>
+      ))}
+    </div>
   </section>
 
-  <section class="mb-fluid-md" aria-label="Education">
+  <section class="education-section mb-fluid-md" aria-label="Education">
     <h2 class="sidebar-section-title">Education</h2>
     <div class="spec-block mt-fluid-xs">
       <p class="font-sans text-fluid-xs text-muted-foreground">
@@ -221,6 +251,7 @@ const toSnakeCase = (str: string) =>
       height: auto;
       overflow-y: visible;
       padding: var(--spacing-fluid-md);
+      padding-bottom: 0;
     }
   }
 
@@ -308,7 +339,7 @@ const toSnakeCase = (str: string) =>
       display: none !important;
     }
 
-    /* Dark mode (default): show bracketed tags [ GH ] - matches ActionButton */
+    /* Dark mode (default): show unix-style tags */
     .link-tag {
       display: inline;
       font-family: var(--font-mono);
@@ -321,16 +352,6 @@ const toSnakeCase = (str: string) =>
     /* Ensure hidden class works (overrides display:inline above) */
     .link-tag.hidden {
       display: none !important;
-    }
-
-    .link-tag::before {
-      content: '[ ';
-      color: var(--color-accent-purple);
-    }
-
-    .link-tag::after {
-      content: ' ]';
-      color: var(--color-accent-purple);
     }
 
     .social-link:hover .link-tag {
@@ -357,6 +378,60 @@ const toSnakeCase = (str: string) =>
     :global([data-theme='light']) .social-link:hover .social-icon {
       opacity: 1;
     }
+  }
+
+  /* Header layout - show/hide based on viewport */
+  .header-desktop {
+    display: block;
+  }
+
+  .header-mobile {
+    display: none;
+  }
+
+  @media (max-width: 1024px) {
+    .header-desktop {
+      display: none;
+    }
+
+    .header-mobile {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .education-section {
+      display: none;
+    }
+
+    .profile-text {
+      margin-top: 0.25rem;
+    }
+
+    .terminal-section-title {
+      margin-bottom: 0.25rem;
+    }
+  }
+
+
+  /* Terminal-style section titles (mobile) */
+  .terminal-section-title {
+    font-family: var(--font-mono);
+    font-size: var(--text-fluid-xs);
+    font-weight: 500;
+    color: var(--color-accent-green);
+    margin-bottom: 0.5rem;
+  }
+
+  .header-meta {
+    color: var(--color-muted-foreground);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .meta-separator {
+    opacity: 0.7;
   }
 
   .sidebar-role {
@@ -388,12 +463,42 @@ const toSnakeCase = (str: string) =>
   }
 
   /* Achievement styling - white numbers, purple labels */
-  .achievement-headline {
+  .achievement-headline,
+  .achievement-metric {
     color: var(--color-foreground);
   }
 
   .achievement-label {
     color: var(--color-accent-purple);
+  }
+
+  /* Mobile: two-column grid for aligned metrics */
+  .achievements-grid {
+    grid-template-columns: auto 1fr;
+    column-gap: 0.5rem;
+    row-gap: 0.125rem;
+    margin-top: var(--spacing-fluid-sm);
+  }
+
+  .achievements-grid .achievement-item {
+    display: contents;
+  }
+
+  .achievements-grid .achievement-metric {
+    text-align: right;
+    align-self: baseline;
+  }
+
+  .achievements-grid .achievement-label {
+    align-self: baseline;
+  }
+
+  .achievement-desc {
+    margin-bottom: var(--spacing-fluid-sm);
+  }
+
+  .achievements-grid .achievement-item:last-child .achievement-desc {
+    margin-bottom: 0;
   }
 
   .skill-separator {

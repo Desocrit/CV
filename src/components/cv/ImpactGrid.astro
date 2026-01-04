@@ -36,7 +36,7 @@ const { nodes } = Astro.props;
 </div>
 
 <style>
-  .impact-section {
+  .impact-section :global(.section-with-label:not(.is-collapsed)) {
     margin-bottom: var(--spacing-fluid-md);
   }
 

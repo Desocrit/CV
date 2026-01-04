@@ -68,6 +68,7 @@ export const educationSchema = z.object({
   score_long: nonEmptyString.optional(),
   specialism: nonEmptyString.optional(),
   institution: nonEmptyString,
+  tenure: nonEmptyString.optional(),
   year: z.number().int().min(1900).max(2100),
   notable: nonEmptyString.optional(),
 });
