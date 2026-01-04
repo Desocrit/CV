@@ -68,12 +68,22 @@ const highlightMetrics = (text: string): string => {
         </p>
       )}
 
-      <!-- Tech stack as diagnostic nodes -->
+      <!-- Tech stack as diagnostic nodes (dark mode) -->
       {technologies.length > 0 && (
-        <div class="tech-tags mt-fluid-xs flex flex-wrap gap-1.5" data-print="hide">
+        <div class="tech-tags mt-fluid-xs flex flex-wrap gap-1.5">
           {technologies.filter(t => !t.name.startsWith('TODO')).slice(0, 4).map((tech) => (
             <TechTag name={tech.name} url={tech.url} tooltip={tech.tooltip} />
           ))}
+        </div>
+      )}
+
+      <!-- Tech stack as simple list (light mode) -->
+      {technologies.length > 0 && (
+        <div class="tech-list-light">
+          <hr class="tech-divider" />
+          <p class="tech-list-text">
+            {technologies.filter(t => !t.name.startsWith('TODO')).slice(0, 4).map((tech) => tech.name).join(', ')}
+          </p>
         </div>
       )}
     </div>
@@ -104,8 +114,10 @@ const highlightMetrics = (text: string): string => {
         <details class="group/details mt-fluid-sm" data-print="hide">
           <summary class="details-toggle inline-flex cursor-pointer list-none items-center gap-0.5 font-mono text-fluid-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
             <span class="bracket">[</span>
-            <span class="toggle-text group-open/details:hidden"> VIEW_DETAILS </span>
-            <span class="toggle-text hidden group-open/details:inline"> HIDE_DETAILS </span>
+            <span class="toggle-text light:hidden group-open/details:hidden"> VIEW_DETAILS </span>
+            <span class="toggle-text hidden light:hidden group-open/details:inline"> HIDE_DETAILS </span>
+            <span class="toggle-text hidden light:inline light:group-open/details:hidden">View details →</span>
+            <span class="toggle-text hidden light:group-open/details:inline">← Hide details</span>
             <span class="bracket">]</span>
           </summary>
           <div class="details-content mt-fluid-xs pl-3 border-l-2 text-fluid-xs leading-relaxed whitespace-pre-line">
@@ -121,10 +133,14 @@ const highlightMetrics = (text: string): string => {
           class="terminal-trigger details-toggle inline-flex cursor-pointer items-center gap-0.5 font-mono text-fluid-2xs mt-fluid-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors"
           data-prompt={prompt.trim()}
           data-print="hide"
+          aria-label={`View details for ${title}`}
         >
-          <span class="bracket">[</span>
-          <span class="toggle-text">VIEW_DETAILS</span>
-          <span class="bracket">]</span>
+          <span aria-hidden="true">
+            <span class="bracket">[</span>
+            <span class="toggle-text light:hidden">VIEW_DETAILS</span>
+            <span class="toggle-text hidden light:inline">View details →</span>
+            <span class="bracket">]</span>
+          </span>
         </button>
       )}
     </div>
@@ -224,6 +240,11 @@ const highlightMetrics = (text: string): string => {
     color: var(--color-muted-foreground);
   }
 
+  /* Print tech list - hidden on screen */
+  .tech-list-light {
+    display: none;
+  }
+
   /* Responsive: Stack on smaller screens */
   @media (max-width: 640px) {
     .card-grid {
@@ -273,6 +294,7 @@ const highlightMetrics = (text: string): string => {
       flex-basis: 100%;
       order: 10;
     }
+
   }
 
   /* Mobile: Only button is clickable, not entire card */
@@ -307,8 +329,8 @@ const highlightMetrics = (text: string): string => {
     }
 
     .content-card {
-      padding-top: 0.3rem;
-      padding-bottom: 0.3rem;
+      padding-top: 0.35rem;
+      padding-bottom: 0.35rem;
       border-bottom: none;
     }
 
@@ -316,10 +338,10 @@ const highlightMetrics = (text: string): string => {
       border-bottom: none;
     }
 
-    /* Maintain two-column layout in cards for compact display */
+    /* Maintain two-column layout in cards */
     .card-grid {
-      grid-template-columns: 115px 1fr;
-      gap: 0.6rem;
+      grid-template-columns: 160px 1fr;
+      gap: 0.75rem;
     }
 
     /* ========================================================================
@@ -342,7 +364,7 @@ const highlightMetrics = (text: string): string => {
 
     /* Headline - keep with header, avoid orphaning */
     .card-content > p:first-child {
-      font-size: 9pt !important;
+      font-size: 8pt !important;
       line-height: 1.4 !important;
       color: #333 !important;
       break-before: avoid;
@@ -355,8 +377,8 @@ const highlightMetrics = (text: string): string => {
        Short lists (≤4 items): keep together to avoid awkward splits
        Long lists (>4 items): allow breaking to prevent large white gaps */
     .bullet-list {
-      padding-left: 0.8rem !important;
-      margin-top: 0.15rem !important;
+      padding-left: 0.75rem !important;
+      margin-top: 0.2rem !important;
     }
 
     /* Default: keep bullet lists together */
@@ -375,8 +397,9 @@ const highlightMetrics = (text: string): string => {
     .bullet-list li {
       display: list-item !important;
       list-style-type: disc !important;
-      margin: 0.05rem 0 !important;
-      font-size: 8pt !important;
+      margin: 0.1rem 0 !important;
+      font-size: 7.5pt !important;
+      line-height: 1.35 !important;
       color: #4a4a4a !important;
       break-inside: avoid;
       page-break-inside: avoid;
@@ -388,7 +411,7 @@ const highlightMetrics = (text: string): string => {
     .label-text {
       color: #4a4a4a !important;
       text-transform: none !important;
-      font-size: 8pt !important;
+      font-size: 7.5pt !important;
       letter-spacing: 0 !important;
       margin-top: 0.15rem !important;
     }
@@ -411,20 +434,48 @@ const highlightMetrics = (text: string): string => {
     details > div {
       display: block !important;
       padding-left: 0;
-      margin-top: 0.2rem;
+      margin-top: 0.15rem;
       border: none;
     }
 
     .details-content {
       color: #4a4a4a !important;
       border-color: transparent !important;
-      font-size: 8pt !important;
+      font-size: 7.5pt !important;
       padding-left: 0 !important;
     }
 
     /* Hide the dash separator */
     .item-separator {
       display: none !important;
+    }
+
+    /* Tech tags - hide styled tags in print, show simple list */
+    .tech-tags {
+      display: none !important;
+    }
+
+    .tech-list-light {
+      display: block !important;
+      margin-top: 0.5rem;
+    }
+
+    .tech-divider {
+      border: none;
+      border-top: 0.5px solid #c0c0c0;
+      margin: 0 0 0.2rem 0;
+      margin-right: 2rem;
+    }
+
+    .tech-list-text {
+      font-family: var(--font-sans);
+      font-size: 7pt;
+      font-weight: 400;
+      color: #4a4a4a;
+      margin: 0;
+      padding-right: 4rem;
+      line-height: 1.4;
+      text-wrap: balance;
     }
   }
 </style>

@@ -83,8 +83,9 @@ const digitCount = String(parsed.number).length;
     if (document.documentElement.dataset.odometerInit) return;
     document.documentElement.dataset.odometerInit = 'true';
 
-    // Check for reduced motion preference
+    // Check for reduced motion preference or light mode (no animation in light mode)
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isLightMode = () => document.documentElement.getAttribute('data-theme') === 'light';
 
     // Timing constants
     const SCRAMBLE_DURATION = 300;
@@ -111,8 +112,8 @@ const digitCount = String(parsed.number).length;
 
       if (!numberSpan || target <= 0 || isNaN(target)) return;
 
-      // Skip animation for reduced motion - show final value immediately
-      if (prefersReducedMotion) {
+      // Skip animation for reduced motion or light mode - show final value immediately
+      if (prefersReducedMotion || isLightMode()) {
         numberSpan.textContent = target.toString();
         return;
       }
@@ -173,8 +174,8 @@ const digitCount = String(parsed.number).length;
     function initOdometers() {
       const odometers = document.querySelectorAll('[data-odometer]');
 
-      // If reduced motion is preferred, just show values without observer
-      if (prefersReducedMotion) {
+      // If reduced motion is preferred or light mode, just show values without observer
+      if (prefersReducedMotion || isLightMode()) {
         odometers.forEach(function(el) {
           const target = el.getAttribute('data-target') || '0';
           const numberSpan = el.querySelector('.odometer-number');

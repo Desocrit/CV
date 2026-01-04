@@ -332,24 +332,6 @@ export default function RAGTerminal({
     }
   }, [isOpen]);
 
-  // Manage aria-hidden on main content for screen reader accessibility
-  useEffect(() => {
-    const mainContent = document.getElementById('main-content');
-    if (!mainContent) return;
-
-    if (isOpen) {
-      mainContent.setAttribute('aria-hidden', 'true');
-      mainContent.setAttribute('inert', '');
-    } else {
-      mainContent.removeAttribute('aria-hidden');
-      mainContent.removeAttribute('inert');
-    }
-
-    return () => {
-      mainContent.removeAttribute('aria-hidden');
-      mainContent.removeAttribute('inert');
-    };
-  }, [isOpen]);
 
   // Handle FAB click - use onOpen if provided, otherwise dispatch custom event
   const handleFabClick = useCallback(() => {
@@ -431,6 +413,12 @@ export default function RAGTerminal({
               font-size: 12px;
             }
           }
+
+          @media print {
+            .terminal-floating-icon {
+              display: none !important;
+            }
+          }
         `}</style>
       </button>
     ) : null;
@@ -442,9 +430,8 @@ export default function RAGTerminal({
       <div
         ref={terminalRef}
         className={`rag-terminal ${isClosing ? 'terminal-closing' : ''}`}
-        role="dialog"
+        role="complementary"
         aria-labelledby={titleId}
-        aria-modal="true"
       >
         {/* CRT Scanline overlay */}
         <div className="crt-scanlines" aria-hidden="true" />
@@ -598,7 +585,7 @@ export default function RAGTerminal({
         <style>{`
           /* Body layout adjustment when terminal is open */
           :global(body.terminal-open) {
-            overflow: hidden;
+            /* Allow page interaction while terminal is open */
           }
 
           :global(body.terminal-open #main-content) {
@@ -630,16 +617,17 @@ export default function RAGTerminal({
             z-index: 50;
             display: flex;
             flex-direction: column;
-            background: rgba(5, 5, 8, 0.98);
-            border-top: 1px solid rgba(55, 191, 81, 0.3);
-            border-left: 1px solid rgba(55, 191, 81, 0.15);
+            /* Force dark mode styling */
+            background: rgba(5, 5, 8, 0.98) !important;
+            border-top: 1px solid rgba(55, 191, 81, 0.3) !important;
+            border-left: 1px solid rgba(55, 191, 81, 0.15) !important;
             font-family: var(--font-mono);
             font-size: 11px;
-            color: #888;
+            color: #888 !important;
             box-shadow:
               0 -10px 40px rgba(0, 0, 0, 0.4),
               0 0 30px rgba(55, 191, 81, 0.06),
-              inset 0 1px 0 rgba(55, 191, 81, 0.1);
+              inset 0 1px 0 rgba(55, 191, 81, 0.1) !important;
             animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             overflow: hidden;
           }
@@ -745,8 +733,8 @@ export default function RAGTerminal({
             align-items: center;
             justify-content: space-between;
             padding: 0.625rem 1rem;
-            border-bottom: 1px solid rgba(55, 191, 81, 0.15);
-            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(55, 191, 81, 0.15) !important;
+            background: #0a0a0c !important;
             flex-shrink: 0;
           }
 
@@ -754,7 +742,7 @@ export default function RAGTerminal({
             display: flex;
             align-items: center;
             gap: 0.625rem;
-            color: rgba(55, 191, 81, 0.7);
+            color: rgba(55, 191, 81, 0.7) !important;
             font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 0.15em;
@@ -764,9 +752,9 @@ export default function RAGTerminal({
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: #37BF51;
-            box-shadow: 0 0 8px #37BF51, 0 0 16px rgba(55, 191, 81, 0.5);
-            animation: pulse 2s ease-in-out infinite;
+            background: #37BF51 !important;
+            box-shadow: 0 0 8px #37BF51, 0 0 16px rgba(55, 191, 81, 0.5) !important;
+            animation: pulse 2s ease-in-out infinite !important;
           }
 
           @keyframes pulse {
@@ -781,13 +769,13 @@ export default function RAGTerminal({
           }
 
           .terminal-status {
-            color: #555;
+            color: #555 !important;
             font-size: 9px;
             letter-spacing: 0.1em;
           }
 
           .terminal-status-ready {
-            color: #37BF51;
+            color: #37BF51 !important;
             animation: statusPulse 2s ease-in-out infinite;
           }
 
@@ -803,9 +791,9 @@ export default function RAGTerminal({
           }
 
           .terminal-close {
-            background: none;
-            border: none;
-            color: #555;
+            background: none !important;
+            border: none !important;
+            color: #555 !important;
             font-family: inherit;
             font-size: 10px;
             cursor: pointer;
@@ -814,7 +802,7 @@ export default function RAGTerminal({
           }
 
           .terminal-close:hover {
-            color: #37BF51;
+            color: #37BF51 !important;
             text-shadow: 0 0 8px rgba(55, 191, 81, 0.5);
           }
 
@@ -1028,22 +1016,22 @@ export default function RAGTerminal({
             display: flex;
             align-items: center;
             padding: 0.75rem 1rem;
-            border-top: 1px solid rgba(55, 191, 81, 0.1);
-            background: rgba(0, 0, 0, 0.4);
+            border-top: 1px solid rgba(55, 191, 81, 0.1) !important;
+            background: rgba(0, 0, 0, 0.4) !important;
             flex-shrink: 0;
           }
 
           .terminal-input-prompt {
-            color: #37BF51;
+            color: #37BF51 !important;
             margin-right: 0.5rem;
             font-weight: 600;
           }
 
           .terminal-input {
             flex: 1;
-            background: none;
-            border: none;
-            color: #f2f2f2;
+            background: none !important;
+            border: none !important;
+            color: #f2f2f2 !important;
             font-family: inherit;
             font-size: inherit;
             outline: none;
@@ -1051,16 +1039,16 @@ export default function RAGTerminal({
           }
 
           .terminal-input::placeholder {
-            color: #444;
+            color: #444 !important;
             letter-spacing: 0.05em;
           }
 
           .terminal-input:disabled {
-            color: #555;
+            color: #555 !important;
           }
 
           .terminal-cursor-input {
-            color: #37BF51;
+            color: #37BF51 !important;
             animation: blink 1s step-end infinite;
           }
 
@@ -1070,25 +1058,25 @@ export default function RAGTerminal({
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.2) !important;
             overflow-y: auto;
           }
 
           .sidebar-section {
-            border-bottom: 1px solid rgba(55, 191, 81, 0.1);
+            border-bottom: 1px solid rgba(55, 191, 81, 0.1) !important;
           }
 
           .sidebar-section:last-child {
-            border-bottom: none;
+            border-bottom: none !important;
           }
 
           .sidebar-header {
             padding: 0.625rem 0.75rem;
             font-size: 9px;
-            color: rgba(55, 191, 81, 0.6);
+            color: rgba(55, 191, 81, 0.6) !important;
             letter-spacing: 0.15em;
-            background: rgba(55, 191, 81, 0.03);
-            border-bottom: 1px solid rgba(55, 191, 81, 0.08);
+            background: rgba(55, 191, 81, 0.03) !important;
+            border-bottom: 1px solid rgba(55, 191, 81, 0.08) !important;
           }
 
           .sidebar-content {
@@ -1101,7 +1089,7 @@ export default function RAGTerminal({
           }
 
           .history-empty {
-            color: #444;
+            color: #444 !important;
             font-size: 9px;
             padding: 0.25rem 0;
           }
@@ -1114,12 +1102,12 @@ export default function RAGTerminal({
           }
 
           .history-index {
-            color: #444;
+            color: #444 !important;
             min-width: 1.5rem;
           }
 
           .history-command {
-            color: #666;
+            color: #666 !important;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1135,17 +1123,17 @@ export default function RAGTerminal({
             gap: 0.5rem;
             padding: 0.25rem 0;
             font-size: 9px;
-            color: #555;
+            color: #555 !important;
           }
 
           .help-item kbd {
             display: inline-block;
             padding: 0.125rem 0.375rem;
-            background: rgba(55, 191, 81, 0.1);
-            border: 1px solid rgba(55, 191, 81, 0.2);
+            background: rgba(55, 191, 81, 0.1) !important;
+            border: 1px solid rgba(55, 191, 81, 0.2) !important;
             border-radius: 2px;
             font-size: 8px;
-            color: #37BF51;
+            color: #37BF51 !important;
           }
 
           /* Mobile - stacked layout, terminal goes full width */

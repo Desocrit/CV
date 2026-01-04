@@ -1,6 +1,9 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
+/* Custom variant for light mode (dark is default, light is opt-in via data-theme) */
+@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
+
 @font-face {
   font-family: 'Geist';
   src: url('/fonts/Geist-Variable.woff2') format('woff2');
@@ -13,6 +16,56 @@
   font-family: 'Geist Mono';
   src: url('/fonts/GeistMono-Variable.woff2') format('woff2');
   font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* IBM Plex Sans for light mode */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('/fonts/IBMPlexSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('/fonts/IBMPlexSans-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('/fonts/IBMPlexSans-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* IBM Plex Mono for light mode */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/fonts/IBMPlexMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/fonts/IBMPlexMono-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/fonts/IBMPlexMono-SemiBold.woff2') format('woff2');
+  font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
@@ -99,68 +152,414 @@
 }
 
 [data-theme='light'] {
-  --color-background: #F2F2F0;
-  --color-foreground: #323234;
+  /* Swiss Blueprint: Architectural Specification palette */
+  --color-background: #F5F5F7; /* Technical Vellum */
+  --color-foreground: #1D1D1F; /* Charcoal Ink */
 
-  --color-card: #F2F2F0;
-  --color-card-foreground: #323234;
+  --color-card: #F5F5F7;
+  --color-card-foreground: #1D1D1F;
 
-  --color-popover: #F2F2F0;
-  --color-popover-foreground: #323234;
+  --color-popover: #F5F5F7;
+  --color-popover-foreground: #1D1D1F;
 
-  --color-primary: #323234;
-  --color-primary-foreground: #F2F2F0;
+  --color-primary: #1D1D1F;
+  --color-primary-foreground: #F5F5F7;
 
-  --color-secondary: #E8E8E6;
-  --color-secondary-foreground: #323234;
+  --color-secondary: #EBEBED;
+  --color-secondary-foreground: #1D1D1F;
 
-  --color-muted: #E5E5E3;
-  --color-muted-foreground: #5A5A5E;
-  --color-muted-foreground-light: #7A7A7E;
+  --color-muted: #E8E8EA;
+  --color-muted-foreground: #636366;
+  --color-muted-foreground-light: #86868B;
 
-  --color-accent: #E8E8E6;
-  --color-accent-foreground: #323234;
+  --color-accent: #EBEBED;
+  --color-accent-foreground: #1D1D1F;
 
-  --color-border: rgba(0, 0, 0, 0.1);
-  --color-border-subtle: rgba(0, 0, 0, 0.05);
-  --color-input: rgba(0, 0, 0, 0.1);
-  --color-ring: #323234;
+  --color-border: rgba(0, 0, 0, 0.12);
+  --color-border-subtle: rgba(0, 0, 0, 0.06);
+  --color-input: rgba(0, 0, 0, 0.08);
+  --color-ring: #1D1D1F;
 
-  --color-achievement: #323234;
-  --color-achievement-foreground: #F2F2F0;
+  --color-achievement: #1D1D1F;
+  --color-achievement-foreground: #F5F5F7;
 
-  --color-terminal-bg: #E8E8E6;
-  --color-terminal-text: #5A5A5E;
-  --color-terminal-prompt: #5A5A5E;
-  --color-terminal-accent: #323234;
+  --color-terminal-bg: rgba(255, 255, 255, 0.8); /* Console: white 80% opacity */
+  --color-terminal-text: #1D1D1F; /* Charcoal Mono */
+  --color-terminal-prompt: #636366;
+  --color-terminal-accent: #1D1D1F;
 
-  --color-accent-purple: #1e3a5f;
-  --color-accent-green: #323234;
+  /* Engineering Inks (Swiss architectural palette) */
+  --color-accent-purple: #9A5B4C; /* Terracotta */
+  --color-accent-green: #2D6A4F; /* Forest Green */
+  --color-accent-blue: #2A5A8A; /* Ink Blue */
+  --color-accent-orange: #9A5B4C; /* Terracotta */
+  --color-accent-red: #8B3A3A; /* Oxblood */
+  --color-accent-cyan: #3D6B6B; /* Verdigris */
 
-  /* Tokyo Night light variants */
-  --color-accent-blue: #2e5a9e;
-  --color-accent-orange: #b86a3a;
-  --color-accent-red: #a14459;
-  --color-accent-cyan: #3a8a7a;
+  /* Light mode geometry */
+  --border-width: 0.5px; /* Hairline borders */
+  --shadow-offset: #D1D1D6; /* Hard offset shadow color */
 }
 
+/* ==========================================================================
+   LIGHT MODE: Swiss Blueprint Typography
+   IBM Plex fonts with architectural kerning
+   ========================================================================== */
+
+/* The Swiss Kerning Secret - optimizeLegibility for crisp rendering */
+[data-theme='light'] {
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Tighten headers to feel like a "Block" of ink */
 [data-theme='light'] h1,
-[data-theme='light'] h2 {
+[data-theme='light'] h2,
+[data-theme='light'] h3 {
   font-weight: 600;
+  letter-spacing: -0.022em; /* The "Inter" Sweet Spot */
+  line-height: 1.1;
 }
 
-[data-theme='light'] .mono-marker {
+[data-theme='light'] h4 {
   font-weight: 500;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
+}
+
+/* Mono needs to breathe to look like code */
+[data-theme='light'] .mono-marker {
+  font-family: 'IBM Plex Mono', 'Consolas', monospace;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  font-variant-ligatures: none; /* Principal signal: we don't use flashy ligatures */
 }
 
 [data-theme='light'] .font-mono,
-[data-theme='light'] [class*="font-mono"] {
+[data-theme='light'] [class*="font-mono"],
+[data-theme='light'] code,
+[data-theme='light'] pre {
+  font-family: 'IBM Plex Mono', 'Consolas', monospace;
   font-weight: 500;
+  letter-spacing: 0.05em;
+  font-variant-ligatures: none;
 }
 
 [data-theme='light'] .metadata-spec {
   font-weight: 400;
+}
+
+/* ==========================================================================
+   LIGHT MODE: Hairline Borders (0.5px)
+   Explicit selectors for specific elements
+   ========================================================================== */
+
+/* Badge borders */
+[data-theme='light'] .badge {
+  border-width: 0.5px;
+}
+
+/* Terminal borders */
+[data-theme='light'] .terminal {
+  border-width: 0.5px;
+}
+
+/* Impact card borders */
+[data-theme='light'] .impact-card {
+  border-width: 0.5px;
+}
+
+/* Content item separators - remove borders entirely */
+[data-theme='light'] .content-item {
+  border-top: none !important;
+}
+
+/* Section dividers as hairlines */
+[data-theme='light'] .section-divider,
+[data-theme='light'] hr {
+  height: 0.5px;
+}
+
+/* ==========================================================================
+   LIGHT MODE: Status indicators
+   ========================================================================== */
+
+/* Status indicators without glow */
+[data-theme='light'] .status-dot,
+[data-theme='light'] [class*="status-"] {
+  box-shadow: none;
+  animation: none;
+}
+
+/* Achievement metrics without glow */
+[data-theme='light'] .achievement-metric-glow {
+  text-shadow: none !important;
+}
+
+/* ==========================================================================
+   LIGHT MODE: Impact Card Hover Effects
+   Hard 2px offset shadow on hover (architectural blueprint style)
+   Disable swirling border animation, use offset shadow instead
+   ========================================================================== */
+
+/* Disable the swirling conic-gradient border animation for light mode */
+[data-theme='light'] .impact-card-wrapper::before {
+  display: none !important;
+}
+
+/* Impact cards - border color change and offset shadow on hover */
+[data-theme='light'] .impact-card-wrapper {
+  transition: box-shadow 0.15s ease-out;
+}
+
+[data-theme='light'] .impact-card-wrapper:hover {
+  box-shadow: 2px 2px 0px color-mix(in srgb, var(--card-accent) 40%, white);
+}
+
+/* Impact card inner element styling for light mode */
+[data-theme='light'] .impact-card {
+  border-width: 0.5px;
+  transition: border-color 0.15s ease-out;
+}
+
+[data-theme='light'] .impact-card-wrapper:hover .impact-card {
+  border-color: var(--card-accent);
+}
+
+/* Badge hover effect */
+[data-theme='light'] .badge:hover {
+  box-shadow: 2px 2px 0px var(--color-accent-purple);
+}
+
+/* ==========================================================================
+   LIGHT MODE: Swiss Standard Case Typography
+   Remove SCREAMING_SNAKE and // terminal coding
+   ========================================================================== */
+
+/* Hide the terminal-style section title, show the clean print version - LIGHT MODE ONLY */
+[data-theme='light'] .section-title {
+  display: none !important;
+}
+
+/* xs/sm/md (< 1024px): no underline, no extra spacing */
+[data-theme='light'] .section-title-print {
+  display: block !important;
+  order: -1;
+  color: var(--color-foreground);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  font-size: var(--text-fluid-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+/* lg (1024px-1279px): full-width underline */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  [data-theme='light'] .section-title-print {
+    display: block !important;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
+    border-bottom: 0.5px solid var(--color-border);
+  }
+}
+
+/* xl+ (1280px+): text-width underline */
+@media (min-width: 1280px) {
+  [data-theme='light'] .section-title-print {
+    display: inline-block !important;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
+    border-bottom: 0.5px solid var(--color-border);
+  }
+}
+
+/* Dark mode: Keep terminal title visible but hide the // prefix */
+/* The section-title-text shows PROJECTS, section-prefix shows // */
+
+/* Remove uppercase from all light mode text */
+[data-theme='light'] .uppercase,
+[data-theme='light'] [class*='uppercase'] {
+  text-transform: none !important;
+}
+
+/* Achievement labels - Standard case instead of SCREAMING_SNAKE */
+[data-theme='light'] .achievement-label {
+  text-transform: none !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* Tech tags - Standard case */
+[data-theme='light'] .tech-tag {
+  text-transform: none !important;
+}
+
+/* Card labels (company names) - show clean version in light mode */
+[data-theme='light'] .label-text {
+  text-transform: none !important;
+}
+
+[data-theme='light'] .label-text .screen-only {
+  display: none !important;
+}
+
+[data-theme='light'] .label-text .print-only {
+  display: inline !important;
+}
+
+/* Impact card headers - remove brackets and snake case */
+[data-theme='light'] .card-header {
+  text-transform: capitalize !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* Sidebar section titles */
+[data-theme='light'] .sidebar-section-title {
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+/* Education separator: // becomes · (dot) */
+[data-theme='light'] .spec-separator {
+  font-size: 0;
+}
+
+[data-theme='light'] .spec-separator::before {
+  content: '·';
+  font-size: 10px;
+  padding: 0 0.25em;
+}
+
+/* Education meta - remove uppercase */
+[data-theme='light'] .edu-meta {
+  text-transform: none !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* Skill category titles - Standard case */
+[data-theme='light'] .skill-category-title {
+  text-transform: none !important;
+}
+
+/* Terminal section titles on mobile - Standard case */
+[data-theme='light'] .terminal-section-title {
+  text-transform: none !important;
+}
+
+/* Section prefix (// ) - hide in light mode */
+[data-theme='light'] .section-prefix {
+  display: none !important;
+}
+
+/* Section context separator - use dot instead of / */
+[data-theme='light'] .section-context::before {
+  content: ' · ' !important;
+}
+
+
+/* ==========================================================================
+   LIGHT MODE: Button & CTA Styling
+   Replace [BRACKET_STYLE] with bold underlined text
+   ========================================================================== */
+
+/* ActionButton - hide brackets, use heavier font weight */
+[data-theme='light'] .action-button .bracket {
+  display: none !important;
+}
+
+[data-theme='light'] .action-button .label {
+  font-weight: 600;
+  text-transform: none !important;
+}
+
+/* Details toggle (VIEW_DETAILS) - Standard case with heavy weight */
+[data-theme='light'] .details-toggle .bracket {
+  display: none !important;
+}
+
+[data-theme='light'] .details-toggle .toggle-text {
+  font-weight: 700;
+  text-transform: none !important;
+}
+
+/* Terminal trigger buttons */
+[data-theme='light'] .terminal-trigger .bracket {
+  display: none !important;
+}
+
+[data-theme='light'] .terminal-trigger .toggle-text {
+  font-weight: 700;
+  text-transform: none !important;
+}
+
+
+/* Impact card header - heavier weight for legibility */
+[data-theme='light'] .impact-card .card-header {
+  font-weight: 600;
+}
+
+/* Impact card CTA - hide brackets, just show arrow */
+[data-theme='light'] .card-cta .cta-bracket {
+  display: none !important;
+}
+
+[data-theme='light'] .card-cta {
+  font-weight: 600;
+}
+
+[data-theme='light'] .card-cta .cta-arrow {
+  padding: 0 0.25em;
+}
+
+/* Impact card header - hide brackets */
+[data-theme='light'] .impact-card .header-bracket {
+  display: none !important;
+}
+
+[data-theme='light'] .impact-card .card-header {
+  font-size: 9px !important;
+  text-transform: capitalize !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* Achievement labels in sidebar - show Title Case version in light mode */
+[data-theme='light'] .achievement-label {
+  text-transform: none !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* Theme visibility now handled via Tailwind light: variant */
+
+/* Sidebar role - heavier weight in light mode */
+[data-theme='light'] .sidebar-role {
+  font-weight: 500;
+}
+
+/* Tag-styled elements - heavier weight in light mode for legibility */
+[data-theme='light'] .tag-text,
+[data-theme='light'] .link-tag,
+[data-theme='light'] .label-text,
+[data-theme='light'] .toggle-text,
+[data-theme='light'] .tech-tag,
+[data-theme='light'] .achievement-label {
+  font-weight: 500;
+}
+
+/* In light mode, hide screen-only inside achievement labels and show print-only/light-mode-only */
+[data-theme='light'] .achievement-label .screen-only {
+  display: none !important;
+}
+
+[data-theme='light'] .achievement-label .print-only {
+  display: inline !important;
+}
+
+/* Hero button - also use bold underline style */
+[data-theme='light'] .no-print.inline-flex[class*="border"] {
+  border: none !important;
+  background: none !important;
 }
 
 @layer base {
@@ -287,6 +686,14 @@
 }
 
 @layer components {
+  /* Unified tag text styling - for labels, CTAs, headers, etc. */
+  .tag-text {
+    font-family: var(--font-mono);
+    font-size: var(--text-fluid-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
   .tracking-widest-plus {
     letter-spacing: var(--tracking-widest-plus);
   }
@@ -404,15 +811,45 @@
 @media print {
   @page {
     size: A4;
-    margin: 1.5cm 1.8cm;
+    margin: 1.2cm 1.5cm;
+  }
+
+  /* ==========================================================================
+     PRINT: Force light mode display patterns regardless of current theme
+     Elements with light:hidden should be hidden, light:inline should show
+     ========================================================================== */
+
+  /* Hide dark-mode-only elements (those using light:hidden to hide in light mode) */
+  .light\:hidden {
+    display: none !important;
+  }
+
+  /* Show light-mode elements (those using hidden light:inline) */
+  .light\:inline {
+    display: inline !important;
+  }
+
+  .light\:block {
+    display: block !important;
+  }
+
+  /* Override Tailwind's responsive hidden utilities for print-critical elements */
+  .sidebar-section-title.hidden,
+  .sidebar-section-title.md\:block {
+    display: block !important;
   }
 
   :root {
+    /* Font overrides for print - use IBM Plex family */
+    --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'Consolas', monospace;
+
+    /* Color overrides for print */
     --color-background: #ffffff;
     --color-foreground: #1a1a1a;
     --color-card: #ffffff;
     --color-card-foreground: #1a1a1a;
-    --color-border: #e0e0e0;
+    --color-border: #d0d0d0;
     --color-muted-foreground: #4a4a4a;
     --color-muted-foreground-light: #666666;
     --color-achievement: #1a1a1a;
@@ -429,17 +866,17 @@
   }
 
   /* ==========================================================================
-     HYBRID LAYOUT: Fixed sidebar (210px) + fluid main column
+     HYBRID LAYOUT: Fixed sidebar + fluid main column
      ========================================================================== */
   .cv-layout {
     display: grid;
-    grid-template-columns: 210px minmax(0, 1fr);
+    grid-template-columns: 200px minmax(0, 1fr);
     gap: 1.5rem;
     width: 100%;
   }
 
   .sidebar-column {
-    width: 210px;
+    width: 200px;
     flex-shrink: 0;
   }
 
@@ -450,7 +887,7 @@
 
   html {
     font-size: 9pt;
-    line-height: 1.4;
+    line-height: 1.45;
   }
 
   body {
@@ -476,7 +913,7 @@
   h1 {
     font-size: 16pt;
     font-weight: 600;
-    margin: 0 0 0.1rem 0;
+    margin: 0 0 0.25rem 0;
     letter-spacing: -0.02em;
     line-height: 1.1;
     text-transform: none;
@@ -485,7 +922,7 @@
   h2 {
     font-size: 9pt;
     font-weight: 600;
-    margin: 0 0 0.2rem 0;
+    margin: 0 0 0.25rem 0;
     letter-spacing: 0;
     text-transform: none;
     color: #1a1a1a;
@@ -507,12 +944,12 @@
   }
 
   p {
-    margin: 0.1rem 0;
-    line-height: 1.4;
+    margin: 0.15rem 0;
+    line-height: 1.45;
   }
 
   section {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
     padding-bottom: 0;
   }
 
@@ -589,7 +1026,7 @@
   article {
     border: none;
     background: none;
-    padding: 0.25rem 0;
+    padding: 0.3rem 0;
   }
 
   .terminal {
@@ -634,7 +1071,7 @@
   li {
     margin: 0.1rem 0;
     padding: 0;
-    line-height: 1.4;
+    line-height: 1.45;
   }
 
   .uppercase,
@@ -667,13 +1104,15 @@
     word-break: break-all;
   }
 
-  /* Exclude icon-only links and navigation elements from footnotes */
+  /* Exclude icon-only links, navigation elements, and tech tags from footnotes */
   a[href*="linkedin.com"]:empty::after,
   a[href*="github.com"]:empty::after,
   nav a[href*="linkedin.com"]::after,
   nav a[href*="github.com"]::after,
   .sidebar-link[href*="linkedin.com"]::after,
-  .sidebar-link[href*="github.com"]::after {
+  .sidebar-link[href*="github.com"]::after,
+  .tech-tag[href*="linkedin.com"]::after,
+  .tech-tag[href*="github.com"]::after {
     content: none;
   }
 }

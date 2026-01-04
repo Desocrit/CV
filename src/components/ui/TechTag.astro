@@ -71,23 +71,40 @@ const { name, url, tooltip, class: className = '' } = Astro.props;
     opacity: 0;
   }
 
-  .tech-tag:hover .tech-tag-sweep {
-    animation: glimmer 400ms linear forwards;
+  /* Light mode: disable shimmer, use border color change and offset shadow */
+  :global([data-theme='light']) .tech-tag {
+    text-transform: none;
+    transition: box-shadow 0.15s ease-out, border-color 0.15s ease-out;
   }
 
-  @keyframes glimmer {
-    0% {
-      opacity: 1;
-      background-position: 200% 0;
-    }
-    100% {
-      opacity: 0;
-      background-position: -100% 0;
-    }
+  :global([data-theme='light']) .tech-tag:hover {
+    border-color: var(--tag-accent);
+    box-shadow: 2px 2px 0px color-mix(in srgb, var(--tag-accent) 40%, white);
+  }
+
+  :global([data-theme='light']) .tech-tag-sweep {
+    display: none;
+  }
+
+  /* Dark mode: disable shimmer animation entirely */
+  .tech-tag:hover .tech-tag-sweep {
+    animation: none;
+    display: none;
   }
 
   .tech-tag:focus-visible {
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
+  }
+
+  /* Print styles - use light mode styling */
+  @media print {
+    .tech-tag {
+      text-transform: none;
+    }
+
+    .tech-tag-sweep {
+      display: none;
+    }
   }
 </style>

@@ -4,25 +4,8 @@ import Sidebar from '../components/cv/Sidebar.astro';
 import Section from '../components/ui/Section.astro';
 import ContentCard from '../components/cv/ContentCard.astro';
 import ImpactGrid from '../components/cv/ImpactGrid.astro';
+import ImpactGridPrint from '../components/cv/ImpactGridPrint.astro';
 import { cvData } from '../lib/cv-data';
-
-const skillCategories = [
-  {
-    name: 'technical_specialties',
-    displayName: 'Technical Specialties',
-    skills: cvData.skills.technical_specialties,
-  },
-  {
-    name: 'organizational_leverage',
-    displayName: 'Organizational Leverage',
-    skills: cvData.skills.organizational_leverage,
-  },
-  {
-    name: 'emerging_frontier',
-    displayName: 'Emerging Frontier',
-    skills: cvData.skills.emerging_frontier,
-  },
-];
 
 const impactNodes = cvData.impact_nodes;
 
@@ -84,7 +67,6 @@ const educationData = cvData.education.map((edu) => ({
         institution: cvData.education[0]?.institution ?? '',
         year: cvData.education[0]?.year ?? 0,
       }}
-      skillCategories={skillCategories}
     />
 
     <div class="main-column">
@@ -109,7 +91,10 @@ const educationData = cvData.education.map((edu) => ({
           </Section>
         </div>
 
-        <ImpactGrid nodes={impactNodes} />
+        <div class="impact-screen-only">
+          <ImpactGrid nodes={impactNodes} />
+        </div>
+        <ImpactGridPrint nodes={impactNodes} />
 
         <div class="history-section">
           <Section title="History" id="history">
@@ -157,7 +142,7 @@ const educationData = cvData.education.map((edu) => ({
 <style>
   .cv-layout {
     display: grid;
-    grid-template-columns: 380px 1fr;
+    grid-template-columns: 400px 1fr;
     gap: 0;
     height: 100vh;
     overflow: hidden;
@@ -171,6 +156,12 @@ const educationData = cvData.education.map((edu) => ({
   .main-content {
     max-width: 80ch;
     padding: var(--spacing-fluid-lg);
+  }
+
+  @media (min-width: 1200px) {
+    .main-content {
+      max-width: 100ch;
+    }
   }
 
   @media (max-width: 1023px) {
@@ -259,8 +250,8 @@ const educationData = cvData.education.map((edu) => ({
   @media print {
     .cv-layout {
       display: grid;
-      grid-template-columns: 210px 1fr;
-      gap: 1.5rem;
+      grid-template-columns: 190px 1fr;
+      gap: 1rem;
       height: auto;
       overflow: visible;
     }
@@ -277,14 +268,33 @@ const educationData = cvData.education.map((edu) => ({
 
     .content-item {
       border-top: none !important;
-      padding-top: 0.2rem !important;
-      padding-bottom: 0.2rem !important;
+      padding-top: 0.1rem !important;
+      padding-bottom: 0.1rem !important;
     }
 
     .content-list {
       display: flex;
       flex-direction: column;
-      gap: 0.15rem;
+      gap: 0.05rem;
+    }
+
+    /* Hide main column education section for print - education appears in sidebar only */
+    .education-section {
+      display: none !important;
+    }
+
+    /* Hide screen-only ImpactGrid in print - use ImpactGridPrint instead */
+    .impact-screen-only {
+      display: none !important;
+    }
+
+    /* Section spacing - match sidebar 2.5rem breathing room */
+    .impact-print-section {
+      margin-top: 2.5rem;
+    }
+
+    .history-section {
+      margin-top: 2.5rem;
     }
   }
 </style>

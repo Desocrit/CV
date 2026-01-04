@@ -41,6 +41,7 @@ export const projectSchema = z.object({
   the_premise: nonEmptyString,
   technical_meat: nonEmptyString,
   impact_and_acclaim: z.array(nonEmptyString),
+  supporting_data: z.array(nonEmptyString).optional(),
   role: nonEmptyString.optional(),
   status: nonEmptyString,
   prompt: nonEmptyString.optional(),
@@ -52,13 +53,8 @@ export const workHistorySchema = z.object({
   tenure: nonEmptyString,
   summary: nonEmptyString,
   impact: z.array(nonEmptyString),
+  supporting_data: z.array(nonEmptyString).optional(),
   tech_stack: z.array(techTagSchema),
-});
-
-export const skillsSchema = z.object({
-  technical_specialties: z.array(nonEmptyString),
-  organizational_leverage: z.array(nonEmptyString),
-  emerging_frontier: z.array(nonEmptyString),
 });
 
 export const educationSchema = z.object({
@@ -77,8 +73,10 @@ export const impactNodeSchema = z.object({
   header: nonEmptyString,
   title: nonEmptyString,
   description: nonEmptyString,
+  long_description: nonEmptyString.optional(),
   prompt: nonEmptyString,
   color: impactColorSchema,
+  print_only: z.boolean().optional(),
 });
 
 export const cvSchema = z.object({
@@ -94,7 +92,6 @@ export const cvSchema = z.object({
   outlier_achievements: z.array(outlierAchievementSchema),
   projects: z.array(projectSchema),
   work_history: z.array(workHistorySchema),
-  skills: skillsSchema,
   education: z.array(educationSchema),
   impact_nodes: z.array(impactNodeSchema),
   meta: z.object({
@@ -110,7 +107,6 @@ export type CVData = z.infer<typeof cvSchema>;
 export type Project = z.infer<typeof projectSchema>;
 export type WorkHistory = z.infer<typeof workHistorySchema>;
 export type OutlierAchievement = z.infer<typeof outlierAchievementSchema>;
-export type Skills = z.infer<typeof skillsSchema>;
 export type Education = z.infer<typeof educationSchema>;
 export type ImpactNode = z.infer<typeof impactNodeSchema>;
 

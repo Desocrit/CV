@@ -9,24 +9,27 @@ interface Props {
 const { nodes } = Astro.props;
 ---
 
-<div data-print="hide" class="impact-section">
+<div class="impact-section">
   <Section title="Impact" id="impact">
     <div class="impact-grid">
       {nodes.map((node) => (
-        <div class:list={['impact-card-wrapper', `impact-card-wrapper--${node.color}`]}>
+        <div
+          class:list={['impact-card-wrapper', `impact-card-wrapper--${node.color}`, { 'print-only-card': node.print_only }]}
+          data-print={node.print_only ? 'only' : undefined}
+        >
           <button
             class="impact-card"
             type="button"
-            aria-label={`Learn more about ${node.title}`}
+            aria-label={`${node.title}: ${node.description}`}
             data-prompt={node.prompt}
           >
-            <div class="card-content">
-              <span class="card-header">[ {node.header} ]</span>
+            <div class="card-content" aria-hidden="true">
+              <span class="card-header"><span class="header-bracket">[ </span>{node.header}<span class="header-bracket"> ]</span></span>
               <h3 class="card-title">{node.title}</h3>
               <p class="card-description">{node.description}</p>
             </div>
             <span class="card-cta" aria-hidden="true">
-              [<span class="cta-arrow">&nbsp;&gt;&nbsp;</span>]
+              <span class="cta-bracket">[</span><span class="cta-arrow">&gt;</span><span class="cta-bracket">]</span>
             </span>
           </button>
         </div>
@@ -98,6 +101,11 @@ const { nodes } = Astro.props;
   .impact-card-wrapper--red    { --card-accent: var(--color-accent-red); }
   .impact-card-wrapper--cyan   { --card-accent: var(--color-accent-cyan); }
 
+  /* Print-only cards: hidden on screen, shown in print */
+  .print-only-card {
+    display: none;
+  }
+
   .impact-card {
     position: relative;
     z-index: 1;
@@ -117,10 +125,17 @@ const { nodes } = Astro.props;
     outline-offset: 2px;
   }
 
+  /* Light mode: colored left border */
+  :global([data-theme='light']) .impact-card {
+    border-left: 3px solid var(--card-accent);
+  }
+
   .card-content {
     display: flex;
     flex-direction: column;
     gap: 0;
+    flex: 1;
+    min-width: 0;
   }
 
   .card-header {
@@ -133,10 +148,23 @@ const { nodes } = Astro.props;
     letter-spacing: 0.15em;
     margin-bottom: 0.25rem;
     transition: opacity 0.15s ease;
+    text-transform: uppercase; /* Dark mode: SCREAMING_SNAKE style */
+  }
+
+  /* Light mode: Title Case, higher opacity, increased weight */
+  :global([data-theme='light']) .card-header {
+    text-transform: capitalize;
+    opacity: 0.8;
+    font-weight: 600;
   }
 
   .impact-card-wrapper:hover .card-header {
     opacity: 1;
+  }
+
+  /* Light mode: keep header at 80% even on hover */
+  :global([data-theme='light']) .impact-card-wrapper:hover .card-header {
+    opacity: 0.8;
   }
 
   .card-title {
@@ -155,6 +183,10 @@ const { nodes } = Astro.props;
     color: var(--color-muted-foreground);
     margin: 0.25rem 0 0 0;
     line-height: 1.4;
+  }
+
+  :global([data-theme='light']) .card-description {
+    font-style: normal;
   }
 
   .card-cta {
@@ -203,6 +235,100 @@ const { nodes } = Astro.props;
   @media (max-width: 640px) {
     .impact-grid {
       grid-template-columns: 1fr;
+    }
+  }
+
+  /* ==========================================================================
+     PRINT STYLES: 3x3 grid layout for printed CV
+     ========================================================================== */
+  @media print {
+    .impact-section {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .impact-section :global(.section-with-label) {
+      margin-bottom: 0.5rem;
+    }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem 0.75rem;
+    }
+
+    /* Show print-only cards in print */
+    .print-only-card {
+      display: block;
+    }
+
+    /* Reset wrapper styles for print */
+    .impact-card-wrapper {
+      position: static;
+      background: none;
+    }
+
+    /* Hide animated border pseudo-element */
+    .impact-card-wrapper::before {
+      display: none;
+    }
+
+    /* Style cards as simple text blocks */
+    .impact-card {
+      display: block;
+      padding: 0;
+      border: none;
+      border-left: 1.5px solid var(--color-muted-foreground-light);
+      padding-left: 0.5rem;
+      background: none;
+      cursor: default;
+      text-align: left;
+      width: 100%;
+    }
+
+    .card-content {
+      display: block;
+    }
+
+    /* Category header styling - mono font like sidebar titles */
+    .card-header {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 6.5pt;
+      font-weight: 500;
+      color: var(--color-muted-foreground-light);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.1rem;
+      opacity: 1;
+    }
+
+    /* Hide brackets in print */
+    .header-bracket {
+      display: none;
+    }
+
+    /* Title styling */
+    .card-title {
+      font-size: 8pt;
+      font-weight: 600;
+      color: var(--color-foreground);
+      line-height: 1.25;
+      margin: 0;
+    }
+
+    /* Description styling */
+    .card-description {
+      font-size: 7pt;
+      font-style: normal;
+      color: var(--color-muted-foreground);
+      line-height: 1.35;
+      margin: 0.1rem 0 0 0;
+    }
+
+    /* Hide interactive CTA element */
+    .card-cta {
+      display: none;
     }
   }
 </style>
