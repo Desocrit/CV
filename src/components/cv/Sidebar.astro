@@ -80,7 +80,7 @@ const toSnakeCase = (str: string) =>
           <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
         </svg>
         <span class="link-text">LinkedIn</span>
-        <span class="link-tag">/ln/in</span>
+        <span class="link-tag">/in</span>
       </a>
 
       <div class="print-only print-contact-links">
@@ -371,8 +371,8 @@ const toSnakeCase = (str: string) =>
 
     :global([data-theme='light']) .social-icon {
       display: block !important;
-      width: 1.5rem;
-      height: 1.5rem;
+      width: 1.125rem;
+      height: 1.125rem;
       opacity: 0.7;
     }
 
@@ -386,11 +386,18 @@ const toSnakeCase = (str: string) =>
     }
 
     :global([data-theme='light']) .social-links {
-      gap: 1.25rem;
+      gap: 1rem;
+    }
+
+    /* Adjust spacing around social nav on mobile/tablet */
+    .social-nav {
+      margin-top: 0.75rem;
+      margin-bottom: var(--spacing-fluid-md);
     }
 
     :global([data-theme='light']) .social-nav {
-      margin-top: 0.75rem;
+      margin-top: 1.25rem;
+      margin-bottom: var(--spacing-fluid-md);
     }
   }
 
@@ -437,25 +444,10 @@ const toSnakeCase = (str: string) =>
     margin-bottom: 0.5rem;
   }
 
-  /* Light mode mobile section titles - hidden by default */
+  /* Light mode mobile section titles - no longer used, kept hidden */
+  /* Light mode now uses sidebar-section-title on all screen sizes */
   .mobile-section-title {
     display: none;
-    font-family: var(--font-sans);
-    font-size: var(--text-fluid-xs);
-    font-weight: 600;
-    color: var(--color-foreground);
-    margin-bottom: 0.5rem;
-  }
-
-  /* Show only in light mode on mobile (below md breakpoint) */
-  :global([data-theme='light']) .mobile-section-title {
-    display: block;
-  }
-
-  @media (min-width: 768px) {
-    :global([data-theme='light']) .mobile-section-title {
-      display: none;
-    }
   }
 
   .header-meta {
@@ -504,10 +496,15 @@ const toSnakeCase = (str: string) =>
     width: fit-content;
   }
 
-  /* Ensure sidebar section titles are hidden on mobile (replaced by terminal/mobile titles) */
+  /* Ensure sidebar section titles are hidden on mobile in dark mode (replaced by terminal titles) */
   @media (max-width: 1023px) {
     .sidebar-section-title {
       display: none;
+    }
+
+    /* Light mode: show sidebar-section-title on mobile/tablet (same as desktop) */
+    :global([data-theme='light']) .sidebar-section-title {
+      display: block;
     }
   }
 
@@ -565,7 +562,7 @@ const toSnakeCase = (str: string) =>
       height: auto;
       overflow: visible;
       padding: 0;
-      padding-right: 2rem;
+      padding-right: 3rem;
     }
 
     /* Force desktop header layout for print - hide mobile layout */
@@ -579,12 +576,12 @@ const toSnakeCase = (str: string) =>
 
     /* Match mb-fluid-md max spacing (2.5rem) for proper breathing room */
     .site-header {
-      margin-bottom: 1.5rem;
+      margin-bottom: 2.5rem;
     }
 
     /* Contact links section */
     .social-nav {
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
     }
 
     /* Consistent section spacing - match light mode mb-fluid-md max */
@@ -638,7 +635,7 @@ const toSnakeCase = (str: string) =>
 
     .print-contact-label {
       font-family: var(--font-sans);
-      font-size: 7pt;
+      font-size: 9px;
       font-weight: 600;
       color: var(--color-foreground);
       line-height: 1.2;
@@ -646,7 +643,7 @@ const toSnakeCase = (str: string) =>
 
     .print-contact-value {
       font-family: var(--font-mono);
-      font-size: 7.5pt;
+      font-size: 10px;
       color: var(--color-muted-foreground);
       line-height: 1.3;
     }
@@ -654,7 +651,7 @@ const toSnakeCase = (str: string) =>
     /* Match light mode styling - use mono font with underline */
     .sidebar-section-title {
       font-family: var(--font-mono);
-      font-size: 8pt;
+      font-size: 10px;
       font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.1em;
@@ -667,20 +664,24 @@ const toSnakeCase = (str: string) =>
 
     .sidebar-role {
       color: #4a4a4a;
-      font-size: 9pt;
+      font-size: 11px;
       margin-top: 0.15rem;
+    }
+
+    .sidebar-location {
+      font-size: 10px;
     }
 
     .achievement-metric {
       color: #1a1a1a;
-      font-size: 11pt;
+      font-size: 13px;
       font-weight: 700;
     }
 
     .achievement-label {
       color: #666;
       text-transform: none;
-      font-size: 7pt;
+      font-size: 9px;
       letter-spacing: 0.02em;
     }
 
@@ -689,15 +690,16 @@ const toSnakeCase = (str: string) =>
     }
 
     .achievement-item p {
-      font-size: 7.5pt !important;
+      font-size: 10px !important;
       line-height: 1.35 !important;
       margin-top: 0.1rem !important;
     }
 
     .spec-block p,
     .edu-meta {
+      font-family: var(--font-sans);
       text-transform: none;
-      font-size: 7.5pt;
+      font-size: 10px;
       letter-spacing: 0;
     }
 
@@ -707,7 +709,7 @@ const toSnakeCase = (str: string) =>
 
     address a,
     address button {
-      font-size: 7.5pt;
+      font-size: 10px;
     }
 
     .sidebar-link .link-text::after {
@@ -715,7 +717,7 @@ const toSnakeCase = (str: string) =>
     }
 
     .profile-text {
-      font-size: 7.5pt;
+      font-size: 10px;
       line-height: 1.4;
       color: #4a4a4a;
     }
@@ -732,9 +734,7 @@ const toSnakeCase = (str: string) =>
     /* QR Code section at bottom of sidebar */
     .print-qr-section {
       display: block !important;
-      margin-top: 2.5rem;
-      padding-top: 0.75rem;
-      border-top: 0.5px solid #c0c0c0;
+      margin-top: 3.5rem;
     }
 
     .qr-content {
@@ -747,7 +747,7 @@ const toSnakeCase = (str: string) =>
 
     .qr-label {
       font-family: 'IBM Plex Sans', system-ui, sans-serif;
-      font-size: 7pt;
+      font-size: 9px;
       font-weight: 600;
       color: #1a1a1a;
       margin: 0;
@@ -765,7 +765,7 @@ const toSnakeCase = (str: string) =>
 
     .qr-url {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 6pt;
+      font-size: 8px;
       color: #666;
       margin: 0;
     }

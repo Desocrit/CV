@@ -275,7 +275,7 @@ const educationData = cvData.education.map((edu) => ({
     .content-list {
       display: flex;
       flex-direction: column;
-      gap: 0.05rem;
+      gap: 1rem;
     }
 
     /* Hide main column education section for print - education appears in sidebar only */
@@ -289,8 +289,8 @@ const educationData = cvData.education.map((edu) => ({
     }
 
     /* Section spacing - match sidebar 2.5rem breathing room */
-    .impact-print-section {
-      margin-top: 2.5rem;
+    :global(.impact-print-section) {
+      margin-top: 3rem;
     }
 
     .history-section {

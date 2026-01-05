@@ -81,9 +81,11 @@ const highlightMetrics = (text: string): string => {
       {technologies.length > 0 && (
         <div class="tech-list-light">
           <hr class="tech-divider" />
-          <p class="tech-list-text">
-            {technologies.filter(t => !t.name.startsWith('TODO')).slice(0, 4).map((tech) => tech.name).join(', ')}
-          </p>
+          <div class="tech-list-text">
+            {technologies.filter(t => !t.name.startsWith('TODO')).slice(0, 4).map((tech) => (
+              <span class="tech-item">{tech.name}</span>
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -340,7 +342,7 @@ const highlightMetrics = (text: string): string => {
 
     /* Maintain two-column layout in cards */
     .card-grid {
-      grid-template-columns: 160px 1fr;
+      grid-template-columns: 140px 1fr;
       gap: 0.75rem;
     }
 
@@ -350,23 +352,28 @@ const highlightMetrics = (text: string): string => {
 
     /* Card meta (header column) - NEVER break inside */
     .card-meta {
-      margin-top: 0 !important;
+      margin-top: 0;
       break-inside: avoid;
       page-break-inside: avoid;
     }
 
     .card-meta h3 {
-      font-size: 9pt !important;
-      font-weight: 600 !important;
+      font-size: 12px;
+      font-weight: 600;
       break-after: avoid;
       page-break-after: avoid;
     }
 
+    /* Card meta text (tag, subtitle) */
+    .card-meta p {
+      font-size: 10px;
+    }
+
     /* Headline - keep with header, avoid orphaning */
     .card-content > p:first-child {
-      font-size: 8pt !important;
-      line-height: 1.4 !important;
-      color: #333 !important;
+      font-size: 10px;
+      line-height: 1.4;
+      color: #333;
       break-before: avoid;
       page-break-before: avoid;
       orphans: 3;
@@ -377,8 +384,8 @@ const highlightMetrics = (text: string): string => {
        Short lists (≤4 items): keep together to avoid awkward splits
        Long lists (>4 items): allow breaking to prevent large white gaps */
     .bullet-list {
-      padding-left: 0.75rem !important;
-      margin-top: 0.2rem !important;
+      padding-left: 1rem;
+      margin-top: 0.5rem;
     }
 
     /* Default: keep bullet lists together */
@@ -395,12 +402,12 @@ const highlightMetrics = (text: string): string => {
 
     /* Individual list items - avoid breaking mid-item */
     .bullet-list li {
-      display: list-item !important;
-      list-style-type: disc !important;
-      margin: 0.1rem 0 !important;
-      font-size: 7.5pt !important;
-      line-height: 1.35 !important;
-      color: #4a4a4a !important;
+      display: list-item;
+      list-style-type: disc;
+      margin: 0.25rem 0;
+      font-size: 10px;
+      line-height: 1.35;
+      color: #4a4a4a;
       break-inside: avoid;
       page-break-inside: avoid;
       orphans: 2;
@@ -409,16 +416,16 @@ const highlightMetrics = (text: string): string => {
 
     /* Label text - professional, not uppercase */
     .label-text {
-      color: #4a4a4a !important;
-      text-transform: none !important;
-      font-size: 7.5pt !important;
-      letter-spacing: 0 !important;
-      margin-top: 0.15rem !important;
+      color: #4a4a4a;
+      text-transform: none;
+      font-size: 10px;
+      letter-spacing: 0;
+      margin-top: 0.15rem;
     }
 
     /* Metric highlighting - use weight instead of color */
     .metric-highlight {
-      color: #1a1a1a !important;
+      color: #1a1a1a;
       font-weight: 700;
     }
 
@@ -432,50 +439,65 @@ const highlightMetrics = (text: string): string => {
     }
 
     details > div {
-      display: block !important;
+      display: block;
       padding-left: 0;
       margin-top: 0.15rem;
       border: none;
     }
 
     .details-content {
-      color: #4a4a4a !important;
-      border-color: transparent !important;
-      font-size: 7.5pt !important;
-      padding-left: 0 !important;
+      color: #4a4a4a;
+      border-color: transparent;
+      font-size: 10px;
+      padding-left: 0;
     }
 
     /* Hide the dash separator */
     .item-separator {
-      display: none !important;
+      display: none;
     }
 
     /* Tech tags - hide styled tags in print, show simple list */
     .tech-tags {
-      display: none !important;
+      display: none;
     }
 
     .tech-list-light {
-      display: block !important;
+      display: block;
       margin-top: 0.5rem;
     }
 
     .tech-divider {
       border: none;
       border-top: 0.5px solid #c0c0c0;
-      margin: 0 0 0.2rem 0;
+      margin: 0 0 0.4rem 0;
       margin-right: 2rem;
     }
 
     .tech-list-text {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      justify-items: start;
+      gap: 0.15rem;
       font-family: var(--font-sans);
-      font-size: 7pt;
+      font-size: 8px;
       font-weight: 400;
       color: #4a4a4a;
       margin: 0;
-      padding-right: 4rem;
-      line-height: 1.4;
-      text-wrap: balance;
+      padding-right: 2rem;
+    }
+
+    .tech-item {
+      font-family: var(--font-sans);
+    }
+
+    .tech-item:nth-child(even) {
+      justify-self: end;
+    }
+
+    .tech-item:only-child {
+      grid-column: 1 / -1;
+      justify-self: center;
     }
   }
 </style>

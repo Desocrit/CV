@@ -143,15 +143,15 @@ work_history:
       - Build a custom pipeline to ingest financial research
     supporting_data: []
     tech_stack:
-      - name: Python
-        url: https://peps.python.org/pep-0020/
-        tooltip: Executable pseudocode
-      - name: Ruby on Rails
-        url: https://rubyonrails.org/doctrine
-        tooltip: Opinions over configuration
       - name: Java
         url: https://www.oracle.com/java/technologies/language-environment.html
         tooltip: Write once, debug everywhere
+      - name: Ruby on Rails
+        url: https://rubyonrails.org/doctrine
+        tooltip: Opinions over configuration
+      - name: Python
+        url: https://peps.python.org/pep-0020/
+        tooltip: Executable pseudocode
       - name: Postgres
         url: https://www.postgresql.org/docs/current/history.html
         tooltip: The database your DBA actually respects
