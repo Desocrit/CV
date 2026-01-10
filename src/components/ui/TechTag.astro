@@ -46,7 +46,7 @@ const { name, url, tooltip, class: className = '' } = Astro.props;
     pointer-events: none;
   }
 
-  /* The Glimmer - spotlight sweep on border, hover only */
+  /* The Glimmer - tight flashlight sweep on border, hover only */
   .tech-tag-sweep {
     position: absolute;
     inset: -1px;
@@ -54,11 +54,15 @@ const { name, url, tooltip, class: className = '' } = Astro.props;
     background: linear-gradient(
       90deg,
       transparent 0%,
-      var(--tag-accent) 50%,
+      transparent 35%,
+      var(--tag-accent) 48%,
+      var(--tag-accent) 52%,
+      transparent 65%,
       transparent 100%
     );
-    background-size: 200% 100%;
-    background-position: 200% 0;
+    background-size: 250% 100%;
+    background-position: 100% 0;
+    background-repeat: no-repeat;
     -webkit-mask:
       linear-gradient(#fff 0 0) content-box,
       linear-gradient(#fff 0 0);
@@ -86,10 +90,22 @@ const { name, url, tooltip, class: className = '' } = Astro.props;
     display: none;
   }
 
-  /* Dark mode: disable shimmer animation entirely */
-  .tech-tag:hover .tech-tag-sweep {
-    animation: none;
-    display: none;
+  /* Dark mode md+: glimmer sweep animation on hover */
+  @keyframes glimmer-sweep {
+    0% {
+      opacity: 1;
+      background-position: 100% 0;
+    }
+    100% {
+      opacity: 1;
+      background-position: 0% 0;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :global(:not([data-theme='light'])) .tech-tag:hover .tech-tag-sweep {
+      animation: glimmer-sweep 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
   }
 
   .tech-tag:focus-visible {

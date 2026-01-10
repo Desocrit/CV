@@ -80,8 +80,10 @@ const educationData = cvData.education.map((edu) => ({
                     title={project.project_title}
                     tag={project.subtitle}
                     technologies={project.stack_and_tools}
-                    headline={project.the_premise}
-                    bulletPoints={project.impact_and_acclaim}
+                    headline={project.headline}
+                    bulletPoints={project.metric}
+                    supportingData={project.action}
+                    cta={project.cta}
                     prompt={project.prompt}
                     useTerminal={true}
                   />
@@ -108,6 +110,7 @@ const educationData = cvData.education.map((edu) => ({
                     technologies={job.tech_stack}
                     headline={job.summary}
                     bulletPoints={job.impact}
+                    supportingData={job.supporting_data}
                   />
                 </div>
               ))}
@@ -182,11 +185,17 @@ const educationData = cvData.education.map((edu) => ({
     }
   }
 
-  /* Projects section color cycling: green → purple → blue → green */
+  /* Projects section color cycling: green → orange → blue → purple */
   .projects-section .content-item:nth-child(1) :global(.content-card) { --card-accent: var(--color-accent-green); }
-  .projects-section .content-item:nth-child(2) :global(.content-card) { --card-accent: var(--color-accent-purple); }
+  .projects-section .content-item:nth-child(2) :global(.content-card) { --card-accent: var(--color-accent-orange); }
   .projects-section .content-item:nth-child(3) :global(.content-card) { --card-accent: var(--color-accent-blue); }
-  .projects-section .content-item:nth-child(4) :global(.content-card) { --card-accent: var(--color-accent-green); }
+  .projects-section .content-item:nth-child(4) :global(.content-card) { --card-accent: var(--color-accent-purple); }
+
+  /* Projects: show only first bullet on screen, all bullets in print */
+  .projects-section :global(.bullet-list li:nth-child(n+2)),
+  .projects-section :global(.supporting-list li:nth-child(n+2)) {
+    display: none;
+  }
 
   /* History section color cycling: green → purple → blue */
   .history-section .content-item:nth-child(1) :global(.content-card) { --card-accent: var(--color-accent-green); }
@@ -220,7 +229,7 @@ const educationData = cvData.education.map((edu) => ({
       transition: color 0.15s ease;
     }
     .projects-section:has(.content-item:nth-child(2):hover) :global(.section-title) {
-      color: var(--color-accent-purple);
+      color: var(--color-accent-orange);
       transition: color 0.15s ease;
     }
     .projects-section:has(.content-item:nth-child(3):hover) :global(.section-title) {
@@ -228,7 +237,7 @@ const educationData = cvData.education.map((edu) => ({
       transition: color 0.15s ease;
     }
     .projects-section:has(.content-item:nth-child(4):hover) :global(.section-title) {
-      color: var(--color-accent-green);
+      color: var(--color-accent-purple);
       transition: color 0.15s ease;
     }
 
@@ -295,6 +304,12 @@ const educationData = cvData.education.map((edu) => ({
 
     .history-section {
       margin-top: 2.5rem;
+    }
+
+    /* Projects: show all bullets in print */
+    .projects-section :global(.bullet-list li:nth-child(n+2)),
+    .projects-section :global(.supporting-list li:nth-child(n+2)) {
+      display: list-item !important;
     }
   }
 </style>

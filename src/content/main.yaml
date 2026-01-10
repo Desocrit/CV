@@ -9,9 +9,9 @@ github: https://github.com/csaunders-ldt
 linkedin: https://www.linkedin.com/in/christopher-saunders-48b092110/
 
 # Abstract
-summary: >
-  Deep expertise in AI systems and infrastructure at scale.
-  Drives culture transformation and strategic initiatives.
+summary: |
+  Eliminating complexity that slows us down
+  Expert in AI, scale, and clearing tech debt
 
 outlier_achievements:
   - metric: Throughput
@@ -27,6 +27,16 @@ outlier_achievements:
 projects:
   - project_title: Nova
     subtitle: Flagship AI
+    headline: Developed an analytics agent that cut data requests by 98%
+    metric:
+      - Drove 95% usage by industry leading decision makers by allowing self-serve analytics
+      - Revitalised our sales pipeline with a demo that landed several high value clients
+    action:
+      - Cultivated an AI-first culture, seeding deep expertise through several training programs
+      - Engineered a self-improving loop through evals, trading control for depth of experience
+    cta: How did we build the architecture that eliminated hallucinations?
+    prompt: Tell me about the Nova project and how it enforces accuracy and avoids hallucinations?
+    war_story: []
     stack_and_tools:
       - name: AI SDK
         url: https://sdk.vercel.ai/docs/introduction
@@ -43,81 +53,93 @@ projects:
       - name: RAG
         url: https://arxiv.org/abs/2005.11401
         tooltip: Ctrl+F for robots
-    the_premise: Drove a company-wide pivot to an Agentic Operating System
-    technical_meat: |
-      Developed an 'experiment-first' architecture for model-agnostic tool execution.
-      Built custom MCP server backends to support headless execution across Web, Slack, and Linear.
-    impact_and_acclaim:
-      - Achieved 95% WAU conversion rate.
-      - Brought in the biggest clients in company history.
-    supporting_data: []
-    role: Lead Engineer
-    status: Resulted in a company-wide pivot.
-    prompt: Tell me about the Nova project - the Agentic OS architecture, MCP implementation, and how it achieved 95% WAU.
-
-  - project_title: Monorepo
-    subtitle: Standardisation
-    stack_and_tools:
-      - name: Turborepo
-        url: https://turbo.build/repo/docs/core-concepts
-        tooltip: npm workspaces on steroids
-      - name: GHA
-        url: https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions
-        tooltip: YAML hell, but make it CI/CD
-      - name: Protobuf
-        url: https://developers.google.com/protocol-buffers/docs/overview
-        tooltip: JSON's faster, angrier cousin
-      - name: ESLint
-        url: https://eslint.org/docs/latest/use/core-concepts
-        tooltip: Your code's most pedantic critic
-    the_premise: Consolidated 22 microservices into a standardized monorepo
-    technical_meat: |
-      Authored de-facto standards for CI/CD, TypeScript, and package architecture.
-      Introduced validation pipelines and mandatory READMEs for all backend packages.
-    impact_and_acclaim:
-      - Reduced average PRs per change from five to one.
-      - Achieved 100% strict TypeScript and ESLint coverage.
-    supporting_data: []
-    role: Lead Contributor
-    status: Structural game-changer.
-    prompt: Explain the monorepo consolidation - how did Chris standardize 22 microservices and enforce 100% strict TypeScript?
 
   - project_title: Checkout
     subtitle: Total rebuild
+    headline: Rebuilt the checkout from scratch for stability and scalability
+    metric:
+      - Secured 10-year partnership with London Marathon through three successful ballots
+      - Earned three sweet months without an incident, letting us rebuild client trust
+    action:
+      - Enforced strict state management, deliberately trading raw speed for stability
+      - Quarantined bespoke logic, so the edge cases couldn't infect the critical path
+    cta: How did we handle a million users without one person seeing a queue?
+    prompt: How did checkout v2 allow for a million users over a week without requiring queues?
+    war_story: []
     stack_and_tools:
       - name: NextJS
         url: https://nextjs.org/docs/app/building-your-application/routing
         tooltip: React with mass-market opinions
       - name: GraphQL
         url: https://engineering.fb.com/2015/09/14/core-infra/graphql-a-data-query-language/
-        tooltip: REST's over-engineered replacement
+        tooltip: Over-fetching's arch-nemesis
       - name: Recoil
         url: https://recoiljs.org/docs/introduction/motivation
         tooltip: Facebook's apology for Redux
       - name: Stripe
         url: https://stripe.com/docs/payments/payment-intents
         tooltip: The 3% tax on internet commerce
-    the_premise: Rebuilt checkout from scratch to fix several core problems
-    technical_meat: |
-      Implemented strict accessibility-first testing patterns that became the organization's primary frontend testing methodology.
-      Authored the architectural approach that enabled a major refactor previously considered impossible.
-    impact_and_acclaim:
-      - Zero incidents for the first 90 days of production.
-      - Handled three London Marathon ballots with no downtime.
-    supporting_data: []
-    role: Project Lead
-    status: Processed 3 Marathons.
-    prompt: Deep dive on Checkout v2 - the accessibility-first testing patterns, zero-incident launch, and London Marathon load handling.
+
+  - project_title: System Tests
+    subtitle: Testing Framework
+    headline: Built a 'Virtual Monolith', letting us integration test distributed services locally
+    metric:
+      - Boosted overall coverage by 35% by making full-stack testing the path of least resistance
+      - Allowed us to fully replace our previous integration testing layer with full-stack tests
+    action:
+      - Allowed GRPC to execute locally to allow step-through debugging across an entire stack
+      - Traded framework complexity for developer simplicity, eliminating the need for snapshots
+    cta: How did we handle the dependency cycles that this would cause?
+    prompt: How did Chris handle dependency cycles in the System Test framework?
+    stack_and_tools:
+      - name: GraphQL
+        url: https://graphql.org/learn/
+        tooltip: Over-fetching's arch-nemesis
+      - name: gRPC
+        url: https://grpc.io/docs/what-is-grpc/introduction/
+        tooltip: HTTP/2's favourite child
+      - name: SQS
+        url: https://aws.amazon.com/sqs/
+        tooltip: Bezos's waiting room
+      - name: Docker
+        url: https://docs.docker.com/get-started/
+        tooltip: '"Works on my machine" as a service'
+
+  - project_title: Tempo
+    subtitle: Design System
+    headline: Unified the design language to bridge the gap between devs, designers and AI
+    metric:
+      - Replaced over 10,000 styletron and BaseUI components with accessible Tailwind
+      - Brought rebranding lead time from 12 dev weeks to 1 by fixing years of design debt
+    action:
+      - Seamlessly orchestrated a high-risk 30 day migration of the entire system
+      - Synchronised Figma tokens exactly with code, enable AI driven UI generation
+    prompt: How did Tempo allow AI to build pixel-perfect designs with Figma MCP?
+    cta: How did Tempo allow AI to build pixel-perfect designs with Figma MCP?
+    war_story: []
+    stack_and_tools:
+      - name: Tailwind
+        url: https://tailwindcss.com/docs/utility-first
+        tooltip: class="mb-4 pt-2 flex justify-oh-god-why"
+      - name: Figma
+        url: https://www.figma.com/
+        tooltip: Where designs go to get ignored
+      - name: Storybook
+        url: https://storybook.js.org/
+        tooltip: Components in solitary confinement
+      - name: Catalyst
+        url: https://catalyst.tailwindui.com/
+        tooltip: $299 well spent
 
 work_history:
   - company: Let's Do This
     role: Principal Engineer
     tenure: Feb 2021 — Present
-    summary: Heavy contributions across infrastructure, checkout and flagship AI product
+    summary: Lead architect for the company's transition to Agentic AI and high-scale event infrastructure.
     impact:
-      - Orchestrated infrastructure cost reductions totaling over $500k annually
-      - Increased system throughput by 1000x for peak load events
-      - Highest velocity engineer in the company across all major metrics
+      - Rebuilt the checkout, and subsequently optimised it to handle spikes of 200 bookings per second
+      - Led the strategic pivot to an AI-first OS (Nova), achieving 95% WAU adoption across the enterprise.
+      - Drove foundational engineering standards while maintaining the company's highest individual contribution velocity.
     supporting_data: []
     tech_stack:
       - name: TypeScript
@@ -131,16 +153,15 @@ work_history:
         tooltip: HTTP/2's favourite child
       - name: GraphQL
         url: https://engineering.fb.com/2015/09/14/core-infra/graphql-a-data-query-language/
-        tooltip: REST's over-engineered replacement
+        tooltip: Over-fetching's arch-nemesis
 
   - company: Singletrack
     role: Senior Engineer
     tenure: Nov 2017 — Jan 2021
-    summary: Developed bespoke ingestion systems and portals for financial clients
+    summary: Engineered bespoke ingestion systems and offline-first portals for Tier-1 financial clients.
     impact:
-      - Developed a component-based framework for rapidly building client portals
-      - Used Service Workers to make the entire website work offline
-      - Build a custom pipeline to ingest financial research
+      - Developed a proprietary component framework that accelerated the delivery of bespoke client portals.
+      - Engineered offline-first capabilities using Service Workers, ensuring resilience for mobile financial reporting.
     supporting_data: []
     tech_stack:
       - name: Java
@@ -157,21 +178,16 @@ work_history:
         tooltip: The database your DBA actually respects
 
   - company: RateSetter
-    role: Developer
+    role: Software Engineer
     tenure: Feb 2016 — Nov 2017
-    summary: Developed innovative peer-to-peer moneylending software in a high-compliance market
+    summary: Built core P2P lending platforms in a high-compliance financial environment.
     impact:
-      - Maintained and scaled the core P2P lending platform
-      - Helped build and migrate to a microservices based system
-      - Built a decision engine to help with loan approval
+      - Engineered the automated credit decision engine and supported the strategic transition to a microservices architecture.
     supporting_data: []
     tech_stack:
-      - name: C#
-        url: https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/
-        tooltip: Java with a suit and tie
-      - name: Angular
-        url: https://thenewstack.io/the-angular-renaissance-why-frontend-devs-should-revisit-it/
-        tooltip: Why hello there!
+      - name: .NET
+        url: https://github.com/dotnet/runtime/blob/main/docs/design/coreclr/botr/README.md
+        tooltip: Microsoft's apology for COM
       - name: SQL Server
         url: https://www.microsoft.com/en-us/research/publication/hekaton-sql-servers-memory-optimized-oltp-engine/
         tooltip: When your budget says no to Oracle
@@ -188,78 +204,73 @@ education:
     notable: Highest overall grade in the BSc.
 
 impact_nodes:
-  - header: Strategic Pivots
-    title: Agentic OS
-    description: Led company-wide AI pivot, 95% WAU
-    long_description: Led company-wide AI pivot achieving 95% weekly active user adoption
+  # Category 1: Growth & Reach (Green)
+  - header: Global Scale
+    title: 1000x Throughput
+    description: Increased site throughput from 1 booking/second to 200
+    long_description: Increased site burst throughput from 1 booking per second to 200 by deleting features and database optimisation
     color: green
     print_only: false
-    prompt: Describe how Chris led the strategic transformation to an Agentic Operating System, including the technical architecture decisions and business impact.
+    prompt: How did Chris handle the scaling architecture to handle 1000x traffic spikes?
 
-  - header: Strategic Pivots
-    title: 100% TypeScript
-    description: Standardized 22 microservices
-    long_description: Consolidated and standardized 22 microservices with 100% strict TypeScript
+  - header: Global Scale
+    title: 100% Internationalization
+    description: Orchestrated 900-PR extraction to reach 100% i18n
+    long_description: Orchestrated a massive extraction project to achieve 100% i18n coverage across 12 languages via an agentic AI-translation pipeline.
     color: green
     print_only: false
-    prompt: Explain Chris's role in institutionalizing strict TypeScript adoption across the monorepo and the engineering culture changes required.
+    prompt: Explain the strategy behind the 100% i18n migration and AI translation pipeline.
 
-  - header: Strategic Pivots
-    title: Tempo
-    description: Built the Tempo design system and migrated 100% of old code to use it
-    long_description: Built the Tempo design system and migrated 100% of old code to use it 
-    color: green
-    print_only: true
-    prompt: Explain how Chris build the Tempo design system, and the impact that it had
-
-
-  - header: Talent Multiplication
-    title: Claude Academy
-    description: AI literacy program for engineers
-    long_description: Brought AI usage among engineers from almost nonexistent to 90% of all code.
-    color: purple
+  # Category 2: Speed & Standards (Yellow)
+  - header: Developer Velocity
+    title: Monorepo
+    description: Consolidated 22 services with 100% strict TypeScript
+    long_description: Consolidated 22 microservices into a unified monorepo, leading the migration to 100% strict TypeScript and zero ESLint errors.
+    color: orange
     print_only: false
-    prompt: Detail the Claude Academy initiative, its curriculum, and how it accelerated organizational AI adoption.
+    prompt: How did Chris consolidate 22 services into a monorepo and enforce strict TypeScript?
 
-  - header: Talent Multiplication
-    title: Training Pipeline
-    description: Produced over a hundred presentations
-    long_description: Produced over a hundred presentations across diverse topics from AI to microservices
-    color: purple
+  - header: Developer Velocity
+    title: CI/CD Architecture
+    description: Achieved 10x faster tests and 75% lower build costs
+    long_description: Used cross-branch caching and parallelization strategies to achieve 10x faster test execution and a 75% reduction in workflow costs.
+    color: orange
     print_only: false
-    prompt: Describe Chris's mentorship framework and the Staff+ Fast-Track program he architected.
+    prompt: How did Chris optimize the CI/CD pipeline to achieve 10x faster test execution?
 
-  - header: Talent Multiplication
-    title: IC6 Pipeline
-    description: 100% promotion rate for team members
-    long_description: 100% of all IC6 and most IC5 promotions were from direct team members
-    color: purple
-    print_only: true
-    prompt: Describe Chris's mentorship framework and the Staff+ Fast-Track program he architected.
-
-  - header: Operational Resilience
-    title: Incident Command
-    description: Top contributor across incidents
-    long_description: Reduced Mean Time To Recovery by 60% across SEV-1 incidents.
+  # Category 3: Risk & Efficiency (Blue)
+  - header: System Integrity
+    title: Capital Efficiency
+    description: Reduced overall costs by $500k/year, and db usage by 90%
+    long_description: Recovered $500k in annual expenditure by reducing database usage by 90%, optimising CI and deleting features
     color: blue
     print_only: false
-    prompt: Explain Chris's incident command improvements, PagerDuty optimizations, and cross-functional response protocols.
+    prompt: Walk me through the optimization strategies that saved $500k annually.
 
-  - header: Operational Resilience
-    title: $500k Savings
-    description: Reduced production database load by 90%
-    long_description: Delivered $500k annual savings, by means of reducing the database load by 90%
+  - header: System Integrity
+    title: Security Hardening
+    description: Remediated 35+ CVEs and hardened attack surfaces
+    long_description: Directed the remediation of 35+ critical CVEs and implemented comprehensive DAST/SAST tooling across the distributed architecture.
     color: blue
     print_only: false
-    prompt: Detail the infrastructure cost reduction strategies Chris implemented and their impact on system performance.
+    prompt: Describe Chris's approach to security hardening and CVE remediation.
 
-  - header: Operational Resilience
-    title: System Tests
-    description: Built the custom System Test framework resulting in 35% increase in code coverage
-    long_description: Build a custom testing framework that resulted in 35% increase in code coverage
-    color: blue
-    print_only: true
-    prompt: Explain Chris's incident command improvements, PagerDuty optimizations, and cross-functional response protocols.
+  # Category 4: People & Culture (Purple)
+  - header: Talent Density
+    title: The AI Pivot
+    description: Trained team to 90% AI-assisted code adoption
+    long_description: Institutionalized AI-first engineering through a year of continuous training, moving the team from 0% to 90% AI-assisted output.
+    color: purple
+    print_only: false
+    prompt: How did Chris drive the cultural shift to 90% AI adoption across engineering?
+
+  - header: Talent Density
+    title: Knowledge Systems
+    description: Systemized onboarding via "Two Minute Guides" series
+    long_description: Scaled technical onboarding by founding the "Two Minute Guides" series and authoring the core operational runbooks.
+    color: purple
+    print_only: false
+    prompt: Explain the impact of the Knowledge Infrastructure and "Two Minute Guides" on onboarding.
 
 meta:
   keywords: [Principal Engineer, AI Infrastructure Lead, Systems Architect]
@@ -272,6 +283,9 @@ loose_details:
     - Migrated company from 30% to 100% strict TypeScript uptake.
     - Directed security initiatives and hardened system vulnerabilities.
     - Created the 'Two Minute Guides' series with 24 guides by 5 authors.
+    - 100% i18n coverage
+    - 500k savings on infra
+    - 90% reduction in prod database load
   war_stories:
     - Navigated the LME load testing phase by fixing underlying architectural problems.
     - Managed BFv2 release by neutralizing misunderstandings among detractors.

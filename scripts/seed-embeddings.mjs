@@ -99,7 +99,7 @@ function parseContentIntoChunks(yamlContent) {
       chunks.push({
         node_id: `03_${String(i).padStart(2, '0')}`,
         category: 'project',
-        content: `Project: ${project.project_title} (${project.subtitle || ''}). Role: ${project.role || 'N/A'}. Stack: ${techStack}. Premise: ${project.the_premise} Technical details: ${project.technical_meat} Impact: ${project.impact_and_acclaim.join('. ')} Status: ${project.status}`,
+        content: `Project: ${project.project_title} (${project.subtitle || ''}). Stack: ${techStack}. Headline: ${project.headline}. Metrics: ${project.metric.join('. ')}`,
       });
     });
   }

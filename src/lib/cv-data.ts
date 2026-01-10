@@ -37,14 +37,13 @@ export const outlierAchievementSchema = z.object({
 export const projectSchema = z.object({
   project_title: nonEmptyString,
   subtitle: nonEmptyString.optional(),
-  stack_and_tools: z.array(techTagSchema),
-  the_premise: nonEmptyString,
-  technical_meat: nonEmptyString,
-  impact_and_acclaim: z.array(nonEmptyString),
-  supporting_data: z.array(nonEmptyString).optional(),
-  role: nonEmptyString.optional(),
-  status: nonEmptyString,
+  headline: nonEmptyString,
+  metric: z.array(nonEmptyString),
+  action: z.array(nonEmptyString).optional(),
+  cta: nonEmptyString.optional(),
   prompt: nonEmptyString.optional(),
+  stack_and_tools: z.array(techTagSchema),
+  war_story: z.array(nonEmptyString).optional(),
 });
 
 export const workHistorySchema = z.object({

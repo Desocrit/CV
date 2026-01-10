@@ -476,6 +476,11 @@ const toSnakeCase = (str: string) =>
     max-width: 50ch;
   }
 
+  /* Preserve newlines in profile text */
+  .profile-text {
+    white-space: pre-line;
+  }
+
   /* Remove margin from last visible section (when followed by print-only) - screen only */
   @media screen {
     section:has(+ .print-only) {

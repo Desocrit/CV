@@ -10,24 +10,25 @@ interface Props {
   technologies?: TechTagType[];
   headline: string;
   bulletPoints: string[];
+  supportingData?: string[];
   details?: string;
+  cta?: string;
   prompt?: string;
   useTerminal?: boolean;
 }
 
-const { title, subtitle, tag, label, technologies = [], headline, bulletPoints, details, prompt, useTerminal = false } = Astro.props;
+const { title, subtitle, tag, label, technologies = [], headline, bulletPoints, supportingData = [], details, cta, prompt, useTerminal = false } = Astro.props;
 
 // Convert label to SCREAMING_CASE for display
 const labelText = label?.toUpperCase().replace(/\s+/g, '_').replace(/'/g, '');
 
-// Escape HTML entities to prevent XSS
+// Escape HTML entities to prevent XSS (apostrophes are safe in text content)
 const escapeHtml = (text: string): string => {
   return text
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
+    .replace(/"/g, '&quot;');
 };
 
 // Highlight metrics (numbers, percentages, multipliers) in bullet points
@@ -45,7 +46,7 @@ const highlightMetrics = (text: string): string => {
   <div class="card-grid">
     <!-- Left Column: Title, Subtitle, Tag, Label, Technologies -->
     <div class="card-meta">
-      <h3 class="text-fluid-base font-medium tracking-tight text-foreground">
+      <h3 class="card-title text-fluid-base font-medium tracking-tight text-foreground transition-colors">
         {title}
       </h3>
 
@@ -70,7 +71,7 @@ const highlightMetrics = (text: string): string => {
 
       <!-- Tech stack as diagnostic nodes (dark mode) -->
       {technologies.length > 0 && (
-        <div class="tech-tags mt-fluid-xs flex flex-wrap gap-1.5">
+        <div class="tech-tags mt-fluid-xs gap-1.5">
           {technologies.filter(t => !t.name.startsWith('TODO')).slice(0, 4).map((tech) => (
             <TechTag name={tech.name} url={tech.url} tooltip={tech.tooltip} />
           ))}
@@ -91,9 +92,9 @@ const highlightMetrics = (text: string): string => {
     </div>
 
     <!-- Right Column: Headline, Bullets, Details -->
-    <div class:list={['card-content', { 'card-content--clickable': prompt && useTerminal }]} data-prompt={prompt && useTerminal ? prompt.trim() : undefined}>
+    <div class="card-content">
       <!-- Headline -->
-      <p class="text-fluid-sm text-muted-foreground leading-relaxed">
+      <p class="text-fluid-sm text-muted-foreground leading-relaxed font-medium">
         {headline.trim()}
       </p>
 
@@ -110,6 +111,22 @@ const highlightMetrics = (text: string): string => {
           );
         })}
       </ul>
+
+      <!-- Supporting Data -->
+      {supportingData.length > 0 && (
+        <ul class="supporting-list mt-fluid-xs space-y-1 text-fluid-xs">
+          {supportingData.map((item) => {
+            const cleanItem = item.replace(/^["']|["']$/g, '');
+            const highlighted = highlightMetrics(cleanItem);
+            return (
+              <li class="flex items-baseline gap-2 text-muted-foreground">
+                <span class="item-separator shrink-0" aria-hidden="true">–</span>
+                <span set:html={highlighted} />
+              </li>
+            );
+          })}
+        </ul>
+      )}
 
       <!-- Optional Details Toggle -->
       {details && !useTerminal && (
@@ -132,17 +149,13 @@ const highlightMetrics = (text: string): string => {
       {prompt && useTerminal && (
         <button
           type="button"
-          class="terminal-trigger details-toggle inline-flex cursor-pointer items-center gap-0.5 font-mono text-fluid-2xs mt-fluid-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors"
+          class="terminal-trigger inline-flex cursor-pointer items-center gap-1 text-fluid-xs font-medium mt-fluid-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors"
           data-prompt={prompt.trim()}
           data-print="hide"
           aria-label={`View details for ${title}`}
         >
-          <span aria-hidden="true">
-            <span class="bracket">[</span>
-            <span class="toggle-text light:hidden">VIEW_DETAILS</span>
-            <span class="toggle-text hidden light:inline">View details →</span>
-            <span class="bracket">]</span>
-          </span>
+          <span class="cta-text">{cta ?? 'View details'}</span>
+          <span class="cta-arrow" aria-hidden="true">→</span>
         </button>
       )}
     </div>
@@ -158,17 +171,21 @@ const highlightMetrics = (text: string): string => {
   /* Two-column grid layout matching Experience style */
   .card-grid {
     display: grid;
-    grid-template-columns: minmax(140px, 180px) 1fr;
+    grid-template-columns: minmax(135px, 175px) 1fr;
     gap: var(--spacing-fluid-md);
+  }
+
+  /* Tech tags: max 2 per row, don't stretch */
+  .tech-tags {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    justify-content: start;
+    align-items: start;
   }
 
   /* Right column content */
   .card-content {
     min-width: 0;
-  }
-
-  .card-content--clickable {
-    cursor: pointer;
   }
 
   /* Label text - uses card accent color */
@@ -205,35 +222,39 @@ const highlightMetrics = (text: string): string => {
     content: '';
   }
 
-  /* Details toggle - subtle lighter muted color */
-  .details-toggle {
-    color: var(--color-muted-foreground-light);
-  }
-
-  .details-toggle:hover {
-    color: var(--card-accent);
-  }
-
-  .details-toggle .bracket {
-    color: var(--color-muted-foreground-light);
-  }
-
-  .details-toggle .toggle-text {
-    color: var(--color-muted-foreground-light);
-  }
-
-  .details-toggle:hover .bracket,
-  .details-toggle:hover .toggle-text,
-  .content-card:hover .details-toggle .bracket,
-  .content-card:hover .details-toggle .toggle-text {
-    color: var(--card-accent);
-  }
-
-  /* Terminal trigger button reset */
+  /* Terminal trigger button - CTA style */
   .terminal-trigger {
     background: none;
     border: none;
     padding: 0;
+    color: var(--color-muted-foreground-light);
+  }
+
+  .terminal-trigger:hover {
+    color: var(--card-accent);
+  }
+
+  .terminal-trigger .cta-text {
+    color: inherit;
+  }
+
+  .terminal-trigger .cta-arrow {
+    color: inherit;
+    transition: transform 0.15s ease;
+  }
+
+  .terminal-trigger:hover .cta-arrow {
+    transform: translateX(2px);
+  }
+
+  /* Title gets subtle CRT-style glow on card hover - dark mode only */
+  .content-card:hover .card-title {
+    text-shadow: 0 0 4px color-mix(in srgb, var(--card-accent) 65%, transparent);
+  }
+
+  /* Light mode: no glow effect */
+  :global([data-theme='light']) .content-card:hover .card-title {
+    text-shadow: none;
   }
 
   /* Details content panel */
@@ -299,22 +320,9 @@ const highlightMetrics = (text: string): string => {
 
   }
 
-  /* Mobile: Only button is clickable, not entire card */
+  /* Mobile: Light up CTA when card is active */
   @media (max-width: 1023px) {
-    .card-content--clickable {
-      cursor: default;
-    }
-
-    /* Light up VIEW_DETAILS button when card is active (matches header color) */
-    .content-card.is-active-card .terminal-trigger,
-    .content-card.is-active-card .details-toggle {
-      color: var(--card-accent);
-    }
-
-    .content-card.is-active-card .terminal-trigger .bracket,
-    .content-card.is-active-card .terminal-trigger .toggle-text,
-    .content-card.is-active-card .details-toggle .bracket,
-    .content-card.is-active-card .details-toggle .toggle-text {
+    .content-card.is-active-card .terminal-trigger {
       color: var(--card-accent);
     }
   }
@@ -342,7 +350,7 @@ const highlightMetrics = (text: string): string => {
 
     /* Maintain two-column layout in cards */
     .card-grid {
-      grid-template-columns: 140px 1fr;
+      grid-template-columns: 135px 1fr;
       gap: 0.75rem;
     }
 
@@ -402,6 +410,25 @@ const highlightMetrics = (text: string): string => {
 
     /* Individual list items - avoid breaking mid-item */
     .bullet-list li {
+      display: list-item;
+      list-style-type: disc;
+      margin: 0.25rem 0;
+      font-size: 10px;
+      line-height: 1.35;
+      color: #4a4a4a;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      orphans: 2;
+      widows: 2;
+    }
+
+    /* Supporting data list - same styling as bullet list, no extra spacing */
+    .supporting-list {
+      padding-left: 1rem;
+      margin-top: 0;
+    }
+
+    .supporting-list li {
       display: list-item;
       list-style-type: disc;
       margin: 0.25rem 0;
@@ -516,9 +543,8 @@ const highlightMetrics = (text: string): string => {
   function initContentCardHandlers() {
     const abortController = new AbortController();
     const { signal } = abortController;
-    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
 
-    // Attach click handlers to all terminal triggers (always works)
+    // Attach click handlers to all terminal triggers (button only)
     document.querySelectorAll('.terminal-trigger').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -527,19 +553,6 @@ const highlightMetrics = (text: string): string => {
         if (prompt) openTerminal(prompt);
       }, { signal });
     });
-
-    // Attach click handlers to clickable card content areas (DESKTOP ONLY)
-    // On mobile, only the button should be clickable
-    if (!isMobile) {
-      document.querySelectorAll('.card-content--clickable').forEach((card) => {
-        card.addEventListener('click', (e) => {
-          // Don't trigger if clicking the button (it has its own handler)
-          if ((e.target as HTMLElement).closest('.terminal-trigger')) return;
-          const prompt = (card as HTMLElement).dataset['prompt'];
-          if (prompt) openTerminal(prompt);
-        }, { signal });
-      });
-    }
 
     // Cleanup on page transition
     document.addEventListener('astro:before-swap', () => {
