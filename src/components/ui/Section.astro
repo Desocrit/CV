@@ -164,13 +164,15 @@ const formatTitle = (str: string) =>
     position: relative;
   }
 
-  /* Expanded touch target on the button itself */
-  .section-toggle::before {
-    content: '';
-    position: absolute;
-    inset: -0.75rem;
-    min-width: 44px;
-    min-height: 44px;
+  @media screen {
+    /* Expanded touch target on the button itself */
+    .section-toggle::before {
+      content: '';
+      position: absolute;
+      inset: -0.75rem;
+      min-width: 44px;
+      min-height: 44px;
+    }
   }
 
   .section-toggle:focus-visible {

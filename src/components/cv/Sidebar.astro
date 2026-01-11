@@ -1,5 +1,7 @@
 ---
 import Odometer from '../ui/Odometer.astro';
+import TechStackPrint from './TechStackPrint.astro';
+import type { TechTag } from '../../lib/cv-data';
 
 interface Achievement {
   metric: string;
@@ -27,9 +29,10 @@ interface Props {
   profile: string;
   achievements: Achievement[];
   education: Education;
+  technologies: TechTag[];
 }
 
-const { name, role, email, phone, location, linkedin, github, profile, achievements, education } = Astro.props;
+const { name, role, email, phone, location, linkedin, github, profile, achievements, education, technologies } = Astro.props;
 
 const toSnakeCase = (str: string) =>
   str.toUpperCase().replace(/\s+/g, '_');
@@ -208,6 +211,8 @@ const toSnakeCase = (str: string) =>
     </div>
   </section>
 
+  <TechStackPrint technologies={technologies} />
+
   <section class="print-qr-section print-only" aria-label="View CV online">
     <div class="qr-content">
       <p class="qr-label">View on web</p>
@@ -241,6 +246,53 @@ const toSnakeCase = (str: string) =>
       overflow-y: visible;
       padding: var(--spacing-fluid-md);
       padding-bottom: 0;
+    }
+  }
+
+  /* Small screens only (640px-1023px): two-column layout with Achievements in second column */
+  @media screen and (min-width: 640px) and (max-width: 1023px) {
+    .sidebar-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto auto;
+      column-gap: var(--spacing-fluid-md);
+      row-gap: 0;
+    }
+
+    .site-header {
+      grid-column: 1;
+      grid-row: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .profile-section {
+      grid-column: 1;
+      grid-row: 2;
+      margin: 0;
+    }
+
+    .social-nav {
+      grid-column: 1;
+      grid-row: 3;
+      margin-top: 0.75rem;
+      margin-bottom: 0;
+    }
+
+    .achievements-section {
+      grid-column: 2;
+      grid-row: 1 / 4;
+      align-self: start;
+    }
+
+    .achievements-grid {
+      margin-top: 0 !important;
+    }
+
+    /* Hide all section titles on small screens */
+    .sidebar-section-title,
+    .terminal-section-title,
+    .mobile-section-title {
+      display: none !important;
     }
   }
 

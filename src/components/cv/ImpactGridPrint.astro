@@ -51,18 +51,16 @@ const orderedHeaders = [...new Set(nodes.map(n => n.header))];
             <span class="category-name">{shortHeader}</span>
           </header>
 
-          {/* Two-column metric grid */}
+          {/* Two-column metric rows */}
           <div class="metric-grid">
             {items.map((node) => (
               <div class="metric-row">
-                {/* Column A: Metrics & Labels (30%) */}
-                <div class="metric-column">
+                <div class="metric-label">
                   {node.metric_value && (
                     <span class="metric-hook">{node.metric_value}</span>
-                  )}
+                  )}{' '}
                   <span class="metric-sublabel">{node.metric_label}</span>
                 </div>
-                {/* Column B: Narrative (70%) */}
                 <p class="metric-narrative">{node.long_description || node.description}</p>
               </div>
             ))}
@@ -117,7 +115,7 @@ const orderedHeaders = [...new Set(nodes.map(n => n.header))];
     .impact-categories {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.35rem;
     }
 
     /* ========================================
@@ -132,9 +130,10 @@ const orderedHeaders = [...new Set(nodes.map(n => n.header))];
        SWISS RULE - 0.25pt hairline
        ======================================== */
     .swiss-rule {
-      height: 0.25pt;
-      background: #888888;
-      margin: 0;
+        border: none;
+        border-top: 0.5px solid #c0c0c0;
+        margin: 0 0 0.4rem 0;
+        margin-right: 2rem;
     }
 
     /* ========================================
@@ -182,53 +181,48 @@ const orderedHeaders = [...new Set(nodes.map(n => n.header))];
     }
 
     /* ========================================
-       METRIC ROW - 30% | 70% grid
+       METRIC ROW - two column grid
        ======================================== */
     .metric-row {
       display: grid;
-      grid-template-columns: 30% 70%;
-      align-items: first baseline;
+      grid-template-columns: 25% 1fr;
+      gap: 0.5rem;
+      align-items: baseline;
+      margin-top: 0.25rem;
     }
 
-    /* ========================================
-       COLUMN A: METRICS & LABELS
-       ======================================== */
-    .metric-column {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      padding-right: 0.5rem;
+    /* METRIC LABEL - contains hook + sublabel inline */
+    .metric-label {
+      white-space: nowrap;
     }
 
-    /* THE HOOK - 12px bold, matches card titles */
+    /* THE HOOK - 13px bold, matches achievement-metric */
     .metric-hook {
       font-family: 'IBM Plex Sans', system-ui, sans-serif;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       color: #1a1a1a;
-      letter-spacing: -0.01em;
-      line-height: 1.2;
+      margin-right: 0.2em;
     }
 
-    /* SUB-LABEL - 9px, matches achievement labels */
+    /* SUB-LABEL - matches achievement-label print style */
     .metric-sublabel {
-      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      font-family: 'IBM Plex Mono', 'Consolas', monospace;
       font-size: 9px;
-      font-weight: 500;
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: 0.01em;
       color: #666666;
-      line-height: 1.2;
     }
 
-    /* ========================================
-       COLUMN B: NARRATIVE - 10px, matches other descriptions
-       ======================================== */
+    /* NARRATIVE - 9px sans */
     .metric-narrative {
       font-family: 'IBM Plex Sans', system-ui, sans-serif;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 400;
       color: #4a4a4a;
-      line-height: 1.4;
       margin: 0;
+      line-height: 1.4;
     }
   }
 </style>

@@ -32,6 +32,12 @@ const educationData = cvData.education.map((edu) => ({
   startDate: String(edu.year),
   endDate: String(edu.year),
 }));
+
+// Collect all technologies from work history and projects for the Tech Stack section
+const allTechnologies = [
+  ...cvData.work_history.flatMap((job) => job.tech_stack),
+  ...cvData.projects.flatMap((project) => project.stack_and_tools),
+];
 ---
 
 <Layout
@@ -67,6 +73,7 @@ const educationData = cvData.education.map((edu) => ({
         institution: cvData.education[0]?.institution ?? '',
         year: cvData.education[0]?.year ?? 0,
       }}
+      technologies={allTechnologies}
     />
 
     <div class="main-column">

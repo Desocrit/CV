@@ -16,7 +16,7 @@ summary: |
 outlier_achievements:
   - metric: Throughput
     headline: 1000x
-    description: Improved burst capacityto handle the London Marathon
+    description: Improved burst capacity for the London Marathon
   - metric: Cost Savings
     headline: $500k
     description: Per annum savings from infrastructure optimisations
@@ -30,31 +30,36 @@ projects:
     headline: Developed an analytics agent that cut data requests by 98%
     metric:
       - Drove 95% self-serve analytics usage by industry leading decision makers
-      - Revitalised our sales pipeline with a demo that landed several high value clients
+      - Revitalised our sales pipeline with a demo that landed high value clients
     action:
       - Cultivated an AI-first culture, seeding expertise through training programs
-      - Engineered self-improving eval loops, trading control for depth of experience
+      # - Engineered self-improving eval loops, trading control for depth of experience
     cta: How did we build the architecture that eliminated hallucinations?
     prompt: Tell me about the Nova project and how it enforces accuracy and avoids hallucinations?
     war_story: []
     stack_and_tools:
       - name: MongoDB
+        group: Databases
         url: https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1
         tooltip: The database for startups who fear schemas
         professional_tooltip: For when 'eventually consistent' is consistent enough
       - name: MCP
+        group: APIs
         url: https://modelcontextprotocol.io/introduction
         tooltip: Anthropic's protocol for AI world domination
         professional_tooltip: Attempting to be the POSIX of the agentic era
       - name: AI SDK
+        group: AI
         url: https://sdk.vercel.ai/docs/introduction
         tooltip: Vercel's gift to the agentic masses
         professional_tooltip: A standard library for non-deterministic state machines
       - name: mem0
+        group: AI
         url: https://mem0.ai/research
         tooltip: Because LLMs have the memory of a goldfish
         professional_tooltip: A hippocampal bypass for stateless transformers
       - name: RAG
+        group: AI
         url: https://arxiv.org/abs/2005.11401
         tooltip: Ctrl+F for robots
         professional_tooltip: Open-book exams for latent space
@@ -64,26 +69,30 @@ projects:
     headline: Built a 'Virtual Monolith' for local testing of distributed services
     metric:
       - Boosted test coverage by 35% by making full-stack testing the easiest option
-      - Allowed us to fully replace our previous integration testing layer with System Tests
+      - Allowed us to fully replace our previous integration tests with System Tests
     action:
       - Used local GRPC to allow step-through debugging across an entire stack
-      - Traded framework complexity for developer simplicity, eliminating the need for snapshots
+      # - Traded framework complexity for developer simplicity, eliminating the need for snapshots
     cta: How did we handle the dependency cycles that this would cause?
     prompt: How did Chris handle dependency cycles in the System Test framework?
     stack_and_tools:
       - name: GraphQL
+        group: APIs
         url: https://graphql.org/learn/
         tooltip: Over-fetching's arch-nemesis
         professional_tooltip: Solving over-fetching by inviting N+1 to dinner
       - name: SQS
+        group: Cloud
         url: https://aws.amazon.com/sqs/
         tooltip: Bezos's waiting room
         professional_tooltip: At-least-once semantics, at-most-once documented
       - name: Docker
+        group: Cloud
         url: https://docs.docker.com/get-started/
         tooltip: '"Works on my machine" as a service'
         professional_tooltip: A few namespaces and a cgroup in a trench coat
       - name: gRPC
+        group: APIs
         url: https://grpc.io/docs/what-is-grpc/introduction/
         tooltip: HTTP/2's favourite child
         professional_tooltip: Strongly-typed telepathy for services that hate overhead
@@ -92,31 +101,37 @@ projects:
     subtitle: Total rebuild
     headline: Rebuilt the checkout from scratch for stability and scalability
     metric:
-      - Secured 10-year partnership with London Marathon via three successful ballots
+      - Secured 10-year partnership with London Marathon via 3 successful ballots
       - Earned three sweet months without an incident, letting us rebuild client trust
     action:
       - Enforced strict state management, deliberately trading raw speed for stability
-      - Quarantined bespoke logic, so the edge cases couldn't infect the critical path
+      # - Quarantined bespoke logic, so the edge cases couldn't infect the critical path
     cta: How did we handle a million users without one person seeing a queue?
     prompt: How did checkout v2 allow for a million users over a week without requiring queues?
     war_story: []
     stack_and_tools:
       - name: GraphQL
+        group: APIs
         url: https://engineering.fb.com/2015/09/14/core-infra/graphql-a-data-query-language/
         tooltip: Over-fetching's arch-nemesis
         professional_tooltip: Solving over-fetching by inviting N+1 to dinner
       - name: Stripe
+        group: APIs
         url: https://stripe.com/docs/payments/payment-intents
         tooltip: The 3% tax on internet commerce
         professional_tooltip: PCI-DSS compliance as an API primitive
+        hide_on_sidebar: true
       - name: NextJS
+        group: Frontend
         url: https://nextjs.org/docs/app/building-your-application/routing
         tooltip: React with mass-market opinions
         professional_tooltip: The hydration tax on server-rendered components
       - name: Recoil
+        group: Frontend
         url: https://recoiljs.org/docs/introduction/motivation
         tooltip: Facebook's apology for Redux
         professional_tooltip: Directed acyclic graphs for your component tree
+        hide_on_sidebar: true
 
   - project_title: Tempo
     subtitle: Design System
@@ -126,24 +141,28 @@ projects:
       - Brought rebrand lead time from 12 dev weeks to 1 by clearing design debt
     action:
       - Synchronised Figma tokens exactly with code, enable AI driven UI generation
-      - Seamlessly orchestrated a high-risk 30 day migration of the entire system
+      # - Seamlessly orchestrated a high-risk 30 day migration of the entire system
     prompt: How did Tempo allow AI to build pixel-perfect designs with Figma MCP?
     cta: How did Tempo allow AI to build pixel-perfect designs with Figma MCP?
     war_story: []
     stack_and_tools:
       - name: Storybook
+        group: Design Tools
         url: https://storybook.js.org/
         tooltip: Components in solitary confinement
         professional_tooltip: Component-driven development, validated in a vacuum
       - name: CVA
+        group: Design Tools
         url: https://cva.style/docs
         tooltip: Tailwind's ternary operator, but legible
         professional_tooltip: Discriminated unions for conditional class composition
       - name: Tailwind
+        group: Frontend
         url: https://tailwindcss.com/docs/utility-first
         tooltip: class="mb-4 pt-2 flex justify-oh-god-why"
         professional_tooltip: Because naming things is the only hard problem left in CS
       - name: Figma
+        group: Design Tools
         url: https://www.figma.com/
         tooltip: Where designs go to get ignored
         professional_tooltip: CRDTs meet the design-to-code impedance mismatch
@@ -161,18 +180,22 @@ work_history:
     supporting_data: []
     tech_stack:
       - name: TypeScript
+        group: Languages
         url: https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes-func.html
         tooltip: JavaScript for mass adoption
         professional_tooltip: Gradual typing for JavaScript's billion-dollar mistake
-      - name: gRPC
-        url: https://grpc.io/blog/principles/
-        tooltip: HTTP/2's favourite child
-        professional_tooltip: Strongly-typed telepathy for services that hate overhead
+      - name: AWS
+        group: Cloud
+        url: https://aws.amazon.com/
+        tooltip: Bezos's retirement fund, one Lambda at a time
+        professional_tooltip: Shared responsibility model for your infrastructure and your sanity
       - name: MongoDB
+        group: Databases
         url: https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1
         tooltip: The database for startups who fear schemas
         professional_tooltip: For when 'eventually consistent' is consistent enough
       - name: GraphQL
+        group: APIs
         url: https://engineering.fb.com/2015/09/14/core-infra/graphql-a-data-query-language/
         tooltip: Over-fetching's arch-nemesis
         professional_tooltip: Solving over-fetching by inviting N+1 to dinner
@@ -188,18 +211,22 @@ work_history:
     supporting_data: []
     tech_stack:
       - name: Ruby on Rails
+        group: Backend
         url: https://rubyonrails.org/doctrine
         tooltip: Opinions over configuration
         professional_tooltip: ActiveRecord — the ORM that launched a thousand N+1s
       - name: Java
+        group: Languages
         url: https://www.oracle.com/java/technologies/language-environment.html
         tooltip: Write once, debug everywhere
         professional_tooltip: Trading startup latency for peak throughput
-      - name: Postgres
+      - name: PGSQL
+        group: Databases
         url: https://www.postgresql.org/docs/current/history.html
         tooltip: The database your DBA actually respects
         professional_tooltip: The MVCC implementation everyone else benchmarks against
       - name: Python
+        group: Languages
         url: https://peps.python.org/pep-0020/
         tooltip: Executable pseudocode
         professional_tooltip: The world's favorite pseudocode, despite the GIL
@@ -215,13 +242,20 @@ work_history:
     supporting_data: []
     tech_stack:
       - name: SQL Server
+        group: Databases
         url: https://www.microsoft.com/en-us/research/publication/hekaton-sql-servers-memory-optimized-oltp-engine/
         tooltip: When your budget says no to Oracle
         professional_tooltip: Enterprise-grade query optimization with a per-core tax
       - name: .NET
+        group: Backend
         url: https://github.com/dotnet/runtime/blob/main/docs/design/coreclr/botr/README.md
         tooltip: Microsoft's apology for COM
         professional_tooltip: The CLR's belated revenge on the JVM
+      - name: Angular
+        group: Frontend
+        url: https://angular.io/guide/architecture
+        tooltip: Google's framework, versioned like a trauma response
+        professional_tooltip: Dependency injection all the way down, RxJS all the way up
 
 education:
   - degree: Computer Science
@@ -240,10 +274,10 @@ impact_nodes:
   - header: Developer Velocity
     short_header: EFFICIENCY
     title: CI/CD Architecture
-    metric_value: "10x"
-    metric_label: Latency Reduction
+    metric_value: 90%
+    metric_label: CI savings
     description: Cut CI costs by 90% and test execution time by 75%
-    long_description: Architected a cross-branch caching pipeline to reduce test latency by 10x and operational build costs by 75%.
+    long_description: Reduced test latency by 90% and CI costs by 75% using cross-branch caching
     color: green
     print_only: false
     prompt: How did Chris optimize the CI/CD pipeline to achieve 10x faster test execution?
@@ -254,7 +288,7 @@ impact_nodes:
     metric_value: "100%"
     metric_label: Compliance
     description: Consolidated 22 services with 100% strict TypeScript
-    long_description: Enforced 100% strict TypeScript and ESLint compliance by consolidating 22 distributed services into a unified monorepo.
+    long_description: Consolidated 22 services into one monorepo with 100% strict Typescript
     color: green
     print_only: false
     prompt: How did Chris consolidate 22 services into a monorepo and enforce strict TypeScript?
@@ -266,7 +300,7 @@ impact_nodes:
     metric_value: "$500k"
     metric_label: Recovered
     description: Saved $500k/year and reduced DB usage by 90%
-    long_description: Recovered $500k in annual OPEX by reducing database load 90% through query optimization and feature pruning.
+    long_description: Saved 500k/year and by optimising the database and pruning unused features
     color: orange
     print_only: false
     prompt: Walk me through the optimization strategies that saved $500k annually.
@@ -277,7 +311,7 @@ impact_nodes:
     metric_value: "35+"
     metric_label: CVEs Fixed
     description: Remediated 35+ CVEs and hardened attack surfaces
-    long_description: Remediated 35+ critical CVEs and hardened attack surfaces by implementing automated DAST/SAST tooling across the stack.
+    long_description: Used automated SAST/DAST tooling to find and fix 35+ critical CVEs
     color: orange
     print_only: false
     prompt: Describe Chris's approach to security hardening and CVE remediation.
@@ -289,7 +323,7 @@ impact_nodes:
     metric_value: "2.0x"
     metric_label: Velocity
     description: Doubled engineering velocity via 90% AI adoption
-    long_description: Doubled development velocity by achieving 90% team adoption through institutionalized AI-first engineering standards.
+    long_description: Doubled development velocity by reaching 90% AI generated code across the team
     color: blue
     print_only: false
     prompt: How did Chris drive the cultural shift to 90% AI adoption across engineering?
@@ -297,10 +331,10 @@ impact_nodes:
   - header: Talent Density
     short_header: CULTURE
     title: Engineering Culture
-    metric_value: "105"
-    metric_label: Guides Written
+    metric_value: "100+"
+    metric_label: Guides
     description: Authored core runbooks and "Two Minute Guides"
-    long_description: Scaled technical onboarding to multiple engineering pods by founding the "Two Minute Guides" series and codifying core runbooks.
+    long_description: Authored 100+ guides including the "Two Minute Guides" series and core runbooks
     color: blue
     print_only: false
     prompt: Explain the impact of the Knowledge Infrastructure and "Two Minute Guides" on onboarding.
@@ -312,7 +346,7 @@ impact_nodes:
     metric_value: "1000x"
     metric_label: Throughput
     description: Engineered 1000x burst capacity on the checkout
-    long_description: Achieved 1000x burst throughput for high-concurrency events by optimizing database access patterns and pruning legacy features.
+    long_description: Improved burst capacity by 1000x to support the needs of the London Marathon
     color: purple
     print_only: false
     prompt: How did Chris handle the scaling architecture to handle 1000x traffic spikes?
@@ -320,10 +354,10 @@ impact_nodes:
   - header: Global Scale
     short_header: INFRASTRUCTURE
     title: 100% Internationalization
-    metric_value: "900"
-    metric_label: Pull Requests
-    description: Orchestrated 900-PR extraction to reach 100% i18n
-    long_description: Reached 100% i18n coverage via an agentic translation pipeline that automatically generated and validated over 900 pull requests.
+    metric_value: "500k"
+    metric_label: Translations
+    description: Orchestrated an agentic extraction to reach 100% i18n
+    long_description: Translated our site into 12+ languages through an agentic translation piepline
     color: purple
     print_only: false
     prompt: Explain the strategy behind the 100% i18n migration and AI translation pipeline.

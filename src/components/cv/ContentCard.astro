@@ -350,7 +350,7 @@ const highlightMetrics = (text: string): string => {
 
     /* Maintain two-column layout in cards */
     .card-grid {
-      grid-template-columns: 80px 1fr;
+      grid-template-columns: 105px 1fr !important;
       gap: 0.75rem;
     }
 
@@ -374,7 +374,7 @@ const highlightMetrics = (text: string): string => {
 
     /* Card meta text (tag, subtitle) */
     .card-meta p {
-      font-size: 10px;
+      font-size: 9px;
     }
 
     /* Headline - keep with header, avoid orphaning */
@@ -484,47 +484,11 @@ const highlightMetrics = (text: string): string => {
       display: none;
     }
 
-    /* Tech tags - hide styled tags in print, show simple list */
-    .tech-tags {
-      display: none;
-    }
-
+    /* Tech tags - hide both styled tags and simple list in print
+       (consolidated Tech Stack section in sidebar handles this) */
+    .tech-tags,
     .tech-list-light {
-      display: block;
-      margin-top: 0.5rem;
-    }
-
-    .tech-divider {
-      border: none;
-      border-top: 0.5px solid #c0c0c0;
-      margin: 0 0 0.4rem 0;
-      margin-right: 2rem;
-    }
-
-    .tech-list-text {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      justify-items: start;
-      gap: 0.15rem;
-      font-family: 'IBM Plex Sans', system-ui, sans-serif;
-      font-size: 8px;
-      font-weight: 400;
-      color: #4a4a4a;
-      margin: 0;
-      padding-right: 2rem;
-    }
-
-    .tech-item {
-      font-family: 'IBM Plex Sans', system-ui, sans-serif;
-    }
-
-    .tech-item:nth-child(even) {
-      justify-self: end;
-    }
-
-    .tech-item:only-child {
-      grid-column: 1 / -1;
-      justify-self: center;
+      display: none !important;
     }
   }
 </style>
