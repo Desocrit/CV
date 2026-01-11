@@ -44,7 +44,7 @@ projects:
         tooltip: The database for startups who fear schemas
         professional_tooltip: For when 'eventually consistent' is consistent enough
       - name: MCP
-        group: APIs
+        group: Transport
         url: https://modelcontextprotocol.io/introduction
         tooltip: Anthropic's protocol for AI world domination
         professional_tooltip: Attempting to be the POSIX of the agentic era
@@ -77,7 +77,7 @@ projects:
     prompt: How did Chris handle dependency cycles in the System Test framework?
     stack_and_tools:
       - name: GraphQL
-        group: APIs
+        group: Transport
         url: https://graphql.org/learn/
         tooltip: Over-fetching's arch-nemesis
         professional_tooltip: Solving over-fetching by inviting N+1 to dinner
@@ -92,7 +92,7 @@ projects:
         tooltip: '"Works on my machine" as a service'
         professional_tooltip: A few namespaces and a cgroup in a trench coat
       - name: gRPC
-        group: APIs
+        group: Transport
         url: https://grpc.io/docs/what-is-grpc/introduction/
         tooltip: HTTP/2's favourite child
         professional_tooltip: Strongly-typed telepathy for services that hate overhead
@@ -111,12 +111,12 @@ projects:
     war_story: []
     stack_and_tools:
       - name: GraphQL
-        group: APIs
+        group: Transport
         url: https://engineering.fb.com/2015/09/14/core-infra/graphql-a-data-query-language/
         tooltip: Over-fetching's arch-nemesis
         professional_tooltip: Solving over-fetching by inviting N+1 to dinner
       - name: Stripe
-        group: APIs
+        group: Transport
         url: https://stripe.com/docs/payments/payment-intents
         tooltip: The 3% tax on internet commerce
         professional_tooltip: PCI-DSS compliance as an API primitive
@@ -151,11 +151,13 @@ projects:
         url: https://storybook.js.org/
         tooltip: Components in solitary confinement
         professional_tooltip: Component-driven development, validated in a vacuum
+        hide_on_sidebar: true
       - name: CVA
         group: Design Tools
         url: https://cva.style/docs
         tooltip: Tailwind's ternary operator, but legible
         professional_tooltip: Discriminated unions for conditional class composition
+        hide_on_sidebar: true
       - name: Tailwind
         group: Frontend
         url: https://tailwindcss.com/docs/utility-first
@@ -166,6 +168,7 @@ projects:
         url: https://www.figma.com/
         tooltip: Where designs go to get ignored
         professional_tooltip: CRDTs meet the design-to-code impedance mismatch
+        hide_on_sidebar: true
 
 work_history:
   - company: Let's Do This
@@ -195,7 +198,7 @@ work_history:
         tooltip: The database for startups who fear schemas
         professional_tooltip: For when 'eventually consistent' is consistent enough
       - name: GraphQL
-        group: APIs
+        group: Transport
         url: https://engineering.fb.com/2015/09/14/core-infra/graphql-a-data-query-language/
         tooltip: Over-fetching's arch-nemesis
         professional_tooltip: Solving over-fetching by inviting N+1 to dinner
