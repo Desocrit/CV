@@ -311,7 +311,7 @@ impact_nodes:
     metric_value: "35+"
     metric_label: CVEs Fixed
     description: Remediated 35+ CVEs and hardened attack surfaces
-    long_description: Used automated SAST/DAST tooling to find and fix 35+ critical CVEs
+    long_description: Implemented automated SAST/DAST tooling to find and fix 35+ critical CVEs
     color: orange
     print_only: false
     prompt: Describe Chris's approach to security hardening and CVE remediation.
