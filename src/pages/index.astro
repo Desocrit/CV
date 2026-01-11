@@ -217,6 +217,19 @@ const educationData = cvData.education.map((edu) => ({
     --section-accent: var(--color-accent-green);
   }
 
+  /* Section-specific card grid column widths */
+  .projects-section :global(.card-grid) {
+    grid-template-columns: minmax(110px, 150px) 1fr;
+  }
+
+  .history-section :global(.card-grid) {
+    grid-template-columns: minmax(130px, 170px) 1fr;
+  }
+
+  .education-section :global(.card-grid) {
+    grid-template-columns: minmax(130px, 170px) 1fr;
+  }
+
   /* Section title hover effects - lg desktop only (mobile/md use scroll-based color) */
   @media (min-width: 1200px) {
     /* Projects */

@@ -22,7 +22,7 @@ outlier_achievements:
     description: Per annum savings from infrastructure optimisations
   - metric: Contributions
     headline: "3000+"
-    description: Average contributions per year in company repositories
+    description: Average contributions per year in company code
 
 projects:
   - project_title: Nova
@@ -38,14 +38,6 @@ projects:
     prompt: Tell me about the Nova project and how it enforces accuracy and avoids hallucinations?
     war_story: []
     stack_and_tools:
-      - name: AI SDK
-        url: https://sdk.vercel.ai/docs/introduction
-        tooltip: Vercel's gift to the agentic masses
-        professional_tooltip: A standard library for non-deterministic state machines
-      - name: mem0
-        url: https://mem0.ai/research
-        tooltip: Because LLMs have the memory of a goldfish
-        professional_tooltip: A hippocampal bypass for stateless transformers
       - name: MongoDB
         url: https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1
         tooltip: The database for startups who fear schemas
@@ -54,6 +46,14 @@ projects:
         url: https://modelcontextprotocol.io/introduction
         tooltip: Anthropic's protocol for AI world domination
         professional_tooltip: Attempting to be the POSIX of the agentic era
+      - name: AI SDK
+        url: https://sdk.vercel.ai/docs/introduction
+        tooltip: Vercel's gift to the agentic masses
+        professional_tooltip: A standard library for non-deterministic state machines
+      - name: mem0
+        url: https://mem0.ai/research
+        tooltip: Because LLMs have the memory of a goldfish
+        professional_tooltip: A hippocampal bypass for stateless transformers
       - name: RAG
         url: https://arxiv.org/abs/2005.11401
         tooltip: Ctrl+F for robots
@@ -75,10 +75,6 @@ projects:
         url: https://graphql.org/learn/
         tooltip: Over-fetching's arch-nemesis
         professional_tooltip: Solving over-fetching by inviting N+1 to dinner
-      - name: gRPC
-        url: https://grpc.io/docs/what-is-grpc/introduction/
-        tooltip: HTTP/2's favourite child
-        professional_tooltip: Strongly-typed telepathy for services that hate overhead
       - name: SQS
         url: https://aws.amazon.com/sqs/
         tooltip: Bezos's waiting room
@@ -87,6 +83,10 @@ projects:
         url: https://docs.docker.com/get-started/
         tooltip: '"Works on my machine" as a service'
         professional_tooltip: A few namespaces and a cgroup in a trench coat
+      - name: gRPC
+        url: https://grpc.io/docs/what-is-grpc/introduction/
+        tooltip: HTTP/2's favourite child
+        professional_tooltip: Strongly-typed telepathy for services that hate overhead
 
   - project_title: Checkout
     subtitle: Total rebuild
@@ -101,22 +101,22 @@ projects:
     prompt: How did checkout v2 allow for a million users over a week without requiring queues?
     war_story: []
     stack_and_tools:
-      - name: NextJS
-        url: https://nextjs.org/docs/app/building-your-application/routing
-        tooltip: React with mass-market opinions
-        professional_tooltip: The hydration tax on server-rendered components
       - name: GraphQL
         url: https://engineering.fb.com/2015/09/14/core-infra/graphql-a-data-query-language/
         tooltip: Over-fetching's arch-nemesis
         professional_tooltip: Solving over-fetching by inviting N+1 to dinner
-      - name: Recoil
-        url: https://recoiljs.org/docs/introduction/motivation
-        tooltip: Facebook's apology for Redux
-        professional_tooltip: Directed acyclic graphs for your component tree
       - name: Stripe
         url: https://stripe.com/docs/payments/payment-intents
         tooltip: The 3% tax on internet commerce
         professional_tooltip: PCI-DSS compliance as an API primitive
+      - name: NextJS
+        url: https://nextjs.org/docs/app/building-your-application/routing
+        tooltip: React with mass-market opinions
+        professional_tooltip: The hydration tax on server-rendered components
+      - name: Recoil
+        url: https://recoiljs.org/docs/introduction/motivation
+        tooltip: Facebook's apology for Redux
+        professional_tooltip: Directed acyclic graphs for your component tree
 
   - project_title: Tempo
     subtitle: Design System
@@ -131,14 +131,6 @@ projects:
     cta: How did Tempo allow AI to build pixel-perfect designs with Figma MCP?
     war_story: []
     stack_and_tools:
-      - name: Tailwind
-        url: https://tailwindcss.com/docs/utility-first
-        tooltip: class="mb-4 pt-2 flex justify-oh-god-why"
-        professional_tooltip: Because naming things is the only hard problem left in CS
-      - name: Figma
-        url: https://www.figma.com/
-        tooltip: Where designs go to get ignored
-        professional_tooltip: CRDTs meet the design-to-code impedance mismatch
       - name: Storybook
         url: https://storybook.js.org/
         tooltip: Components in solitary confinement
@@ -147,6 +139,14 @@ projects:
         url: https://cva.style/docs
         tooltip: Tailwind's ternary operator, but legible
         professional_tooltip: Discriminated unions for conditional class composition
+      - name: Tailwind
+        url: https://tailwindcss.com/docs/utility-first
+        tooltip: class="mb-4 pt-2 flex justify-oh-god-why"
+        professional_tooltip: Because naming things is the only hard problem left in CS
+      - name: Figma
+        url: https://www.figma.com/
+        tooltip: Where designs go to get ignored
+        professional_tooltip: CRDTs meet the design-to-code impedance mismatch
 
 work_history:
   - company: Let's Do This
@@ -164,14 +164,14 @@ work_history:
         url: https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes-func.html
         tooltip: JavaScript for mass adoption
         professional_tooltip: Gradual typing for JavaScript's billion-dollar mistake
-      - name: MongoDB
-        url: https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1
-        tooltip: The database for startups who fear schemas
-        professional_tooltip: For when 'eventually consistent' is consistent enough
       - name: gRPC
         url: https://grpc.io/blog/principles/
         tooltip: HTTP/2's favourite child
         professional_tooltip: Strongly-typed telepathy for services that hate overhead
+      - name: MongoDB
+        url: https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1
+        tooltip: The database for startups who fear schemas
+        professional_tooltip: For when 'eventually consistent' is consistent enough
       - name: GraphQL
         url: https://engineering.fb.com/2015/09/14/core-infra/graphql-a-data-query-language/
         tooltip: Over-fetching's arch-nemesis
@@ -187,22 +187,22 @@ work_history:
       - Built offline-first capabilities for resilience for using Service Workers
     supporting_data: []
     tech_stack:
-      - name: Java
-        url: https://www.oracle.com/java/technologies/language-environment.html
-        tooltip: Write once, debug everywhere
-        professional_tooltip: Trading startup latency for peak throughput
       - name: Ruby on Rails
         url: https://rubyonrails.org/doctrine
         tooltip: Opinions over configuration
         professional_tooltip: ActiveRecord — the ORM that launched a thousand N+1s
-      - name: Python
-        url: https://peps.python.org/pep-0020/
-        tooltip: Executable pseudocode
-        professional_tooltip: The world's favorite pseudocode, despite the GIL
+      - name: Java
+        url: https://www.oracle.com/java/technologies/language-environment.html
+        tooltip: Write once, debug everywhere
+        professional_tooltip: Trading startup latency for peak throughput
       - name: Postgres
         url: https://www.postgresql.org/docs/current/history.html
         tooltip: The database your DBA actually respects
         professional_tooltip: The MVCC implementation everyone else benchmarks against
+      - name: Python
+        url: https://peps.python.org/pep-0020/
+        tooltip: Executable pseudocode
+        professional_tooltip: The world's favorite pseudocode, despite the GIL
 
   - company: RateSetter
     color: blue
@@ -214,14 +214,14 @@ work_history:
       - Decoupled a monolith into event-driven services for independent scaling
     supporting_data: []
     tech_stack:
-      - name: .NET
-        url: https://github.com/dotnet/runtime/blob/main/docs/design/coreclr/botr/README.md
-        tooltip: Microsoft's apology for COM
-        professional_tooltip: The CLR's belated revenge on the JVM
       - name: SQL Server
         url: https://www.microsoft.com/en-us/research/publication/hekaton-sql-servers-memory-optimized-oltp-engine/
         tooltip: When your budget says no to Oracle
         professional_tooltip: Enterprise-grade query optimization with a per-core tax
+      - name: .NET
+        url: https://github.com/dotnet/runtime/blob/main/docs/design/coreclr/botr/README.md
+        tooltip: Microsoft's apology for COM
+        professional_tooltip: The CLR's belated revenge on the JVM
 
 education:
   - degree: Computer Science
