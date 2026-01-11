@@ -71,9 +71,9 @@ const highlightMetrics = (text: string): string => {
 
       <!-- Tech stack as diagnostic nodes (dark mode) -->
       {technologies.length > 0 && (
-        <div class="tech-tags mt-fluid-xs gap-1.5">
+        <div class="tech-tags mt-fluid-xs">
           {technologies.filter(t => !t.name.startsWith('TODO')).slice(0, 4).map((tech) => (
-            <TechTag name={tech.name} url={tech.url} tooltip={tech.tooltip} />
+            <TechTag name={tech.name} url={tech.url} tooltip={tech.professional_tooltip ?? tech.tooltip} />
           ))}
         </div>
       )}
@@ -175,12 +175,11 @@ const highlightMetrics = (text: string): string => {
     gap: var(--spacing-fluid-md);
   }
 
-  /* Tech tags: max 2 per row, don't stretch */
+  /* Tech tags: flow naturally */
   .tech-tags {
-    display: grid;
-    grid-template-columns: repeat(2, max-content);
-    justify-content: start;
-    align-items: start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
   }
 
   /* Right column content */

@@ -7,11 +7,12 @@ const yamlContent = await import('../content/main.yaml?raw').then(
 
 const nonEmptyString = z.string().min(1);
 
-// Tech tag with name, canonical URL, and optional sassy tooltip
+// Tech tag with name, canonical URL, and optional tooltips
 export const techTagSchema = z.object({
   name: nonEmptyString,
   url: z.string().url(),
   tooltip: nonEmptyString.optional(),
+  professional_tooltip: nonEmptyString.optional(),
 });
 
 export type TechTag = z.infer<typeof techTagSchema>;

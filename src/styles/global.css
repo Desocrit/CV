@@ -576,13 +576,6 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on, 'zero' on;
-    overflow: hidden;
-  }
-
-  @media (max-width: 1023px) {
-    body {
-      overflow: auto;
-    }
   }
 
   .scrollbar-hidden {

@@ -36,7 +36,7 @@ const toSnakeCase = (str: string) =>
 ---
 
 <aside class="sidebar-column scrollbar-hidden">
-  <header class="site-header mb-fluid-xs md:mb-fluid-md">
+  <header class="site-header mb-fluid-sm md:mb-fluid-lg">
     <!-- Desktop: stacked layout -->
     <div class="header-desktop">
       <h1 class="text-3xl font-medium text-foreground leading-none tracking-tight">{name}</h1>
@@ -54,7 +54,7 @@ const toSnakeCase = (str: string) =>
     </div>
   </header>
 
-  <nav class="social-nav mb-fluid-lg md:mb-fluid-md" aria-label="Contact links">
+  <nav class="social-nav mb-fluid-sm md:mb-fluid-lg" aria-label="Contact links">
     <address class="social-links font-mono text-fluid-2xs not-italic">
       <!-- Desktop: full links with text | Mobile dark: tags | Mobile light: icons only -->
       <a
@@ -154,7 +154,7 @@ const toSnakeCase = (str: string) =>
     </address>
   </nav>
 
-  <section class="profile-section mb-fluid-lg md:mb-fluid-md" aria-label="Profile">
+  <section class="profile-section mb-fluid-sm md:mb-fluid-lg" aria-label="Profile">
     <h2 class="sidebar-section-title">Profile</h2>
     <h2 class="terminal-section-title md:hidden light:hidden">&gt; PROFILE</h2>
     <h2 class="mobile-section-title">Profile</h2>
@@ -163,7 +163,7 @@ const toSnakeCase = (str: string) =>
     </p>
   </section>
 
-  <section class="achievements-section mb-fluid-lg md:mb-fluid-md" aria-label="Key Achievements">
+  <section class="achievements-section mb-fluid-sm md:mb-fluid-lg" aria-label="Key Achievements">
     <h2 class="sidebar-section-title achievements-title">Achievements</h2>
     <h2 class="terminal-section-title md:hidden light:hidden">&gt; ACHIEVEMENTS</h2>
     <h2 class="mobile-section-title">Achievements</h2>
@@ -191,7 +191,7 @@ const toSnakeCase = (str: string) =>
     </div>
   </section>
 
-  <section class="education-section mb-fluid-md" aria-label="Education">
+  <section class="education-section mb-fluid-sm md:mb-fluid-lg" aria-label="Education">
     <h2 class="sidebar-section-title">Education</h2>
     <div class="spec-block mt-fluid-xs">
       <p class="font-sans text-fluid-xs text-muted-foreground">
@@ -225,14 +225,19 @@ const toSnakeCase = (str: string) =>
 
 <style>
   .sidebar-column {
-    height: 100%;
+    position: sticky;
+    top: 0;
+    align-self: start;
+    max-height: 100vh;
     overflow-y: auto;
     padding: var(--spacing-fluid-lg);
+    padding-bottom: 0;
   }
 
   @media (max-width: 1023px) {
     .sidebar-column {
-      height: auto;
+      position: static;
+      max-height: none;
       overflow-y: visible;
       padding: var(--spacing-fluid-md);
       padding-bottom: 0;
@@ -410,6 +415,11 @@ const toSnakeCase = (str: string) =>
     display: none;
   }
 
+  /* Hide sidebar education on screen - only show in print */
+  .education-section {
+    display: none;
+  }
+
   @media (max-width: 1023px) {
     .header-desktop {
       display: none;
@@ -419,10 +429,6 @@ const toSnakeCase = (str: string) =>
       display: flex;
       flex-direction: column;
       gap: 0.25rem;
-    }
-
-    .education-section {
-      display: none;
     }
 
     .profile-text {

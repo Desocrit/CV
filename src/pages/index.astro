@@ -147,23 +147,29 @@ const educationData = cvData.education.map((edu) => ({
     display: grid;
     grid-template-columns: 400px 1fr;
     gap: 0;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
   }
 
   .main-column {
     min-width: 0;
-    overflow-y: auto;
   }
 
   .main-content {
-    max-width: 80ch;
+    max-width: 70ch; /* Dark mode: Geist has wider ch unit */
     padding: var(--spacing-fluid-lg);
+  }
+
+  :global([data-theme='light']) .main-content {
+    max-width: 86ch; /* Light mode: IBM Plex has narrower ch unit */
   }
 
   @media (min-width: 1200px) {
     .main-content {
-      max-width: 100ch;
+      max-width: 85ch;
+    }
+
+    :global([data-theme='light']) .main-content {
+      max-width: 105ch;
     }
   }
 
@@ -202,23 +208,13 @@ const educationData = cvData.education.map((edu) => ({
   .history-section .content-item:nth-child(2) :global(.content-card) { --card-accent: var(--color-accent-purple); }
   .history-section .content-item:nth-child(3) :global(.content-card) { --card-accent: var(--color-accent-blue); }
 
-  /* Education section: mobile-only, always green */
-  .education-section {
-    display: none;
-  }
-
+  /* Education section: screen-only (hidden in print), always green */
   .education-section :global(.content-card) {
     --card-accent: var(--color-accent-green);
   }
 
   .education-section :global(.section-with-label) {
     --section-accent: var(--color-accent-green);
-  }
-
-  @media (max-width: 1023px) {
-    .education-section {
-      display: block;
-    }
   }
 
   /* Section title hover effects - lg desktop only (mobile/md use scroll-based color) */
