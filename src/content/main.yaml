@@ -143,10 +143,10 @@ projects:
         url: https://storybook.js.org/
         tooltip: Components in solitary confinement
         professional_tooltip: Component-driven development, validated in a vacuum
-      - name: Catalyst
-        url: https://catalyst.tailwindui.com/
-        tooltip: $299 well spent
-        professional_tooltip: Outsourcing ARIA-compliance to people with more patience
+      - name: CVA
+        url: https://cva.style/docs
+        tooltip: Tailwind's ternary operator, but legible
+        professional_tooltip: Discriminated unions for conditional class composition
 
 work_history:
   - company: Let's Do This
