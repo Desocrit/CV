@@ -1,7 +1,7 @@
-// Service Worker with Stale-While-Revalidate Strategy
-// Version: 1.0.0
+// Service Worker with Network-First Strategy
+// Version: 1.1.0
 
-const CACHE_NAME = 'cv-cache-v1';
+const CACHE_NAME = 'cv-cache-v2';
 const CACHE_MAX_AGE_MS = 3 * 24 * 60 * 60 * 1000; // 3 days in milliseconds
 
 // Paths that should never be cached
@@ -61,45 +61,33 @@ async function addCacheTimestamp(response) {
   });
 }
 
-// Stale-while-revalidate fetch handler
-async function staleWhileRevalidate(request) {
+// Network-first fetch handler
+async function networkFirst(request) {
   const cache = await caches.open(CACHE_NAME);
-  const cachedResponse = await cache.match(request);
 
-  // Start fetching fresh content in the background
-  const fetchPromise = fetch(request)
-    .then(async (networkResponse) => {
-      // Only cache successful responses
-      if (networkResponse.ok) {
-        const responseToCache = await addCacheTimestamp(networkResponse.clone());
-        await cache.put(request, responseToCache);
-      }
-      return networkResponse;
-    })
-    .catch((error) => {
-      // Network failed, return cached response if available
-      console.warn('[SW] Network request failed:', error);
+  try {
+    // Try to fetch from network first
+    const networkResponse = await fetch(request);
+
+    // Only cache successful responses
+    if (networkResponse.ok) {
+      const responseToCache = await addCacheTimestamp(networkResponse.clone());
+      await cache.put(request, responseToCache);
+    }
+
+    return networkResponse;
+  } catch (error) {
+    // Network failed - fall back to cache
+    console.warn('[SW] Network request failed, falling back to cache:', error);
+
+    const cachedResponse = await cache.match(request);
+    if (cachedResponse) {
       return cachedResponse;
-    });
+    }
 
-  // Return cached response immediately if fresh, otherwise wait for network
-  if (cachedResponse && isCacheEntryFresh(cachedResponse)) {
-    // Serve stale content immediately, revalidate in background
-    return cachedResponse;
+    // No cache available - throw the original error
+    throw error;
   }
-
-  // No cache or stale cache - wait for network
-  // But if we have stale cache, return it as fallback
-  if (cachedResponse) {
-    // Return stale cache but still revalidate
-    fetchPromise.catch((err) => {
-      console.warn('[SW] Background revalidation failed:', err.message || err);
-    });
-    return cachedResponse;
-  }
-
-  // No cache at all - must wait for network
-  return fetchPromise;
 }
 
 // Install event - precache critical assets
@@ -124,12 +112,12 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch event - stale-while-revalidate strategy
+// Fetch event - network-first strategy
 self.addEventListener('fetch', (event) => {
   // Skip requests that should bypass cache
   if (shouldBypassCache(event.request)) {
     return;
   }
 
-  event.respondWith(staleWhileRevalidate(event.request));
+  event.respondWith(networkFirst(event.request));
 });
