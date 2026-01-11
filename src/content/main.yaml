@@ -238,68 +238,92 @@ education:
 impact_nodes:
   # Category 1: Speed & Standards (Green)
   - header: Developer Velocity
+    short_header: EFFICIENCY
     title: CI/CD Architecture
+    metric_value: "10x"
+    metric_label: Latency Reduction
     description: Cut CI costs by 90% and test execution time by 75%
-    long_description: Redesigned CI/CD infrastructure using cross-branch caching, reducing test latency by 10x and operational build costs by 75%
+    long_description: Architected a cross-branch caching pipeline to reduce test latency by 10x and operational build costs by 75%.
     color: green
     print_only: false
     prompt: How did Chris optimize the CI/CD pipeline to achieve 10x faster test execution?
 
   - header: Developer Velocity
+    short_header: EFFICIENCY
     title: Monorepo
+    metric_value: "100%"
+    metric_label: Compliance
     description: Consolidated 22 services with 100% strict TypeScript
-    long_description: Consolidated 22 distributed services into a unified monorepo to enforce 100% strict TypeScript and ESLint compliance
+    long_description: Enforced 100% strict TypeScript and ESLint compliance by consolidating 22 distributed services into a unified monorepo.
     color: green
     print_only: false
     prompt: How did Chris consolidate 22 services into a monorepo and enforce strict TypeScript?
 
   # Category 2: Risk & Efficiency (Orange)
   - header: System Integrity
+    short_header: RESILIENCE
     title: Capital Efficiency
+    metric_value: "$500k"
+    metric_label: Recovered
     description: Saved $500k/year and reduced DB usage by 90%
-    long_description: Recovered $500k in annual expenditure by reducing database usage by 90%, optimising CI and deleting features
+    long_description: Recovered $500k in annual OPEX by reducing database load 90% through query optimization and feature pruning.
     color: orange
     print_only: false
     prompt: Walk me through the optimization strategies that saved $500k annually.
 
   - header: System Integrity
+    short_header: RESILIENCE
     title: Security Hardening
+    metric_value: "35+"
+    metric_label: CVEs Fixed
     description: Remediated 35+ CVEs and hardened attack surfaces
-    long_description: Hardened system security by implementing automated DAST/SAST tooling and fixing 35+ critical CVEs
+    long_description: Remediated 35+ critical CVEs and hardened attack surfaces by implementing automated DAST/SAST tooling across the stack.
     color: orange
     print_only: false
     prompt: Describe Chris's approach to security hardening and CVE remediation.
 
   # Category 3: People & Culture (Blue)
   - header: Talent Density
+    short_header: CULTURE
     title: The AI Pivot
+    metric_value: "2.0x"
+    metric_label: Velocity
     description: Doubled engineering velocity via 90% AI adoption
-    long_description: Institutionalized AI-first engineering, achieving 90% team adoption and doubling development velocity
+    long_description: Doubled development velocity by achieving 90% team adoption through institutionalized AI-first engineering standards.
     color: blue
     print_only: false
     prompt: How did Chris drive the cultural shift to 90% AI adoption across engineering?
 
   - header: Talent Density
+    short_header: CULTURE
     title: Engineering Culture
+    metric_value: "105"
+    metric_label: Guides Written
     description: Authored core runbooks and "Two Minute Guides"
-    long_description: Scaled technical onboarding by founding the "Two Minute Guides" series and authoring core runbooks
+    long_description: Scaled technical onboarding to multiple engineering pods by founding the "Two Minute Guides" series and codifying core runbooks.
     color: blue
     print_only: false
     prompt: Explain the impact of the Knowledge Infrastructure and "Two Minute Guides" on onboarding.
 
   # Category 4: Growth & Reach (Purple)
   - header: Global Scale
+    short_header: INFRASTRUCTURE
     title: 1000x Throughput
+    metric_value: "1000x"
+    metric_label: Throughput
     description: Engineered 1000x burst capacity on the checkout
-    long_description: Increased site burst throughput by 1000x through database optimisation and deleting unused features
+    long_description: Achieved 1000x burst throughput for high-concurrency events by optimizing database access patterns and pruning legacy features.
     color: purple
     print_only: false
     prompt: How did Chris handle the scaling architecture to handle 1000x traffic spikes?
 
   - header: Global Scale
+    short_header: INFRASTRUCTURE
     title: 100% Internationalization
+    metric_value: "900"
+    metric_label: Pull Requests
     description: Orchestrated 900-PR extraction to reach 100% i18n
-    long_description: Automated the internationalisation of the entire codebase using an agentic pipline producing over 900 PRs
+    long_description: Reached 100% i18n coverage via an agentic translation pipeline that automatically generated and validated over 900 pull requests.
     color: purple
     print_only: false
     prompt: Explain the strategy behind the 100% i18n migration and AI translation pipeline.

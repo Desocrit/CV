@@ -118,18 +118,9 @@ const formatTitle = (str: string) =>
     white-space: nowrap;
   }
 
-  /* Print title - hidden by default, shown in light mode via global.css */
+  /* Print title - hidden by default, shown in light mode (via global.css) and print */
   .section-title-print {
     display: none;
-  }
-
-  /* Light mode: show clean title, hide terminal title */
-  :global([data-theme='light']) .section-title {
-    display: none !important;
-  }
-
-  :global([data-theme='light']) .section-title-print {
-    display: block !important;
   }
 
   /* Light mode mobile: disable full-bleed positioning */
@@ -344,12 +335,19 @@ const formatTitle = (str: string) =>
 
     .section-label {
       display: block;
-      margin-bottom: 0.35rem;
-      padding-top: 0;
+      position: static;
+      width: auto;
+      margin-bottom: 0.5rem;
+      padding: 0;
       background: transparent;
     }
 
     .section-label-inner {
+      display: block;
+      position: static;
+      width: auto;
+      left: auto;
+      transform: none;
       border: none;
       padding: 0;
     }
@@ -364,22 +362,26 @@ const formatTitle = (str: string) =>
       padding-top: 0;
     }
 
+    /* Hide terminal title in print */
     .section-title {
-      display: none;
+      display: none !important;
     }
 
-    /* Match light mode styling - use variables */
-    .section-title-print {
-      display: inline-block;
-      color: var(--color-foreground);
-      font-family: var(--font-sans);
-      font-size: 12px;
+    /* Print-only title - clean Swiss style, must override all screen rules */
+    .section-title-print,
+    :global([data-theme]) .section-title-print,
+    :global(:root) .section-title-print {
+      display: block !important;
+      visibility: visible !important;
+      color: #1a1a1a !important;
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      font-size: 11pt;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      border-bottom: none;
-      padding-bottom: 0;
-      margin-bottom: 0.25rem;
+      border: none;
+      padding: 0;
+      margin: 0;
     }
   }
 </style>

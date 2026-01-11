@@ -71,7 +71,10 @@ export const educationSchema = z.object({
 
 export const impactNodeSchema = z.object({
   header: nonEmptyString,
+  short_header: nonEmptyString.optional(),
   title: nonEmptyString,
+  metric_value: nonEmptyString.optional(),
+  metric_label: nonEmptyString.optional(),
   description: nonEmptyString,
   long_description: nonEmptyString.optional(),
   prompt: nonEmptyString,

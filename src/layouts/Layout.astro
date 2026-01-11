@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import GlitchEffect from '../components/ui/GlitchEffect.astro';
+import BlueprintSpotlight from '../components/ui/BlueprintSpotlight.astro';
 import TerminalWrapper from '../components/ui/terminal/TerminalWrapper';
 
 interface SocialLink {
@@ -172,5 +173,6 @@ const jsonLd = {
     <TerminalWrapper client:only="react" />
 
     <GlitchEffect />
+    <BlueprintSpotlight />
   </body>
 </html>

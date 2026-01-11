@@ -1,12 +1,19 @@
 ---
 import type { ImpactNode } from '../../lib/cv-data';
-import Section from '../ui/Section.astro';
 
 interface Props {
   nodes: ImpactNode[];
 }
 
 const { nodes } = Astro.props;
+
+// Category number mapping
+const categoryNumbers: Record<string, string> = {
+  'Developer Velocity': '01',
+  'System Integrity': '02',
+  'Talent Density': '03',
+  'Global Scale': '04',
+};
 
 // Group nodes by header
 const groupedNodes = nodes.reduce<Record<string, ImpactNode[]>>((acc, node) => {
@@ -23,27 +30,57 @@ const groupedNodes = nodes.reduce<Record<string, ImpactNode[]>>((acc, node) => {
 const orderedHeaders = [...new Set(nodes.map(n => n.header))];
 ---
 
-<div class="impact-print-section">
-  <Section title="Impact" id="impact-print">
-    <div class="impact-groups">
-      {orderedHeaders.map((header) => (
-        <div class="impact-group">
-          <h3 class="group-header">{header}</h3>
-          <ul class="group-bullets">
-            {(groupedNodes[header] ?? []).map((node) => (
-              <li class:list={['bullet-item', { 'print-only-bullet': node.print_only }]}>
-                {node.long_description || node.description}
-              </li>
+<section class="impact-print-section" aria-labelledby="impact-print-heading">
+  <h2 id="impact-print-heading" class="impact-print-title">Impact</h2>
+
+  <div class="impact-categories">
+    {orderedHeaders.map((header) => {
+      const items = groupedNodes[header] ?? [];
+      const number = categoryNumbers[header] ?? '00';
+      const shortHeader = items[0]?.short_header ?? header.toUpperCase();
+
+      return (
+        <article class="category-block">
+          {/* Swiss hairline rule - the anchor line */}
+          <div class="swiss-rule" role="presentation" />
+
+          {/* Category header - hangs below the rule */}
+          <header class="category-header">
+            <span class="category-number">{number}</span>
+            <span class="category-divider">/</span>
+            <span class="category-name">{shortHeader}</span>
+          </header>
+
+          {/* Two-column metric grid */}
+          <div class="metric-grid">
+            {items.map((node) => (
+              <div class="metric-row">
+                {/* Column A: Metrics & Labels (30%) */}
+                <div class="metric-column">
+                  {node.metric_value && (
+                    <span class="metric-hook">{node.metric_value}</span>
+                  )}
+                  <span class="metric-sublabel">{node.metric_label}</span>
+                </div>
+                {/* Column B: Narrative (70%) */}
+                <p class="metric-narrative">{node.long_description || node.description}</p>
+              </div>
             ))}
-          </ul>
-        </div>
-      ))}
-    </div>
-  </Section>
-</div>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+</section>
 
 <style>
-  /* Hide on screen, show only in print */
+  /* ============================================================================
+     SWISS MODERNIST IMPACT GRID
+     International Typographic Style for print resume
+     Typography: IBM Plex Sans | Grid: 30/70 two-column
+     ============================================================================ */
+
+  /* Hidden on screen - print only */
   .impact-print-section {
     display: none;
   }
@@ -53,56 +90,145 @@ const orderedHeaders = [...new Set(nodes.map(n => n.header))];
       display: block;
       break-inside: avoid;
       page-break-inside: avoid;
-      margin-bottom: 0.6rem;
+      margin-top: 0.75rem;
+      margin-bottom: 0.5rem;
     }
 
-    .impact-print-section :global(.section-with-label) {
-      margin-bottom: 0.4rem;
+    /* ========================================
+       SECTION TITLE - matches Section.astro print title
+       ======================================== */
+    .impact-print-title {
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      font-size: 11pt;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #1a1a1a;
+      margin: 0;
+      margin-bottom: 0.5rem;
+      padding: 0;
+      border: none;
+      display: block;
     }
 
-    .impact-groups {
+    /* ========================================
+       CATEGORIES CONTAINER
+       ======================================== */
+    .impact-categories {
       display: flex;
       flex-direction: column;
-      gap: 0.35rem;
-      margin-top: 0.5rem;
+      gap: 0.5rem;
     }
 
-    .impact-group {
+    /* ========================================
+       CATEGORY BLOCK
+       ======================================== */
+    .category-block {
+      width: 100%;
       break-inside: avoid;
-      margin-bottom: 1rem;
     }
 
-    .group-header {
-      font-family: var(--font-sans);
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--color-foreground);
-      letter-spacing: -0.025em;
-      margin: 0 0 0.15rem 0;
-    }
-
-    .group-bullets {
+    /* ========================================
+       SWISS RULE - 0.25pt hairline
+       ======================================== */
+    .swiss-rule {
+      height: 0.25pt;
+      background: #888888;
       margin: 0;
-      margin-top: 0.5rem;
-      padding-left: 1rem;
-      list-style-type: disc;
     }
 
-    .bullet-item {
-      font-family: var(--font-sans);
+    /* ========================================
+       CATEGORY HEADER - 8px, matches sidebar labels
+       ======================================== */
+    .category-header {
+      display: flex;
+      align-items: baseline;
+      gap: 0.15rem;
+      margin-top: 0.3rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .category-number {
+      font-family: 'IBM Plex Mono', 'Consolas', monospace;
+      font-size: 8px;
+      font-weight: 500;
+      color: #666666;
+      letter-spacing: 0.05em;
+    }
+
+    .category-divider {
+      font-family: 'IBM Plex Mono', 'Consolas', monospace;
+      font-size: 8px;
+      font-weight: 500;
+      color: #999999;
+    }
+
+    .category-name {
+      font-family: 'IBM Plex Mono', 'Consolas', monospace;
+      font-size: 8px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #666666;
+    }
+
+    /* ========================================
+       METRIC GRID
+       ======================================== */
+    .metric-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    /* ========================================
+       METRIC ROW - 30% | 70% grid
+       ======================================== */
+    .metric-row {
+      display: grid;
+      grid-template-columns: 30% 70%;
+      align-items: first baseline;
+    }
+
+    /* ========================================
+       COLUMN A: METRICS & LABELS
+       ======================================== */
+    .metric-column {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding-right: 0.5rem;
+    }
+
+    /* THE HOOK - 12px bold, matches card titles */
+    .metric-hook {
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: #1a1a1a;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    /* SUB-LABEL - 9px, matches achievement labels */
+    .metric-sublabel {
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
       font-size: 9px;
-      color: var(--color-muted-foreground);
+      font-weight: 500;
+      color: #666666;
+      line-height: 1.2;
+    }
+
+    /* ========================================
+       COLUMN B: NARRATIVE - 10px, matches other descriptions
+       ======================================== */
+    .metric-narrative {
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      color: #4a4a4a;
       line-height: 1.4;
-      margin-bottom: 0.25rem;
-    }
-
-    .bullet-item::marker {
-      color: var(--color-muted-foreground-light);
-    }
-
-    /* Print-only bullets: hidden by default, shown in this print context */
-    .print-only-bullet {
-      display: list-item;
+      margin: 0;
     }
   }
 </style>

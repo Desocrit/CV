@@ -45,6 +45,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('/fonts/IBMPlexSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* IBM Plex Mono for light mode */
 @font-face {
   font-family: 'IBM Plex Mono';
@@ -337,12 +345,12 @@
    Remove SCREAMING_SNAKE and // terminal coding
    ========================================================================== */
 
-/* Hide the terminal-style section title, show the clean print version - LIGHT MODE ONLY */
+/* Light mode: hide terminal-style title, show clean title */
 [data-theme='light'] .section-title {
   display: none !important;
 }
 
-/* xs/sm/md (< 1024px): no underline, no extra spacing */
+/* Light mode screen titles - clean Swiss style */
 [data-theme='light'] .section-title-print {
   display: block !important;
   order: -1;
@@ -830,6 +838,66 @@
   .sidebar-section-title.hidden,
   .sidebar-section-title.md\:block {
     display: block !important;
+  }
+
+  /* ==========================================================================
+     PRINT: Force light mode typography patterns (hide terminal-style titles)
+     These rules ensure print ALWAYS uses light mode patterns regardless of
+     whether [data-theme='light'] is set on the document
+     ========================================================================== */
+
+  /* Section titles: hide terminal-style, show clean print version */
+  .section-title {
+    display: none !important;
+  }
+
+  .section-title-print {
+    display: inline-block !important;
+    color: #1a1a1a !important;
+  }
+
+  /* Hide terminal prefixes and brackets */
+  .section-prefix {
+    display: none !important;
+  }
+
+  /* Labels: show print-friendly versions */
+  .label-text .screen-only {
+    display: none !important;
+  }
+
+  .label-text .print-only {
+    display: inline !important;
+  }
+
+  /* Achievement labels: show print-friendly versions */
+  .achievement-label .screen-only {
+    display: none !important;
+  }
+
+  .achievement-label .print-only {
+    display: inline !important;
+  }
+
+  /* Remove uppercase transforms for print legibility */
+  .uppercase,
+  [class*='uppercase'],
+  .achievement-label,
+  .tech-tag,
+  .label-text,
+  .card-header,
+  .sidebar-section-title,
+  .edu-meta {
+    text-transform: none !important;
+  }
+
+  /* Hide action buttons and brackets in print */
+  .action-button .bracket,
+  .details-toggle .bracket,
+  .terminal-trigger .bracket,
+  .card-cta .cta-bracket,
+  .impact-card .header-bracket {
+    display: none !important;
   }
 
   :root {

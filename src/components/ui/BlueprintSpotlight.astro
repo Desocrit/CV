@@ -1,0 +1,175 @@
+---
+// Blueprint spotlight effect for dark mode
+// Shows faint grid lines under the cursor like searching a blueprint
+---
+
+<div id="blueprint-spotlight" aria-hidden="true"></div>
+
+<style>
+  #blueprint-spotlight {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  #blueprint-spotlight.active {
+    opacity: 1;
+  }
+
+  @media print {
+    #blueprint-spotlight {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  const GRID_SIZE = 24; // Grid cell size in pixels
+  const SPOTLIGHT_RADIUS = 180; // Radius of the spotlight
+  const FADE_TIMEOUT = 2000; // Hide spotlight after 2s of no movement
+
+  let spotlight: HTMLElement | null = null;
+  let fadeTimer: number | null = null;
+  let isActive = false;
+  let rafId: number | null = null;
+  let currentX = 0;
+  let currentY = 0;
+
+  function isDarkMode(): boolean {
+    return document.documentElement.getAttribute('data-theme') !== 'light';
+  }
+
+  function updateSpotlight(x: number, y: number): void {
+    if (!spotlight || !isActive) return;
+
+    // Use CSS custom properties for smooth updates
+    spotlight.style.setProperty('--mouse-x', `${x}px`);
+    spotlight.style.setProperty('--mouse-y', `${y}px`);
+
+    // Create the grid + spotlight effect
+    // Grid lines using repeating linear gradients, masked by radial gradient
+    spotlight.style.background = `
+      radial-gradient(
+        circle ${SPOTLIGHT_RADIUS}px at ${x}px ${y}px,
+        rgba(55, 191, 81, 0.015) 0%,
+        transparent 100%
+      )
+    `;
+
+    // Use mask to show grid only in spotlight area
+    spotlight.style.maskImage = `
+      radial-gradient(
+        circle ${SPOTLIGHT_RADIUS}px at ${x}px ${y}px,
+        black 0%,
+        transparent 100%
+      )
+    `;
+    spotlight.style.webkitMaskImage = spotlight.style.maskImage;
+
+    // Grid pattern as background
+    spotlight.style.backgroundColor = 'transparent';
+    spotlight.style.backgroundImage = `
+      linear-gradient(to right, rgba(55, 191, 81, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(55, 191, 81, 0.04) 1px, transparent 1px),
+      radial-gradient(
+        circle ${SPOTLIGHT_RADIUS * 0.7}px at ${x}px ${y}px,
+        rgba(55, 191, 81, 0.01) 0%,
+        transparent 100%
+      )
+    `;
+    spotlight.style.backgroundSize = `${GRID_SIZE}px ${GRID_SIZE}px, ${GRID_SIZE}px ${GRID_SIZE}px, 100% 100%`;
+
+    spotlight.classList.add('active');
+
+    // Reset fade timer
+    if (fadeTimer !== null) {
+      clearTimeout(fadeTimer);
+    }
+    fadeTimer = window.setTimeout(() => {
+      spotlight?.classList.remove('active');
+    }, FADE_TIMEOUT);
+  }
+
+  function handleMouseMove(e: MouseEvent): void {
+    if (!isActive) return;
+
+    currentX = e.clientX;
+    currentY = e.clientY;
+
+    // Use requestAnimationFrame for smooth updates
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+    }
+    rafId = requestAnimationFrame(() => {
+      updateSpotlight(currentX, currentY);
+    });
+  }
+
+  function startSpotlight(): void {
+    if (isActive) return;
+    isActive = true;
+    spotlight = document.getElementById('blueprint-spotlight');
+    if (spotlight) {
+      document.addEventListener('mousemove', handleMouseMove, { passive: true });
+    }
+  }
+
+  function stopSpotlight(): void {
+    isActive = false;
+    document.removeEventListener('mousemove', handleMouseMove);
+
+    if (fadeTimer !== null) {
+      clearTimeout(fadeTimer);
+      fadeTimer = null;
+    }
+
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+
+    if (spotlight) {
+      spotlight.classList.remove('active');
+      spotlight.style.background = '';
+      spotlight.style.maskImage = '';
+      spotlight.style.webkitMaskImage = '';
+      spotlight.style.backgroundImage = '';
+    }
+  }
+
+  function init(): void {
+    spotlight = document.getElementById('blueprint-spotlight');
+    if (!spotlight) return;
+
+    // Only start if in dark mode
+    if (isDarkMode()) {
+      startSpotlight();
+    }
+
+    // Watch for theme changes
+    const observer = new MutationObserver(() => {
+      if (isDarkMode()) {
+        startSpotlight();
+      } else {
+        stopSpotlight();
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme']
+    });
+  }
+
+  // Respect reduced motion preferences
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // Skip effect entirely for users who prefer reduced motion
+  } else if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>
