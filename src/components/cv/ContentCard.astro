@@ -247,13 +247,29 @@ const highlightMetrics = (text: string): string => {
     transform: translateX(2px);
   }
 
-  /* Title gets subtle CRT-style glow on card hover - dark mode only */
-  .content-card:hover .card-title {
-    text-shadow: 0 0 4px color-mix(in srgb, var(--card-accent) 65%, transparent);
+  /* CRT-style neon glow on hover - dark mode only */
+  .card-title,
+  .label-text {
+    transition: text-shadow 0.15s ease-out;
   }
 
-  /* Light mode: no glow effect */
-  :global([data-theme='light']) .content-card:hover .card-title {
+  .card-title:hover {
+    text-shadow:
+      0 0 4px var(--card-accent),
+      0 0 12px color-mix(in srgb, var(--card-accent) 60%, transparent),
+      0 0 24px color-mix(in srgb, var(--card-accent) 30%, transparent);
+  }
+
+  .label-text:hover {
+    text-shadow:
+      0 0 4px var(--card-accent),
+      0 0 10px color-mix(in srgb, var(--card-accent) 50%, transparent),
+      0 0 20px color-mix(in srgb, var(--card-accent) 25%, transparent);
+  }
+
+  /* Light mode: no glow effects */
+  :global([data-theme='light']) .card-title:hover,
+  :global([data-theme='light']) .label-text:hover {
     text-shadow: none;
   }
 

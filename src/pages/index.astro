@@ -170,6 +170,13 @@ const allTechnologies = [
     max-width: 86ch; /* Light mode: IBM Plex has narrower ch unit */
   }
 
+  /* md+: remove left padding (sidebar provides gap) */
+  @media (min-width: 1024px) {
+    .main-content {
+      padding-left: 0;
+    }
+  }
+
   @media (min-width: 1200px) {
     .main-content {
       max-width: 85ch;
