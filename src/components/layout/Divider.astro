@@ -1,0 +1,49 @@
+---
+/**
+ * Divider - Horizontal rule/separator component
+ *
+ * Provides consistent visual separation between content sections.
+ * Supports fluid spacing and accent colors.
+ *
+ * @example
+ * <Divider />
+ * <Divider spacing="lg" accent="purple" />
+ */
+interface Props {
+  /** Vertical spacing around the divider */
+  spacing?: 'none' | 'xs' | 'sm' | 'md' | 'lg';
+  /** Accent color for the divider line */
+  accent?: 'default' | 'green' | 'orange' | 'blue' | 'purple' | 'subtle';
+  /** Additional CSS classes */
+  class?: string;
+}
+
+const { spacing = 'sm', accent = 'default', class: className = '' } = Astro.props;
+
+const spacingClasses = {
+  none: 'my-0 print:my-0',
+  xs: 'my-[var(--spacing-fluid-xs)] print:my-1',
+  sm: 'my-[var(--spacing-fluid-sm)] print:my-1',
+  md: 'my-[var(--spacing-fluid-md)] print:my-2',
+  lg: 'my-[var(--spacing-fluid-lg)] print:my-2',
+};
+
+const accentClasses = {
+  default: 'bg-[var(--color-border)] print:bg-[#d0d0d0]',
+  subtle: 'bg-[var(--color-border-subtle)] print:bg-[#d0d0d0]',
+  green: 'bg-[var(--color-accent-green)] print:bg-[#d0d0d0]',
+  orange: 'bg-[var(--color-accent-orange)] print:bg-[#d0d0d0]',
+  blue: 'bg-[var(--color-accent-blue)] print:bg-[#d0d0d0]',
+  purple: 'bg-[var(--color-accent-purple)] print:bg-[#d0d0d0]',
+};
+---
+
+<hr
+  class:list={[
+    'border-none h-px w-full m-0 light:h-[0.5px] print:h-[0.5px]',
+    spacingClasses[spacing],
+    accentClasses[accent],
+    className,
+  ]}
+  aria-hidden="true"
+/>

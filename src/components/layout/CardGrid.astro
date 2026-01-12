@@ -1,0 +1,49 @@
+---
+/**
+ * CardGrid - Two-column grid layout for card content
+ *
+ * Provides the standard meta + content column layout used throughout
+ * the CV. Responsive: stacks on mobile, side-by-side on larger screens.
+ *
+ * @example
+ * <CardGrid>
+ *   <div slot="meta">
+ *     <Heading>Title</Heading>
+ *     <Label>Date</Label>
+ *   </div>
+ *   <div slot="content">
+ *     <Text>Main content here</Text>
+ *   </div>
+ * </CardGrid>
+ */
+interface Props {
+  /** Width variant for the meta column */
+  metaWidth?: 'narrow' | 'default' | 'wide';
+  /** Additional CSS classes */
+  class?: string;
+}
+
+const { metaWidth = 'default', class: className = '' } = Astro.props;
+
+const metaWidthClasses = {
+  narrow: 'grid-cols-1 sm:grid-cols-[minmax(110px,150px)_1fr] print:grid-cols-[105px_1fr]',
+  default: 'grid-cols-1 sm:grid-cols-[minmax(125px,165px)_1fr] print:grid-cols-[105px_1fr]',
+  wide: 'grid-cols-1 sm:grid-cols-[minmax(130px,170px)_1fr] print:grid-cols-[105px_1fr]',
+};
+---
+
+<div
+  class:list={[
+    'card-grid grid gap-[var(--spacing-fluid-xs)] sm:gap-[var(--spacing-fluid-md)] print:gap-3',
+    metaWidthClasses[metaWidth],
+    className,
+  ]}
+>
+  <div class="card-grid__meta min-w-0 flex flex-wrap items-baseline justify-between sm:block print:break-inside-avoid">
+    <slot name="meta" />
+  </div>
+  <div class="card-grid__content min-w-0">
+    <slot name="content" />
+    <slot />
+  </div>
+</div>

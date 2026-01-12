@@ -1,0 +1,25 @@
+---
+/**
+ * ScreenOnly - Wrapper that hides content in print media
+ *
+ * Use this for interactive elements, decorative content, or anything
+ * that shouldn't appear in the printed version of the CV.
+ *
+ * @example
+ * <ScreenOnly>
+ *   <ImpactGrid nodes={nodes} />
+ * </ScreenOnly>
+ */
+export interface Props {
+  /** HTML element to render (default: div) */
+  as?: 'div' | 'span' | 'section' | 'aside' | 'article';
+  /** Additional CSS classes */
+  class?: string;
+}
+
+const { as: Tag = 'div', class: className = '' } = Astro.props;
+---
+
+<Tag class:list={['screen-only contents print:!hidden', className]}>
+  <slot />
+</Tag>

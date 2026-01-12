@@ -1,0 +1,129 @@
+---
+import { cva } from 'class-variance-authority';
+
+/**
+ * Stack - Vertical spacing component using the fluid spacing system
+ *
+ * Creates consistent vertical rhythm between child elements using
+ * gap-based spacing. Perfect for grouping related content with
+ * predictable spacing.
+ *
+ * @example
+ * // Simple gap
+ * <Stack gap="md">
+ *   <Heading>Title</Heading>
+ *   <Text>Description</Text>
+ * </Stack>
+ *
+ * @example
+ * // Responsive gap - different spacing at different breakpoints
+ * <Stack gap={{ base: 'sm', md: 'lg', lg: 'xl' }}>
+ *   <Heading>Title</Heading>
+ *   <Text>Description</Text>
+ * </Stack>
+ */
+
+type GapSize = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+type Breakpoint = 'base' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+type ResponsiveGap = Partial<Record<Breakpoint, GapSize>>;
+
+export interface Props {
+  /** Gap between child elements - single value or responsive object */
+  gap?: GapSize | ResponsiveGap;
+  /** HTML element to render (default: div) */
+  as?: 'div' | 'section' | 'article' | 'aside' | 'main' | 'nav' | 'header' | 'footer';
+  /** Additional CSS classes */
+  class?: string;
+}
+
+// CVA for base gap (no breakpoint prefix)
+const baseGap = cva('', {
+  variants: {
+    gap: {
+      none: 'gap-0 print:gap-0',
+      xs: 'gap-[var(--spacing-fluid-xs)] print:gap-1',
+      sm: 'gap-[var(--spacing-fluid-sm)] print:gap-2',
+      md: 'gap-[var(--spacing-fluid-md)] print:gap-3',
+      lg: 'gap-[var(--spacing-fluid-lg)] print:gap-4',
+      xl: 'gap-[var(--spacing-fluid-xl)] print:gap-6',
+    },
+  },
+});
+
+// Breakpoint-prefixed gap classes
+const breakpointGapClasses: Record<Exclude<Breakpoint, 'base'>, Record<GapSize, string>> = {
+  sm: {
+    none: 'sm:gap-0',
+    xs: 'sm:gap-[var(--spacing-fluid-xs)]',
+    sm: 'sm:gap-[var(--spacing-fluid-sm)]',
+    md: 'sm:gap-[var(--spacing-fluid-md)]',
+    lg: 'sm:gap-[var(--spacing-fluid-lg)]',
+    xl: 'sm:gap-[var(--spacing-fluid-xl)]',
+  },
+  md: {
+    none: 'md:gap-0',
+    xs: 'md:gap-[var(--spacing-fluid-xs)]',
+    sm: 'md:gap-[var(--spacing-fluid-sm)]',
+    md: 'md:gap-[var(--spacing-fluid-md)]',
+    lg: 'md:gap-[var(--spacing-fluid-lg)]',
+    xl: 'md:gap-[var(--spacing-fluid-xl)]',
+  },
+  lg: {
+    none: 'lg:gap-0',
+    xs: 'lg:gap-[var(--spacing-fluid-xs)]',
+    sm: 'lg:gap-[var(--spacing-fluid-sm)]',
+    md: 'lg:gap-[var(--spacing-fluid-md)]',
+    lg: 'lg:gap-[var(--spacing-fluid-lg)]',
+    xl: 'lg:gap-[var(--spacing-fluid-xl)]',
+  },
+  xl: {
+    none: 'xl:gap-0',
+    xs: 'xl:gap-[var(--spacing-fluid-xs)]',
+    sm: 'xl:gap-[var(--spacing-fluid-sm)]',
+    md: 'xl:gap-[var(--spacing-fluid-md)]',
+    lg: 'xl:gap-[var(--spacing-fluid-lg)]',
+    xl: 'xl:gap-[var(--spacing-fluid-xl)]',
+  },
+  '2xl': {
+    none: '2xl:gap-0',
+    xs: '2xl:gap-[var(--spacing-fluid-xs)]',
+    sm: '2xl:gap-[var(--spacing-fluid-sm)]',
+    md: '2xl:gap-[var(--spacing-fluid-md)]',
+    lg: '2xl:gap-[var(--spacing-fluid-lg)]',
+    xl: '2xl:gap-[var(--spacing-fluid-xl)]',
+  },
+};
+
+function getGapClasses(gap: GapSize | ResponsiveGap): string {
+  // Simple string value - use CVA directly
+  if (typeof gap === 'string') {
+    return baseGap({ gap });
+  }
+
+  // Responsive object - build class string
+  const classes: string[] = [];
+
+  // Handle base (no prefix)
+  if (gap.base) {
+    classes.push(baseGap({ gap: gap.base }));
+  }
+
+  // Handle breakpoint-prefixed classes
+  const breakpoints: Exclude<Breakpoint, 'base'>[] = ['sm', 'md', 'lg', 'xl', '2xl'];
+  for (const bp of breakpoints) {
+    const bpGap = gap[bp];
+    if (bpGap) {
+      classes.push(breakpointGapClasses[bp][bpGap]);
+    }
+  }
+
+  return classes.join(' ');
+}
+
+const { gap = 'sm', as: Tag = 'div', class: className = '' } = Astro.props;
+const gapClasses = getGapClasses(gap);
+---
+
+<Tag class:list={['stack flex flex-col', gapClasses, className]}>
+  <slot />
+</Tag>

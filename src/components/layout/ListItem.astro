@@ -1,0 +1,35 @@
+---
+/**
+ * ListItem - Bordered list item wrapper with first-child handling
+ *
+ * Provides consistent spacing and visual separation for items in a content list.
+ * Handles border-top with automatic removal for first items via CSS :first-child.
+ *
+ * @example
+ * <div class="content-list">
+ *   {items.map(item => (
+ *     <ListItem>
+ *       <ContentCard {...item} />
+ *     </ListItem>
+ *   ))}
+ * </div>
+ */
+export interface Props {
+  /** Additional CSS classes */
+  class?: string;
+  /** Whether to show the top border (default: true, first-child handled via CSS) */
+  bordered?: boolean;
+}
+
+const { class: className = '', bordered = true } = Astro.props;
+---
+
+<div
+  class:list={[
+    'content-list-item block list-none py-[var(--spacing-fluid-sm)] first:border-t-0 first:pt-0 light:!border-t-0 print:!border-t-0 print:!py-[0.1rem]',
+    bordered && 'border-t border-[var(--color-border)]',
+    className,
+  ]}
+>
+  <slot />
+</div>
