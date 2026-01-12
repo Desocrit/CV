@@ -68,7 +68,7 @@ projects:
     subtitle: Testing Framework
     headline: Built a 'Virtual Monolith' for local testing of distributed services
     metric:
-      - Boosted test coverage by 35% by making full-stack testing the easiest option
+      - Boosted test coverage by 35% by making full-stack tests the easiest option
       - Allowed us to fully replace our previous integration tests with System Tests
     action:
       - Used local GRPC to allow step-through debugging across an entire stack
@@ -104,7 +104,7 @@ projects:
       - Secured 10-year partnership with London Marathon via 3 successful ballots
       - Earned three sweet months without an incident, letting us rebuild client trust
     action:
-      - Enforced strict state management, deliberately trading raw speed for stability
+      - Enforced strict state management, trading raw speed for stability
       # - Quarantined bespoke logic, so the edge cases couldn't infect the critical path
     cta: How did we handle a million users without one person seeing a queue?
     prompt: How did checkout v2 allow for a million users over a week without requiring queues?
@@ -140,7 +140,7 @@ projects:
       - Replaced over 10,000 legacy components with accessible Tailwind
       - Brought rebrand lead time from 12 dev weeks to 1 by clearing design debt
     action:
-      - Synchronised Figma tokens exactly with code, enable AI driven UI generation
+      - Synchronised Figma tokens with code to enable AI driven UI generation
       # - Seamlessly orchestrated a high-risk 30 day migration of the entire system
     prompt: How did Tempo allow AI to build pixel-perfect designs with Figma MCP?
     cta: How did Tempo allow AI to build pixel-perfect designs with Figma MCP?
@@ -177,8 +177,8 @@ work_history:
     tenure: Feb 2021 — Present
     summary: Architected the transition from startup to resilience
     impact:
-      - Handled the London Marathon through rewriting and tuning the Checkout
-      - Led the strategic pivot to an AI First, through training, tooling, and building
+      - Handled the London Marathon via rewriting and tuning the Checkout
+      - Led a strategic pivot to an AI First, through training, tooling, and building
       - Drove engineering standards while having the highest individual velocity
     supporting_data: []
     tech_stack:
@@ -267,7 +267,7 @@ education:
     score_short: 1st
     score_long: First Class Honours
     specialism: Data Science & AI
-    institution: Southampton Uni
+    institution: Southampton University
     tenure: Sep 2011 — Jul 2015
     year: 2015
     notable: Highest overall grade in the BSc.
