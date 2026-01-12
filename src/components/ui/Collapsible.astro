@@ -8,12 +8,12 @@ interface Props {
 const { triggerText = 'Read more', defaultOpen = false, class: className = '' } = Astro.props;
 ---
 
-<details class:list={['collapsible group', className]} open={defaultOpen}>
+<details class:list={['collapsible group print:block', className]} open={defaultOpen}>
   <summary
-    class="flex cursor-pointer list-none items-center gap-2 font-mono text-fluid-xs text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors"
+    class="flex cursor-pointer items-center gap-2 font-mono text-fluid-xs text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors list-none [&::-webkit-details-marker]:hidden print:hidden"
   >
     <svg
-      class="h-3 w-3 shrink-0 transition-transform group-open:rotate-90"
+      class="size-3 shrink-0 transition-transform group-open:rotate-90"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -23,36 +23,7 @@ const { triggerText = 'Read more', defaultOpen = false, class: className = '' } 
     </svg>
     <span class="tracking-wide">{triggerText}</span>
   </summary>
-  <div class="collapsible-content mt-3 pl-5">
+  <div class="collapsible-content mt-3 pl-5 print:!block print:pl-0 print:mt-0">
     <slot />
   </div>
 </details>
-
-<style>
-  /* Remove default marker */
-  summary::-webkit-details-marker {
-    display: none;
-  }
-
-  summary::marker {
-    display: none;
-    content: '';
-  }
-
-  /* Print: always show content, hide toggle */
-  @media print {
-    details {
-      display: block;
-    }
-
-    summary {
-      display: none;
-    }
-
-    .collapsible-content {
-      display: block !important;
-      padding-left: 0;
-      margin-top: 0;
-    }
-  }
-</style>

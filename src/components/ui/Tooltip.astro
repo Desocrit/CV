@@ -14,13 +14,28 @@ const sideClasses = {
 };
 ---
 
-<button type="button" class="tooltip-trigger group relative inline" aria-describedby="tooltip-content">
+<button
+  type="button"
+  class:list={[
+    'group relative inline border-none p-0 m-0',
+    'font-inherit text-inherit',
+    'underline decoration-dotted underline-offset-2',
+    'cursor-help',
+    'focus:outline-none',
+    'focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 focus-visible:rounded-sm',
+    'print:no-underline print:cursor-default',
+  ]}
+  aria-describedby="tooltip-content"
+>
   <slot />
   <span
     id="tooltip-content"
     class:list={[
-      'tooltip absolute z-50 hidden w-max max-w-xs rounded-md bg-popover px-3 py-1.5 text-fluid-xs text-popover-foreground shadow-md border border-border font-normal',
+      'absolute z-50 hidden w-max max-w-xs rounded-md',
+      'bg-popover px-3 py-1.5 text-fluid-xs text-popover-foreground',
+      'shadow-md border border-border font-normal',
       'group-hover:block group-focus:block',
+      'print:!hidden',
       sideClasses[side],
     ]}
     role="tooltip"
@@ -28,40 +43,3 @@ const sideClasses = {
     {content}
   </span>
 </button>
-
-<style>
-  .tooltip-trigger {
-    appearance: none;
-    background: none;
-    border: none;
-    padding: 0;
-    margin: 0;
-    font: inherit;
-    color: inherit;
-    text-decoration: underline;
-    text-decoration-style: dotted;
-    text-underline-offset: 2px;
-    cursor: help;
-  }
-
-  .tooltip-trigger:focus {
-    outline: none;
-  }
-
-  .tooltip-trigger:focus-visible {
-    outline: 2px solid var(--ring);
-    outline-offset: 2px;
-    border-radius: 2px;
-  }
-
-  @media print {
-    .tooltip {
-      display: none !important;
-    }
-
-    .tooltip-trigger {
-      text-decoration: none;
-      cursor: default;
-    }
-  }
-</style>

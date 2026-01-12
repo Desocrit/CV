@@ -11,56 +11,46 @@ interface Props {
 const { label, href, external = false, class: className = '', screenReaderLabel, ...attrs } = Astro.props;
 const isLink = !!href;
 const hasCustomLabel = !!screenReaderLabel;
+
+const baseClasses = [
+  // Layout
+  'inline-flex items-center',
+  // Typography
+  'font-mono text-fluid-xs',
+  // Colors
+  'text-[var(--color-accent-purple)]',
+  // Button reset
+  'border-none p-0 cursor-pointer',
+  // Transitions
+  'transition-[filter] duration-150 ease-out',
+  // Hover state
+  'hover:brightness-[1.2]',
+  // Focus state
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]',
+];
+
+const bracketClasses = 'text-[var(--color-accent-purple)] light:hidden';
+const labelClasses = 'text-[var(--color-accent-purple)] light:font-semibold';
 ---
 
 {isLink ? (
   <a
     href={href}
-    class:list={['action-button', className]}
+    class:list={['action-button', baseClasses, className]}
     target={external ? '_blank' : undefined}
     rel={external ? 'noopener noreferrer' : undefined}
     {...attrs}
   >
     {hasCustomLabel && <span class="sr-only">{screenReaderLabel}</span>}
-    <span class="bracket" aria-hidden={hasCustomLabel}>[</span>
-    <span class="label" aria-hidden={hasCustomLabel}> {label} </span>
-    <span class="bracket" aria-hidden={hasCustomLabel}>]</span>
+    <span class={bracketClasses} aria-hidden={hasCustomLabel}>[</span>
+    <span class={labelClasses} aria-hidden={hasCustomLabel}> {label} </span>
+    <span class={bracketClasses} aria-hidden={hasCustomLabel}>]</span>
   </a>
 ) : (
-  <button type="button" class:list={['action-button', className]} {...attrs}>
+  <button type="button" class:list={['action-button', baseClasses, className]} {...attrs}>
     {hasCustomLabel && <span class="sr-only">{screenReaderLabel}</span>}
-    <span class="bracket" aria-hidden={hasCustomLabel}>[</span>
-    <span class="label" aria-hidden={hasCustomLabel}> {label} </span>
-    <span class="bracket" aria-hidden={hasCustomLabel}>]</span>
+    <span class={bracketClasses} aria-hidden={hasCustomLabel}>[</span>
+    <span class={labelClasses} aria-hidden={hasCustomLabel}> {label} </span>
+    <span class={bracketClasses} aria-hidden={hasCustomLabel}>]</span>
   </button>
 )}
-
-<style>
-  .action-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 0;
-    font-family: var(--font-mono);
-    font-size: var(--text-fluid-2xs);
-    color: var(--color-accent-purple);
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    transition: filter 0.15s ease;
-  }
-
-  .action-button:hover {
-    filter: brightness(1.2);
-  }
-
-  .action-button:focus-visible {
-    outline: none;
-    ring: 2px solid var(--color-ring);
-  }
-
-  .bracket,
-  .label {
-    color: var(--color-accent-purple);
-  }
-</style>

@@ -1,30 +1,98 @@
 ---
-interface Props {
-  variant?: 'default' | 'secondary' | 'outline' | 'success' | 'status';
-  size?: 'sm' | 'default';
+import { cva, type VariantProps } from 'class-variance-authority';
+
+const badge = cva(
+  // Base styles
+  [
+    'badge', // For global.css light mode overrides
+    'inline-flex',
+    'items-center',
+    'font-mono',
+    'uppercase',
+    'border',
+    'transition-colors',
+    'light:normal-case',
+    'light:font-medium',
+    'print:border-[0.5px]',
+    'print:border-foreground/30',
+  ],
+  {
+    variants: {
+      variant: {
+        default: [
+          'text-muted-foreground',
+          'border-border',
+          'light:text-foreground',
+        ],
+        secondary: [
+          'text-muted-foreground',
+          'border-border/50',
+          'light:border-border',
+        ],
+        outline: [
+          'text-muted-foreground',
+          'border-border',
+          'light:text-foreground',
+        ],
+        success: [
+          'text-foreground',
+          'border-border',
+          'light:text-accent-green',
+          'light:border-accent-green/30',
+        ],
+        status: [
+          'text-foreground',
+          'border-border',
+        ],
+      },
+      size: {
+        sm: [
+          'px-2',
+          'py-0.5',
+          'text-fluid-2xs',
+          'tracking-wider',
+          'print:text-[8px]',
+          'print:px-1.5',
+        ],
+        default: [
+          'px-2.5',
+          'py-0.5',
+          'text-fluid-xs',
+          'tracking-wide',
+          'print:text-[9px]',
+          'print:px-2',
+        ],
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+);
+
+type BadgeVariants = VariantProps<typeof badge>;
+
+interface Props extends BadgeVariants {
   class?: string;
 }
 
-const { variant = 'default', size = 'default', class: className = '' } = Astro.props;
+const { variant, size, class: className } = Astro.props;
 
-const baseClasses = 'inline-flex items-center font-mono border transition-colors';
-
-const variantClasses = {
-  default: 'bg-transparent text-muted-foreground border-border',
-  secondary: 'bg-transparent text-muted-foreground border-border/50',
-  outline: 'bg-transparent text-muted-foreground border-border',
-  success: 'bg-transparent text-foreground border-border',
-  status: 'bg-transparent text-foreground border-border',
-};
-
-const sizeClasses = {
-  sm: 'px-2 py-0.5 text-[10px] tracking-wider',
-  default: 'px-2.5 py-0.5 text-fluid-xs tracking-wide',
-};
-
-const classes = [baseClasses, variantClasses[variant], sizeClasses[size], className].join(' ');
+const classes = badge({ variant, size, class: className });
 ---
 
 <span class={classes}>
   <slot />
 </span>
+
+<style>
+  /* Light mode: hairline borders and offset shadow hover */
+  :global([data-theme='light']) .badge {
+    border-width: 0.5px;
+  }
+
+  :global([data-theme='light']) .badge:hover {
+    box-shadow: 2px 2px 0px var(--color-accent-purple);
+  }
+</style>

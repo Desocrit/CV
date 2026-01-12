@@ -600,7 +600,7 @@ export default function RAGTerminal({
           }
 
           /* Dim gutter markers (// PROJECTS, // IMPACT) when terminal is active */
-          :global(body.terminal-open .section-label) {
+          :global(body.terminal-open .section-header) {
             opacity: 0.3 !important;
             transition: opacity 0.3s ease;
           }

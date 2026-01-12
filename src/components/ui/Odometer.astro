@@ -33,7 +33,12 @@ const digitCount = String(parsed.number).length;
 ---
 
 <span
-  class:list={['odometer-value', className]}
+  class:list={[
+    'odometer-value',
+    'inline-flex',
+    'items-baseline',
+    className
+  ]}
   data-odometer
   data-target={parsed.number}
   data-prefix={parsed.prefix}
@@ -44,37 +49,9 @@ const digitCount = String(parsed.number).length;
 >
   <!-- Initial state shows the full value for SSR/print/no-JS -->
   <span class="odometer-prefix">{parsed.prefix}</span>
-  <span class="odometer-number">{parsed.number}</span>
+  <span class="odometer-number tabular-nums inline-block text-right">{parsed.number}</span>
   <span class="odometer-suffix">{parsed.suffix}</span>
 </span>
-
-<style>
-  .odometer-value {
-    display: inline-flex;
-    align-items: baseline;
-    /* Prevent layout shift during scramble/count phases */
-    min-width: var(--odometer-width, auto);
-  }
-
-  .odometer-number {
-    /* Use tabular figures for consistent digit widths */
-    font-variant-numeric: tabular-nums;
-    display: inline-block;
-    text-align: right;
-  }
-
-  .odometer-prefix,
-  .odometer-suffix {
-    /* Prefixes and suffixes don't animate */
-  }
-
-  /* Print: no animation, just show the value */
-  @media print {
-    .odometer-value {
-      /* Value is already shown correctly via SSR */
-    }
-  }
-</style>
 
 <script is:inline>
   // Odometer animation with forensic scramble effect

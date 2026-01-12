@@ -3,28 +3,11 @@
 // Shows faint grid lines under the cursor like searching a blueprint
 ---
 
-<div id="blueprint-spotlight" aria-hidden="true"></div>
-
-<style>
-  #blueprint-spotlight {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  #blueprint-spotlight.active {
-    opacity: 1;
-  }
-
-  @media print {
-    #blueprint-spotlight {
-      display: none !important;
-    }
-  }
-</style>
+<div
+  id="blueprint-spotlight"
+  class="fixed inset-0 pointer-events-none z-[9999] opacity-0 transition-opacity duration-300 ease-out print:hidden [&.active]:opacity-100"
+  aria-hidden="true"
+></div>
 
 <script>
   const GRID_SIZE = 24; // Grid cell size in pixels

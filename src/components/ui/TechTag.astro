@@ -19,40 +19,70 @@ const { name, url, tooltip, class: className = '' } = Astro.props;
   href={url}
   target="_blank"
   rel="noopener noreferrer"
-  class:list={['tech-tag', className]}
+  class:list={[
+    'tech-tag',
+    'group',
+    'relative',
+    'inline-block',
+    'w-fit',
+    'font-mono',
+    'text-[0.5rem]',
+    'uppercase',
+    'tracking-wider',
+    'px-2',
+    'py-0.5',
+    'border',
+    'border-border',
+    'text-muted-foreground',
+    'no-underline',
+    // Light mode: remove uppercase, add transition for hover effect
+    'light:normal-case',
+    'light:font-medium',
+    'light:transition-[box-shadow,border-color]',
+    'light:duration-150',
+    'light:ease-out',
+    'light:hover:border-[var(--card-accent,var(--color-accent-purple))]',
+    'light:hover:shadow-[2px_2px_0px_color-mix(in_srgb,var(--card-accent,var(--color-accent-purple))_40%,white)]',
+    // Focus visible
+    'focus-visible:outline-2',
+    'focus-visible:outline',
+    'focus-visible:outline-ring',
+    'focus-visible:outline-offset-2',
+    // Print styles
+    'print:normal-case',
+    className,
+  ]}
   title={tooltip}
+  style="--tag-accent: var(--card-accent, var(--color-accent-purple));"
 >
-  <span class="tech-tag-text">{name}</span>
-  <span class="tech-tag-sweep" aria-hidden="true"></span>
+  <span class="pointer-events-none">{name}</span>
+  <span
+    class:list={[
+      'tech-tag-sweep',
+      'absolute',
+      'inset-[-1px]',
+      'p-px',
+      'pointer-events-none',
+      'opacity-0',
+      // Light mode and print: hide sweep
+      'light:hidden',
+      'print:hidden',
+    ]}
+    aria-hidden="true"
+  ></span>
 </a>
 
 <style>
-  /* Match original: font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 border border-border text-muted-foreground */
-  .tech-tag {
-    --tag-accent: var(--card-accent, var(--color-accent-purple));
-
-    position: relative;
-    display: inline-block;
-    width: fit-content;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.125rem 0.5rem;
-    border: 1px solid var(--color-border);
-    color: var(--color-muted-foreground);
-    text-decoration: none;
-  }
-
-  .tech-tag-text {
-    pointer-events: none;
-  }
-
-  /* The Glimmer - tight flashlight sweep on border, hover only */
+  /*
+   * Glimmer Sweep Effect - Dark Mode Only
+   *
+   * This CSS cannot be migrated to Tailwind because:
+   * 1. Complex gradient with specific color stops and background-size/position animation
+   * 2. Mask compositing (mask-composite: exclude) for border-only gradient effect
+   * 3. @keyframes definition for the sweep animation
+   * 4. :global() selector with theme-aware media query for dark mode hover state
+   */
   .tech-tag-sweep {
-    position: absolute;
-    inset: -1px;
-    padding: 1px;
     background: linear-gradient(
       90deg,
       transparent 0%,
@@ -73,26 +103,8 @@ const { name, url, tooltip, class: className = '' } = Astro.props;
       linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-    pointer-events: none;
-    opacity: 0;
   }
 
-  /* Light mode: disable shimmer, use border color change and offset shadow */
-  :global([data-theme='light']) .tech-tag {
-    text-transform: none;
-    transition: box-shadow 0.15s ease-out, border-color 0.15s ease-out;
-  }
-
-  :global([data-theme='light']) .tech-tag:hover {
-    border-color: var(--tag-accent);
-    box-shadow: 2px 2px 0px color-mix(in srgb, var(--tag-accent) 40%, white);
-  }
-
-  :global([data-theme='light']) .tech-tag-sweep {
-    display: none;
-  }
-
-  /* Dark mode md+: glimmer sweep animation on hover */
   @keyframes glimmer-sweep {
     0% {
       opacity: 1;
@@ -104,25 +116,10 @@ const { name, url, tooltip, class: className = '' } = Astro.props;
     }
   }
 
+  /* Dark mode md+: glimmer sweep animation on hover */
   @media (min-width: 1024px) {
     :global(:not([data-theme='light'])) .tech-tag:hover .tech-tag-sweep {
       animation: glimmer-sweep 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-  }
-
-  .tech-tag:focus-visible {
-    outline: 2px solid var(--color-ring);
-    outline-offset: 2px;
-  }
-
-  /* Print styles - use light mode styling */
-  @media print {
-    .tech-tag {
-      text-transform: none;
-    }
-
-    .tech-tag-sweep {
-      display: none;
     }
   }
 </style>

@@ -1,61 +1,113 @@
 ---
 // Server component wrapper for client-side toggle
+// Follows same responsive pattern as sidebar/Link.astro:
+// - Mobile dark: bracketed tag
+// - Mobile light: icon only
+// - Desktop: icon + text
+
+const baseClasses = [
+  // Layout - relative for touch target pseudo-element
+  'relative inline-flex items-center gap-2',
+  // Typography
+  'font-mono text-fluid-xs',
+  // Colors & transitions
+  'text-muted-foreground hover:text-foreground transition-colors duration-200',
+  // Focus states
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+  // Button reset
+  'cursor-pointer border-none p-0 text-left bg-transparent',
+  // Print: hidden
+  'print:hidden',
+  // Expanded touch target
+  'before:content-[\'\'] before:absolute before:inset-[-0.5rem] before:min-w-[44px] before:min-h-[44px]',
+  'group',
+];
+
+// Icon wrapper classes - same pattern as Link
+const iconWrapperClasses = [
+  'flex items-center shrink-0',
+  // Mobile dark: hidden, Mobile light: larger icons, Desktop: normal icons
+  '[&>svg]:hidden [&>svg]:shrink-0',
+  'light:[&>svg]:block light:[&>svg]:size-[1.125rem] light:[&>svg]:opacity-70',
+  'lg:[&>svg]:block lg:[&>svg]:size-3 lg:[&>svg]:opacity-50',
+].join(' ');
+
+// Link text classes - with animated underline on hover
+const linkTextClasses = [
+  'relative hidden',
+  // Desktop: show text
+  'lg:inline',
+  // Animated underline (desktop only)
+  'after:content-[\'\'] after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-px after:bg-foreground after:transition-[width] after:duration-200 after:ease-out',
+  'group-hover:after:w-full',
+].join(' ');
+
+// Tag classes - unix-style brackets on mobile dark mode
+const tagClasses = [
+  // Mobile dark: show with brackets
+  'inline-flex items-center font-mono text-fluid-xs text-accent-purple tracking-normal transition-[filter] duration-150',
+  'before:content-[\'[\'] before:mr-[0.125em]',
+  'after:content-[\']\'] after:ml-[0.125em]',
+  'group-hover:brightness-[1.2]',
+  // Mobile light: hidden (icons shown instead)
+  'light:hidden',
+  // Desktop: hidden
+  'lg:hidden',
+].join(' ');
 ---
 
 <button
   id="theme-toggle"
   type="button"
-  class="theme-toggle-btn inline-flex h-8 w-8 items-center justify-center border border-border bg-transparent text-foreground transition-colors hover:border-foreground/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring no-print"
+  class:list={baseClasses}
   aria-label="Toggle theme"
 >
-  <!-- Sun icon (shown in dark mode, click to switch to light) -->
-  <svg
-    class="h-4 w-4 sun-icon"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    aria-hidden="true"
-  >
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="1.5"
-      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-    />
-  </svg>
-  <!-- Moon icon (shown in light mode, click to switch to dark) -->
-  <svg
-    class="h-4 w-4 moon-icon"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    aria-hidden="true"
-  >
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="1.5"
-      d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-    />
-  </svg>
+  <!-- Icon wrapper -->
+  <span class={iconWrapperClasses}>
+    <!-- Sun icon (shown in dark mode, click to switch to light) -->
+    <svg
+      class="block light:!hidden"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5"
+        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+      />
+    </svg>
+    <!-- Moon icon (shown in light mode, click to switch to dark) -->
+    <svg
+      class="!hidden light:!block"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5"
+        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+      />
+    </svg>
+  </span>
+
+  <!-- Text label (desktop only) -->
+  <span class={linkTextClasses} data-theme-text>
+    <span class="block light:hidden">Light mode</span>
+    <span class="hidden light:block">Dark mode</span>
+  </span>
+
+  <!-- Tag (mobile dark only) -->
+  <span class={tagClasses}>
+    <span class="block light:hidden">:☀:</span>
+    <span class="hidden light:block">:☾:</span>
+  </span>
 </button>
-
-<style>
-  /* CSS-based icon visibility - no flicker since it uses the same data-theme attribute set in <head> */
-  .sun-icon {
-    display: block;
-  }
-  .moon-icon {
-    display: none;
-  }
-
-  :global([data-theme='light']) .sun-icon {
-    display: none;
-  }
-  :global([data-theme='light']) .moon-icon {
-    display: block;
-  }
-</style>
 
 <script>
   function initThemeToggle() {

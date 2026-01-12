@@ -11,38 +11,42 @@ const { title, id, class: className = '' } = Astro.props;
 const headingId = id ? `${id}-heading` : undefined;
 const contentId = id ? `${id}-content` : `section-content-${Math.random().toString(36).slice(2, 9)}`;
 
-const formatTitle = (str: string) =>
-  str.toUpperCase().replace(/\s+/g, '_');
+const formatTitle = (str: string) => str.toUpperCase().replace(/\s+/g, '_');
 ---
 
 <section
-  class:list={['section-with-label', className]}
+  class:list={['section-with-label group', className]}
   id={id}
   aria-labelledby={headingId}
   data-section-id={id}
+  style="--section-accent: var(--color-accent-green);"
 >
   <div class="section-grid">
-    <div class="section-label">
-      <div class="section-label-inner">
-        <div class="section-toggle-area">
-          <button
-            type="button"
-            class="section-toggle"
-            aria-expanded="true"
-            aria-controls={contentId}
-            aria-label={`Toggle ${title} section`}
-          >
-            <span class="section-title font-mono text-fluid-2xs" aria-hidden="true">
-              <span class="section-prefix">// </span>
-              <span class="section-title-text">{formatTitle(title)}</span><span class="section-context"></span>
-            </span>
-          </button>
-        </div>
-        <ActionButton label="^" class="scroll-top-btn" screenReaderLabel="^ Scroll to top" />
-        <span class="section-title-print" aria-hidden="true">{title}</span>
-      </div>
+    <!-- Section header: sticky on mobile, in gutter on xl -->
+    <div class="section-header">
+      <button
+        type="button"
+        class="section-toggle"
+        aria-expanded="true"
+        aria-controls={contentId}
+        aria-label={`Toggle ${title} section`}
+      >
+        <span class="section-title" aria-hidden="true">
+          <span class="section-prefix">// </span>
+          <span class="section-title-text">{formatTitle(title)}</span>
+          <span class="section-context"></span>
+        </span>
+        <span class="section-title-clean" aria-hidden="true">{title}</span>
+      </button>
+
+      <ActionButton
+        label="^"
+        class="scroll-top-btn"
+        screenReaderLabel="Scroll to top"
+      />
     </div>
 
+    <!-- Section content -->
     <div class="section-content" id={contentId}>
       <h2 id={headingId} class="sr-only">{title}</h2>
       <slot />
@@ -51,11 +55,12 @@ const formatTitle = (str: string) =>
 </section>
 
 <style>
-  /* ===== MOBILE FIRST: Terminal Command Bar (< 1024px) ===== */
+  /* ==========================================================================
+     BASE STRUCTURE
+     ========================================================================== */
   .section-with-label {
-    --section-rule-spacing: var(--spacing-fluid-sm);
-    --section-accent: var(--color-accent-green);
-    margin-top: var(--section-rule-spacing);
+    --section-label-width: 140px;
+    margin-top: var(--spacing-fluid-sm);
     margin-bottom: var(--spacing-fluid-sm);
   }
 
@@ -66,106 +71,51 @@ const formatTitle = (str: string) =>
   .section-grid {
     display: flex;
     flex-direction: column;
-    gap: 0;
   }
 
-  .section-label {
+  /* ==========================================================================
+     SECTION HEADER - Mobile (xs/sm): Sticky bar with borders
+     ========================================================================== */
+  .section-header {
     position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
     z-index: 20;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding: 0;
-    background-color: var(--color-background);
-  }
-
-  .section-label-inner {
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    /* Full-bleed: escape container padding */
     width: 100vw;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
+    margin-left: calc(-1 * var(--spacing-fluid-md));
     padding: 0.625rem var(--spacing-fluid-md);
+    background: var(--color-background);
     border-top: 1px solid var(--section-accent);
     border-bottom: 1px solid var(--section-accent);
   }
 
-  /* First section doesn't need top border */
-  .section-with-label:first-child .section-label-inner {
+  .section-with-label:first-child .section-header {
     border-top: none;
   }
 
-  .section-content {
-    min-width: 0;
-    width: 100%;
-    padding-top: var(--spacing-fluid-md);
-  }
-
-  .section-title {
-    display: block;
-    flex-shrink: 0;
-    color: var(--section-accent);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    line-height: 1.4;
-    white-space: nowrap;
-  }
-
-  /* Print title - hidden by default, shown in light mode (via global.css) and print */
-  .section-title-print {
-    display: none;
-  }
-
-  /* Light mode mobile: disable full-bleed positioning */
-  :global([data-theme='light']) .section-label-inner {
-    width: auto;
-    left: auto;
-    transform: none;
-    padding: var(--spacing-fluid-xs) var(--spacing-fluid-xs) var(--spacing-fluid-xs) 0;
-  }
-
-  /* Context text (e.g., company name) that appears when scrolling */
-  .section-context {
-    opacity: 0;
-    transition: opacity 0.2s ease;
-  }
-
-  .section-context:not(:empty) {
-    opacity: 1;
-  }
-
-  .section-context::before {
-    content: '/';
-  }
-
-  .section-context:empty::before {
-    content: none;
-  }
-
-  /* Wrapper takes the flex space */
-  .section-toggle-area {
-    flex: 1;
-  }
-
-  /* Toggle button - sized to content with touch target */
+  /* ==========================================================================
+     SECTION TOGGLE BUTTON
+     ========================================================================== */
   .section-toggle {
-    all: unset;
     display: inline-flex;
     align-items: center;
+    border: none;
+    padding: 0;
+    margin: 0;
+    background: transparent;
     cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
     position: relative;
   }
 
+  .section-toggle:focus-visible {
+    outline: 2px solid var(--section-accent);
+    outline-offset: 2px;
+  }
+
+  /* Touch target */
   @media screen {
-    /* Expanded touch target on the button itself */
     .section-toggle::before {
       content: '';
       position: absolute;
@@ -175,80 +125,131 @@ const formatTitle = (str: string) =>
     }
   }
 
-  .section-toggle:focus-visible {
-    outline: 2px solid var(--section-accent);
-    outline-offset: 2px;
+  /* ==========================================================================
+     TITLE VARIANTS
+     ========================================================================== */
+
+  /* Terminal-style title: dark mode default */
+  .section-title {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-fluid-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    line-height: 1.6;
+    white-space: nowrap;
+    color: var(--section-accent);
   }
 
-  /* Button inherits section accent color */
+  .section-prefix {
+    display: inline;
+  }
+
+  .section-context {
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .section-context:not(:empty) {
+    opacity: 1;
+  }
+
+  .section-context:not(:empty)::before {
+    content: '/';
+  }
+
+  /* Clean title: hidden by default (shown in light mode/print) */
+  .section-title-clean {
+    display: none;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: var(--text-fluid-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-foreground);
+  }
+
+  /* ==========================================================================
+     SCROLL-TO-TOP BUTTON
+     ========================================================================== */
   .scroll-top-btn {
-    display: inline-flex;
     flex-shrink: 0;
     position: relative;
     z-index: 2;
   }
 
-  /* Expanded touch target without affecting layout */
-  .scroll-top-btn::before {
-    content: '';
-    position: absolute;
-    inset: -0.5rem;
-    z-index: 1;
-  }
-
+  /* Color override to match section accent */
   .scroll-top-btn :global(.bracket),
   .scroll-top-btn :global(.label) {
     color: var(--section-accent) !important;
   }
 
-  /* Collapsed state */
+  /* Touch target */
+  @media screen {
+    .scroll-top-btn::before {
+      content: '';
+      position: absolute;
+      inset: -0.5rem;
+      z-index: 1;
+    }
+  }
+
+  /* ==========================================================================
+     SECTION CONTENT
+     ========================================================================== */
+  .section-content {
+    width: 100%;
+    min-width: 0;
+    padding-top: var(--spacing-fluid-md);
+  }
+
+  /* Collapsed state (JS toggle) */
   .section-with-label.is-collapsed .section-content {
     display: none;
   }
 
-  /* ===== MD BREAKPOINT (1024px - 1199px): Header above content ===== */
-  @media (min-width: 1024px) {
-    .section-with-label {
-      --section-accent: var(--color-accent-green);
-    }
+  /* ==========================================================================
+     LIGHT MODE: Clean Swiss typography
+     ========================================================================== */
+  :global([data-theme='light']) .section-header {
+    border-color: var(--color-border);
+    padding-left: 0;
+    padding-right: var(--spacing-fluid-xs);
+    width: auto;
+    margin-left: 0;
+  }
 
-    .section-with-label:first-child .section-label {
-      padding-top: 0;
-    }
+  :global([data-theme='light']) .section-title {
+    display: none;
+  }
 
+  :global([data-theme='light']) .section-title-clean {
+    display: block;
+  }
+
+  /* ==========================================================================
+     LG BREAKPOINT (960px+): Left-aligned, no sticky, no back-to-top
+     ========================================================================== */
+  @media (min-width: 960px) {
     .section-grid {
-      display: flex;
       flex-direction: column;
       gap: var(--spacing-fluid-sm);
     }
 
-    .section-label {
+    .section-header {
       position: relative;
       top: auto;
-      width: auto;
       z-index: 10;
-      padding: 0;
-      background-color: transparent;
-    }
-
-    .section-label-inner {
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
       width: auto;
-      position: relative;
-      left: auto;
-      transform: none;
+      margin-left: 0;
       padding: 0;
+      background: transparent;
       border: none;
+      justify-content: flex-start;
     }
 
-    :global([data-theme='light']) .section-label-inner {
-      padding: 0;
-    }
-
-    .section-with-label:first-child .section-label-inner {
-      border-top: none;
+    .section-toggle {
+      display: contents;
     }
 
     .section-title {
@@ -256,56 +257,50 @@ const formatTitle = (str: string) =>
       margin-bottom: var(--spacing-fluid-2xs);
     }
 
-    :global([data-theme='light']) .section-title {
-      color: var(--color-foreground);
-    }
-
-    .section-content {
-      width: 100%;
-      padding-top: 0;
-    }
-
-    /* Hide mobile-specific elements */
-    .scroll-top-btn {
-      display: none !important;
-    }
-
-    .section-toggle {
-      all: unset;
-      display: contents;
-    }
-
     .section-context {
       display: none;
     }
+
+    .scroll-top-btn {
+      display: none;
+    }
+
+    .section-content {
+      padding-top: 0;
+    }
+
+    /* Light mode lg: full-width underline */
+    :global([data-theme='light']) .section-title-clean {
+      display: block;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.25rem;
+      border-bottom: 0.5px solid var(--color-border);
+    }
   }
 
-  /* ===== LG BREAKPOINT (1200px+): Header in gutter ===== */
-  @media (min-width: 1200px) {
+  /* ==========================================================================
+     XL BREAKPOINT (1300px+): Gutter layout with sticky label
+     ========================================================================== */
+  @media (min-width: 1300px) {
     .section-grid {
       display: grid;
-      grid-template-columns: repeat(12, 1fr);
+      grid-template-columns: var(--section-label-width) 1fr;
       gap: var(--spacing-fluid-sm);
     }
 
-    .section-label {
-      grid-column: span 2;
-      align-self: start;
+    .section-header {
       position: sticky;
       top: var(--spacing-fluid-sm);
-      z-index: 10;
-      background-color: var(--color-background);
+      align-self: start;
+      background: var(--color-background);
       padding-top: var(--spacing-fluid-sm);
     }
 
-    .section-with-label:first-child .section-label {
+    .section-with-label:first-child .section-header {
       padding-top: 0;
     }
 
     .section-content {
-      grid-column: span 10;
-      min-width: 0;
-      align-self: start;
       padding-top: var(--spacing-fluid-sm);
     }
 
@@ -313,14 +308,22 @@ const formatTitle = (str: string) =>
       padding-top: 0;
     }
 
-    /* Typeface alignment fix for sections with larger content titles */
+    /* Typeface alignment fix for content titles */
     .section-with-label[data-section-id='projects'] .section-title,
     .section-with-label[data-section-id='history'] .section-title,
     .section-with-label[data-section-id='education'] .section-title {
       margin-top: 3px;
     }
+
+    /* Light mode xl: inline underline */
+    :global([data-theme='light']) .section-title-clean {
+      display: inline-block;
+    }
   }
 
+  /* ==========================================================================
+     PRINT STYLES
+     ========================================================================== */
   @media print {
     .section-with-label {
       margin-top: 0.75rem;
@@ -335,55 +338,38 @@ const formatTitle = (str: string) =>
       display: block;
     }
 
-    .section-label {
-      display: block;
+    .section-header {
       position: static;
       width: auto;
-      margin-bottom: 0.5rem;
+      margin: 0 0 0.5rem 0;
       padding: 0;
       background: transparent;
-    }
-
-    .section-label-inner {
-      display: block;
-      position: static;
-      width: auto;
-      left: auto;
-      transform: none;
       border: none;
-      padding: 0;
     }
 
-    .scroll-top-btn {
-      display: none;
+    .section-toggle {
+      display: contents;
     }
 
-    .section-content {
-      display: block;
-      border-top: none;
-      padding-top: 0;
-    }
-
-    /* Hide terminal title in print */
     .section-title {
       display: none !important;
     }
 
-    /* Print-only title - clean Swiss style, must override all screen rules */
-    .section-title-print,
-    :global([data-theme]) .section-title-print,
-    :global(:root) .section-title-print {
+    .section-title-clean {
       display: block !important;
-      visibility: visible !important;
-      color: #1a1a1a !important;
-      font-family: 'IBM Plex Sans', system-ui, sans-serif;
       font-size: 11pt;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
+      color: #1a1a1a;
       border: none;
       padding: 0;
       margin: 0;
+    }
+
+    .scroll-top-btn {
+      display: none !important;
+    }
+
+    .section-content {
+      padding-top: 0;
     }
   }
 </style>
@@ -400,7 +386,7 @@ const formatTitle = (str: string) =>
     });
 
     // Mobile-only features
-    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+    const isMobile = window.matchMedia('(max-width: 1299px)').matches;
     if (!isMobile) return;
 
     // Accordion toggle functionality (mobile only)
@@ -421,14 +407,14 @@ const formatTitle = (str: string) =>
     function updateActiveSection() {
       sections.forEach((section) => {
         const rect = section.getBoundingClientRect();
-        const label = section.querySelector('.section-label') as HTMLElement | null;
+        const header = section.querySelector('.section-header') as HTMLElement | null;
         const sectionEl = section as HTMLElement;
 
         // We're "inside" this section if its top is at/above viewport and bottom is below
         const isActive = rect.top <= 10 && rect.bottom > 50;
 
         if (isActive) {
-          label?.classList.add('is-active');
+          header?.classList.add('is-active');
 
           // Find the topmost card in this section (supports both ContentCard and ImpactGrid)
           // For 2-column grids, we want the first card (leftmost) in the current row
@@ -486,7 +472,7 @@ const formatTitle = (str: string) =>
             }
           }
         } else {
-          label?.classList.remove('is-active');
+          header?.classList.remove('is-active');
           // Reset to default green and clear context
           sectionEl.style.setProperty('--section-accent', 'var(--color-accent-green)');
           const contextSpan = section.querySelector('.section-context') as HTMLElement | null;
