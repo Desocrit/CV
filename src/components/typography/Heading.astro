@@ -1,0 +1,74 @@
+---
+import { cva } from 'class-variance-authority';
+
+const heading = cva('text-foreground', {
+  variants: {
+    variant: {
+      // Display: Hero h1 - inherits base h1 styles from global.css
+      display: [],
+      // Default: Section headings
+      default: [
+        'text-fluid-xl',
+        'font-medium',
+        'tracking-tight',
+        'leading-snug',
+      ],
+      // Small: Subsection headings
+      small: [
+        'text-fluid-lg',
+        'font-medium',
+        'tracking-tight',
+        'leading-snug',
+      ],
+      // Tiny: Card titles (matches ContentCard .card-title)
+      tiny: [
+        'text-fluid-base',
+        'font-medium',
+        'tracking-tight',
+      ],
+      // Name: Sidebar name display (responsive sizing)
+      name: [
+        'text-xl',
+        'lg:text-3xl',
+        'font-medium',
+        'tracking-tight',
+        'leading-none',
+      ],
+    },
+  },
+  defaultVariants: {
+    variant: 'default',
+  },
+});
+
+type Variant = 'display' | 'default' | 'small' | 'tiny' | 'name';
+
+interface Props {
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  class?: string;
+  // Boolean variant props - use <Heading small> instead of <Heading variant="small">
+  display?: boolean;
+  small?: boolean;
+  tiny?: boolean;
+  name?: boolean;
+}
+
+const {
+  as: Tag = 'h2',
+  class: className,
+  display,
+  small,
+  tiny,
+  name,
+  ...attrs
+} = Astro.props as Props;
+
+// Determine variant from boolean props (first truthy wins, default to default)
+const variant: Variant = display ? 'display' : name ? 'name' : small ? 'small' : tiny ? 'tiny' : 'default';
+
+const classes = heading({ variant, class: className });
+---
+
+<Tag class={classes} {...attrs}>
+  <slot />
+</Tag>

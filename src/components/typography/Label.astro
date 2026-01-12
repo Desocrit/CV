@@ -1,0 +1,93 @@
+---
+import { cva, type VariantProps } from 'class-variance-authority';
+
+const label = cva(
+  // Base: mono font, uppercase (light mode removes uppercase via global.css)
+  ['font-mono', 'uppercase', 'light:normal-case', 'light:font-medium'],
+  {
+    variants: {
+      variant: {
+        // Default: Section labels, tags (matches ContentCard tag)
+        default: [
+          'text-fluid-2xs',
+          'text-muted-foreground',
+        ],
+        // Accent: Company labels with tracking (matches ContentCard .label-text)
+        accent: [
+          'text-fluid-2xs',
+          'tracking-widest',
+        ],
+        // Achievement: Sidebar achievement labels
+        achievement: [
+          'text-fluid-2xs',
+          'tracking-widest',
+        ],
+        // Micro: Smallest labels (used in AchievementGrid)
+        micro: [
+          'text-fluid-2xs',
+          'tracking-widest',
+          'text-muted-foreground',
+          'light:tracking-wider',
+        ],
+        // Plain: No uppercase transform, for location/subtitle text
+        plain: [
+          'text-fluid-2xs',
+          'text-muted-foreground',
+          '!normal-case',
+          'light:normal-case',
+        ],
+        // Section: Sidebar section titles with border underline
+        section: [
+          'text-fluid-2xs',
+          'font-medium',
+          'tracking-widest',
+          'text-[var(--color-muted-foreground-light)]',
+          'border-b',
+          'border-[var(--color-muted-foreground)]',
+          'pb-1.5',
+          'w-fit',
+          'light:uppercase',
+        ],
+        // Terminal: Terminal-style prompt text (mobile dark mode)
+        terminal: [
+          'text-fluid-xs',
+          'font-medium',
+          '!normal-case',
+        ],
+      },
+      color: {
+        default: '',
+        muted: 'text-muted-foreground',
+        foreground: 'text-foreground',
+        purple: 'text-accent-purple',
+        green: 'text-accent-green',
+        blue: 'text-accent-blue',
+        orange: 'text-accent-orange',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      color: 'default',
+    },
+  }
+);
+
+type LabelVariants = VariantProps<typeof label>;
+
+const {
+  as: Tag = 'span',
+  variant = 'default',
+  color = 'default',
+  class: className,
+  ...attrs
+} = Astro.props as LabelVariants & {
+  as?: 'span' | 'div' | 'label' | 'p';
+  class?: string;
+};
+
+const classes = label({ variant, color, class: className });
+---
+
+<Tag class={classes} {...attrs}>
+  <slot />
+</Tag>

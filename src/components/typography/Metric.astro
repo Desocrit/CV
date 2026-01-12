@@ -1,0 +1,48 @@
+---
+import { cva, type VariantProps } from 'class-variance-authority';
+
+const metric = cva(
+  // Base: mono font, semibold, tight tracking (matches achievement-metric)
+  ['font-mono', 'font-semibold', 'tracking-tight', 'leading-none'],
+  {
+    variants: {
+      size: {
+        sm: 'text-fluid-base',
+        default: 'text-fluid-lg',
+        lg: 'text-fluid-xl',
+        xl: 'text-fluid-2xl',
+      },
+      color: {
+        default: 'text-foreground',
+        purple: 'text-accent-purple',
+        green: 'text-accent-green',
+        blue: 'text-accent-blue',
+        orange: 'text-accent-orange',
+      },
+    },
+    defaultVariants: {
+      size: 'default',
+      color: 'default',
+    },
+  }
+);
+
+type MetricVariants = VariantProps<typeof metric>;
+
+const {
+  as: Tag = 'span',
+  size = 'default',
+  color = 'default',
+  class: className,
+  ...attrs
+} = Astro.props as MetricVariants & {
+  as?: 'span' | 'div' | 'p' | 'data';
+  class?: string;
+};
+
+const classes = metric({ size, color, class: className });
+---
+
+<Tag class={classes} {...attrs}>
+  <slot />
+</Tag>

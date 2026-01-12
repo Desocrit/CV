@@ -1,0 +1,86 @@
+---
+import { cva } from 'class-variance-authority';
+
+const text = cva('', {
+  variants: {
+    variant: {
+      // Body: Default paragraph text
+      body: [
+        'text-fluid-base',
+        'text-foreground',
+        'leading-relaxed',
+      ],
+      // Lead: Headline/intro text (matches ContentCard headline)
+      lead: [
+        'text-fluid-sm',
+        'text-muted-foreground',
+        'leading-relaxed',
+        'font-medium',
+      ],
+      // Summary: Hero summary style
+      summary: [
+        'text-fluid-sm',
+        'text-foreground',
+        'leading-relaxed',
+        'opacity-80',
+      ],
+      // Subtitle: Role/subtitle text (sidebar header role)
+      subtitle: [
+        'text-fluid-sm',
+        'font-light',
+        'tracking-wide',
+        'text-[var(--color-muted-foreground-light)]',
+        'light:text-foreground',
+        'light:font-medium',
+      ],
+      // Small: Bullet points, secondary content
+      small: [
+        'text-fluid-xs',
+        'text-muted-foreground',
+      ],
+      // Muted: De-emphasized text, smallest readable (subtitle style)
+      muted: [
+        'text-fluid-xs',
+        'text-muted-foreground',
+        'leading-relaxed',
+      ],
+    },
+  },
+  defaultVariants: {
+    variant: 'body',
+  },
+});
+
+type Variant = 'body' | 'lead' | 'summary' | 'subtitle' | 'small' | 'muted';
+
+interface Props {
+  as?: 'p' | 'span' | 'div';
+  class?: string;
+  // Boolean variant props - use <Text muted> instead of <Text variant="muted">
+  lead?: boolean;
+  summary?: boolean;
+  subtitle?: boolean;
+  small?: boolean;
+  muted?: boolean;
+}
+
+const {
+  as: Tag = 'p',
+  class: className,
+  lead,
+  summary,
+  subtitle,
+  small,
+  muted,
+  ...attrs
+} = Astro.props as Props;
+
+// Determine variant from boolean props (first truthy wins, default to body)
+const variant: Variant = lead ? 'lead' : summary ? 'summary' : subtitle ? 'subtitle' : small ? 'small' : muted ? 'muted' : 'body';
+
+const classes = text({ variant, class: className });
+---
+
+<Tag class={classes} {...attrs}>
+  <slot />
+</Tag>

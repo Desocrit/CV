@@ -1,0 +1,72 @@
+---
+import { cva, type VariantProps } from 'class-variance-authority';
+
+const link = cva(
+  ['transition-colors', 'duration-200', 'cursor-pointer'],
+  {
+    variants: {
+      variant: {
+        // Default: Standard link with underline
+        default: [
+          'text-foreground',
+          'underline',
+          'underline-offset-2',
+          'hover:text-foreground/80',
+        ],
+        // Subtle: Muted link with animated underline (matches .link-subtle)
+        subtle: [
+          'text-muted-foreground',
+          'no-underline',
+          'hover:text-foreground',
+          'link-subtle',
+        ],
+        // Mono: Terminal-style link
+        mono: [
+          'font-mono',
+          'text-fluid-xs',
+          'text-muted-foreground',
+          'no-underline',
+          'hover:text-foreground',
+        ],
+        // Action: CTA-style link (purple accent)
+        action: [
+          'font-mono',
+          'text-fluid-xs',
+          'text-accent-purple',
+          'no-underline',
+          'hover:brightness-[1.2]',
+        ],
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+    },
+  }
+);
+
+type LinkVariants = VariantProps<typeof link>;
+
+const {
+  href,
+  variant = 'default',
+  external = false,
+  class: className,
+  ...attrs
+} = Astro.props as LinkVariants & {
+  href: string;
+  external?: boolean;
+  class?: string;
+};
+
+const classes = link({ variant, class: className });
+---
+
+<a
+  href={href}
+  class={classes}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+  {...attrs}
+>
+  <slot />
+</a>
