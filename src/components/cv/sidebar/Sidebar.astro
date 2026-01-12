@@ -1,0 +1,77 @@
+---
+/**
+ * Sidebar - Main sidebar composition
+ *
+ * Composes all sidebar subcomponents using the Layout wrapper.
+ * This is the primary export for the sidebar module.
+ */
+import Layout from './Layout.astro';
+import Header from './Header.astro';
+import Nav from './Nav.astro';
+import PrintContact from './PrintContact.astro';
+import Profile from './Profile.astro';
+import Achievements from './Achievements.astro';
+import Education from './Education.astro';
+import QrCode from './QrCode.astro';
+import TechStackPrint from '../TechStackPrint.astro';
+import type { TechTag } from '../../../lib/cv-data';
+
+interface Achievement {
+  metric: string;
+  headline: string;
+  description: string;
+}
+
+interface EducationData {
+  degree: string;
+  degree_title: string;
+  score_short: string;
+  specialism: string;
+  institution: string;
+  year: number;
+}
+
+interface Props {
+  name: string;
+  role: string;
+  email: string;
+  phone?: string;
+  location: string;
+  linkedin: string;
+  github: string;
+  profile: string;
+  achievements: Achievement[];
+  education: EducationData;
+  technologies: TechTag[];
+}
+
+const {
+  name,
+  role,
+  email,
+  phone,
+  location,
+  linkedin,
+  github,
+  profile,
+  achievements,
+  education,
+  technologies,
+} = Astro.props;
+---
+
+<Layout>
+  <Header slot="header" name={name} role={role} location={location} />
+
+  <Fragment slot="nav">
+    <Nav email={email} linkedin={linkedin} github={github} />
+    <PrintContact phone={phone} email={email} linkedin={linkedin} github={github} />
+  </Fragment>
+
+  <Profile profile={profile} />
+  <Achievements achievements={achievements} />
+  <Education {...education} />
+  <TechStackPrint technologies={technologies} />
+
+  <QrCode slot="footer" />
+</Layout>

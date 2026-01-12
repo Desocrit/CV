@@ -1,0 +1,43 @@
+---
+/**
+ * SidebarHeader - Name, role, and location display
+ *
+ * Responsive layout:
+ * - Desktop (lg+): Stacked vertical layout with larger typography
+ * - Mobile: Compact horizontal layout with terminal-style formatting
+ * - Print: Matches desktop layout
+ */
+import Heading from '../../typography/Heading.astro';
+import Text from '../../typography/Text.astro';
+import Label from '../../typography/Label.astro';
+
+interface Props {
+  name: string;
+  role: string;
+  location: string;
+}
+
+const { name, role, location } = Astro.props;
+const shortLocation = location.split(',')[0] ?? location;
+---
+
+<header class:list={[
+  'sm:col-start-1 sm:row-start-1',
+  'print:mb-10',
+]}>
+  <!-- Desktop: stacked layout -->
+  <div class="hidden lg:block print:!block">
+    <Heading as="h1" name class="print:text-[24px]">{name}</Heading>
+    <Text subtitle class="mt-2 print:text-[#4a4a4a] print:text-[11px] print:mt-0.5">{role}</Text>
+    <Label as="p" variant="plain" class="mt-1 print:text-[10px]">{location}</Label>
+  </div>
+
+  <!-- Mobile: compact space-between layout -->
+  <div class="flex flex-col gap-1 lg:hidden print:!hidden">
+    <Heading as="h1" name>{name}</Heading>
+    <Label variant="terminal" color="muted" class="whitespace-nowrap flex-shrink-0">
+      <span class="light:hidden"><span class="opacity-70">//</span> {role.toUpperCase().replace(/\s+/g, '_')}, {shortLocation.toUpperCase()}</span>
+      <span class="hidden light:inline">{role}, {shortLocation}</span>
+    </Label>
+  </div>
+</header>

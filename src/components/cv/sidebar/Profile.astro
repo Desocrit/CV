@@ -1,0 +1,33 @@
+---
+/**
+ * SidebarProfile - Profile/bio section
+ *
+ * Displays the professional summary/profile text.
+ */
+import Section from './Section.astro';
+import Text from '../../typography/Text.astro';
+
+interface Props {
+  profile: string;
+  class?: string;
+}
+
+const { profile, class: className = '' } = Astro.props;
+---
+
+<Section
+  title="Profile"
+  class:list={[
+    'sm:col-start-1 sm:row-start-2 sm:m-0',
+    '[&:has(+_.print-only)]:mb-0',
+    className,
+  ]}
+>
+  <Text muted class:list={[
+    'max-w-[50ch] whitespace-pre-line',
+    'mt-1 lg:mt-0',
+    'print:text-[10px] print:leading-[1.4] print:text-[#4a4a4a]',
+  ]}>
+    {profile}
+  </Text>
+</Section>

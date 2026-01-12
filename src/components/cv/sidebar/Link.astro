@@ -1,0 +1,113 @@
+---
+interface Props {
+  href?: string;
+  external?: boolean;
+  onClick?: string;
+  text: string;
+  tag: string;
+  screenOnly?: boolean;
+  printHide?: boolean;
+  class?: string;
+  id?: string;
+  'aria-label': string;
+}
+
+const {
+  href,
+  external = false,
+  onClick,
+  text,
+  tag,
+  screenOnly = false,
+  printHide = false,
+  class: className = '',
+  id,
+  'aria-label': ariaLabel,
+} = Astro.props;
+
+const isButton = !href;
+
+const baseClasses = [
+  // Layout - relative for touch target pseudo-element
+  'relative inline-flex items-center gap-2',
+  // Typography
+  'font-mono text-fluid-xs',
+  // Colors & transitions
+  'text-muted-foreground hover:text-foreground transition-colors duration-200',
+  // Focus states
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+  // Button reset (for when it's a button)
+  isButton && 'cursor-pointer border-none p-0 text-left',
+  // Visibility modifiers
+  screenOnly && 'screen-only',
+  // Print: hide all sidebar links
+  'print:hidden',
+  // Expanded touch target - using before pseudo via arbitrary
+  'before:content-[\'\'] before:absolute before:inset-[-0.5rem] before:min-w-[44px] before:min-h-[44px]',
+].filter(Boolean);
+
+// Icon wrapper classes
+const iconWrapperClasses = [
+  'flex items-center shrink-0',
+  // Mobile dark: hidden, Mobile light: larger icons, Desktop: normal icons
+  '[&>svg]:hidden [&>svg]:shrink-0',
+  'light:[&>svg]:block light:[&>svg]:size-[1.125rem] light:[&>svg]:opacity-70',
+  'lg:[&>svg]:block lg:[&>svg]:size-3 lg:[&>svg]:opacity-50',
+].join(' ');
+
+// Link text classes - with animated underline on hover
+const linkTextClasses = [
+  'relative hidden',
+  // Desktop: show text
+  'lg:inline',
+  // Animated underline (desktop only)
+  'after:content-[\'\'] after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-px after:bg-foreground after:transition-[width] after:duration-200 after:ease-out',
+  'group-hover:after:w-full',
+].join(' ');
+
+// Tag classes - unix-style brackets on mobile dark mode
+const tagClasses = [
+  // Mobile dark: show with brackets
+  'inline-flex items-center font-mono text-fluid-xs text-accent-purple tracking-normal transition-[filter] duration-150',
+  'before:content-[\'[\'] before:mr-[0.125em]',
+  'after:content-[\']\'] after:ml-[0.125em]',
+  'group-hover:brightness-[1.2]',
+  // Mobile light: hidden (icons shown instead)
+  'light:hidden',
+  // Desktop: hidden
+  'lg:hidden',
+].join(' ');
+---
+
+{isButton ? (
+  <button
+    type="button"
+    id={id}
+    class:list={[baseClasses, 'group', className]}
+    onclick={onClick}
+    data-print={printHide ? 'hide' : undefined}
+    aria-label={ariaLabel}
+  >
+    <span class={iconWrapperClasses}>
+      <slot name="icon" />
+    </span>
+    <span class={linkTextClasses}>{text}</span>
+    <span class={tagClasses}>{tag}</span>
+  </button>
+) : (
+  <a
+    href={href}
+    id={id}
+    class:list={[baseClasses, 'group', className]}
+    target={external ? '_blank' : undefined}
+    rel={external ? 'noopener noreferrer' : undefined}
+    data-print={printHide ? 'hide' : undefined}
+    aria-label={ariaLabel}
+  >
+    <span class={iconWrapperClasses}>
+      <slot name="icon" />
+    </span>
+    <span class={linkTextClasses}>{text}</span>
+    <span class={tagClasses}>{tag}</span>
+  </a>
+)}

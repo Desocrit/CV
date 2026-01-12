@@ -1,0 +1,68 @@
+---
+/**
+ * SidebarSection - Sidebar section with responsive title variants
+ *
+ * Handles the complex title display logic for sidebar sections:
+ * - Desktop: Mono uppercase title with underline
+ * - Mobile dark mode: Terminal-style "> TITLE" format
+ * - Mobile light mode: Clean title matching desktop
+ * - Print: Professional title styling
+ *
+ * @example
+ * <SidebarSection title="Profile">
+ *   <p>Profile content here</p>
+ * </SidebarSection>
+ */
+import Label from '../../typography/Label.astro';
+
+interface Props {
+  /** Section title (displayed in multiple formats based on viewport/theme) */
+  title: string;
+  /** ARIA label for the section (defaults to title) */
+  label?: string;
+  /** Additional CSS classes */
+  class?: string;
+}
+
+const { title, label, class: className = '' } = Astro.props;
+const ariaLabel = label ?? title;
+---
+
+<section
+  class:list={[
+    'sidebar-section print:mb-10',
+    className,
+  ]}
+  aria-label={ariaLabel}
+>
+  <!-- Desktop & Light mode: Clean mono title with underline -->
+  <Label
+    as="h2"
+    variant="section"
+    class:list={[
+      'mb-2',
+      'hidden light:block sm:!hidden lg:!block',
+      'print:!block print:text-[10px] print:!text-[#666666] print:border-[#4a4a4a]',
+    ]}
+  >
+    {title}
+  </Label>
+
+  <!-- Mobile dark mode: Terminal-style prompt -->
+  <Label
+    as="h2"
+    variant="terminal"
+    color="green"
+    class:list={[
+      'mb-2',
+      'block light:hidden sm:hidden',
+      'print:!hidden',
+    ]}
+  >
+    <span aria-hidden="true">&gt; </span>{title.toUpperCase()}
+  </Label>
+
+  <div class="sidebar-section__content mt-1 lg:mt-[var(--spacing-fluid-xs)] print:mt-0">
+    <slot />
+  </div>
+</section>

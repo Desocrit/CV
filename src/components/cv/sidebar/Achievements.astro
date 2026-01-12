@@ -1,0 +1,100 @@
+---
+/**
+ * SidebarAchievements - Key achievements display
+ *
+ * Displays achievements in a two-column grid with aligned metrics.
+ * Responsive styling for desktop, mobile, and print.
+ */
+import Odometer from '../../ui/Odometer.astro';
+import Label from '../../typography/Label.astro';
+import Metric from '../../typography/Metric.astro';
+import Text from '../../typography/Text.astro';
+import ScreenOnly from '../../layout/ScreenOnly.astro';
+import PrintOnly from '../../layout/PrintOnly.astro';
+
+interface Achievement {
+  metric: string;
+  headline: string;
+  description: string;
+}
+
+interface Props {
+  achievements: Achievement[];
+}
+
+const { achievements } = Astro.props;
+
+const toSnakeCase = (str: string) =>
+  str.toUpperCase().replace(/\s+/g, '_');
+---
+
+<section class:list={[
+  'sm:col-start-2 sm:row-span-3 sm:self-start',
+  'print:mb-10',
+]} aria-label="Key Achievements">
+  <!-- Desktop & Light mode title -->
+  <Label
+    as="h2"
+    variant="section"
+    class:list={[
+      'mb-2',
+      'hidden light:block sm:!hidden lg:!block',
+      'print:!block print:text-[10px] print:!text-[#666666] print:border-[#4a4a4a]',
+    ]}
+  >
+    Achievements
+  </Label>
+
+  <!-- Mobile dark mode terminal title -->
+  <Label
+    as="h2"
+    variant="terminal"
+    color="green"
+    class:list={[
+      'mb-2',
+      'block light:hidden sm:hidden',
+      'print:!hidden',
+    ]}
+  >
+    &gt; ACHIEVEMENTS
+  </Label>
+
+  <!-- Two-column grid with aligned metrics -->
+  <div class:list={[
+    'grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5',
+    'mt-[var(--spacing-fluid-sm)]',
+    'sm:!mt-0 lg:mt-[var(--spacing-fluid-sm)]',
+  ]}>
+    {achievements.map((achievement, index) => (
+      <div class="contents">
+        <Metric
+          as="data"
+          size="sm"
+          value={achievement.headline}
+          class:list={[
+            'text-right self-baseline',
+            'print:text-[#1a1a1a] print:text-[13px] print:font-bold',
+          ]}
+        >
+          <Odometer value={achievement.headline} />
+        </Metric>
+        <Label variant="achievement" color="purple" class:list={[
+          'self-baseline',
+          'light:font-semibold light:capitalize',
+          'print:text-[#666] print:normal-case print:text-[9px] print:tracking-[0.02em]',
+        ]}>
+          <ScreenOnly as="span">{toSnakeCase(achievement.metric)}</ScreenOnly>
+          <PrintOnly as="span" class="print:!inline">{achievement.metric}</PrintOnly>
+        </Label>
+        <span class="col-span-2" aria-hidden="true"></span>
+        <Text muted class:list={[
+          'col-span-2 leading-snug max-w-[50ch]',
+          index === achievements.length - 1 ? '' : 'mb-[var(--spacing-fluid-sm)]',
+          'print:text-[10px] print:!leading-[1.35] print:!mt-0.5 print:mb-1.5',
+        ]}>
+          {achievement.description}
+        </Text>
+      </div>
+    ))}
+  </div>
+</section>

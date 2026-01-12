@@ -1,0 +1,39 @@
+---
+/**
+ * SidebarPrintContact - Contact details formatted for print
+ *
+ * Displays phone, email, LinkedIn, and GitHub in a clean, professional format
+ * optimized for printed output. Hidden on screen.
+ */
+import PrintOnly from '../../layout/PrintOnly.astro';
+
+interface Props {
+  phone?: string;
+  email: string;
+  linkedin: string;
+  github: string;
+}
+
+const { phone, email, linkedin, github } = Astro.props;
+---
+
+<PrintOnly class="print:!flex print:flex-col print:gap-1 print:mt-1.5">
+  {phone && (
+    <div class="flex flex-col">
+      <span class="font-sans text-[9px] font-semibold text-[#1a1a1a] leading-tight">Phone</span>
+      <span class="font-mono text-[10px] text-[#4a4a4a] leading-snug">{phone}</span>
+    </div>
+  )}
+  <div class="flex flex-col">
+    <span class="font-sans text-[9px] font-semibold text-[#1a1a1a] leading-tight">Email</span>
+    <span class="font-mono text-[10px] text-[#4a4a4a] leading-snug">{email}</span>
+  </div>
+  <div class="flex flex-col">
+    <span class="font-sans text-[9px] font-semibold text-[#1a1a1a] leading-tight">LinkedIn</span>
+    <span class="font-mono text-[10px] text-[#4a4a4a] leading-snug">{linkedin.replace('https://www.', '').replace('https://', '')}</span>
+  </div>
+  <div class="flex flex-col">
+    <span class="font-sans text-[9px] font-semibold text-[#1a1a1a] leading-tight">GitHub</span>
+    <span class="font-mono text-[10px] text-[#4a4a4a] leading-snug">{github.replace('https://', '')}</span>
+  </div>
+</PrintOnly>
