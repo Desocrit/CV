@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './section-styles.css';
 @plugin '@tailwindcss/typography';
 
 /* Custom variant for light mode (dark is default, light is opt-in via data-theme) */
@@ -79,17 +80,17 @@
 }
 
 @theme {
-  /* Custom breakpoints: mobile-first */
-  --breakpoint-sm: 640px;
-  --breakpoint-md: 1024px;
-  --breakpoint-lg: 1200px;
+  --breakpoint-sm: 560px;
+  --breakpoint-md: 730px;
+  --breakpoint-lg: 960px;
+  --breakpoint-xl: 1300px;
 
   --font-sans: 'Geist', 'system-ui', 'sans-serif';
   --font-mono: 'Geist Mono', 'Consolas', monospace;
 
-  --text-fluid-2xs: clamp(0.625rem, 0.6rem + 0.125vw, 0.6875rem);
-  --text-fluid-xs: clamp(0.6875rem, 0.65rem + 0.19vw, 0.75rem);
-  --text-fluid-sm: clamp(0.8125rem, 0.75rem + 0.31vw, 0.9375rem);
+  --text-fluid-2xs: clamp(0.5rem, 0.475rem + 0.16vw, 0.625rem);
+  --text-fluid-xs: clamp(0.5625rem, 0.54rem + 0.19vw, 0.6875rem);
+  --text-fluid-sm: clamp(0.875rem, 0.85rem + 0.19vw, 1rem);
   --text-fluid-base: clamp(1rem, 0.925rem + 0.375vw, 1.125rem);
   --text-fluid-lg: clamp(1.125rem, 1rem + 0.625vw, 1.375rem);
   --text-fluid-xl: clamp(1.375rem, 1.2rem + 0.875vw, 1.75rem);
@@ -155,8 +156,6 @@
   --color-accent-orange: #ff9e64;
   --color-accent-red: #f7768e;
   --color-accent-cyan: #73daca;
-
-  --tracking-widest-plus: 0.2em;
 }
 
 [data-theme='light'] {
@@ -236,14 +235,7 @@
   letter-spacing: -0.015em;
 }
 
-/* Mono needs to breathe to look like code */
-[data-theme='light'] .mono-marker {
-  font-family: 'IBM Plex Mono', 'Consolas', monospace;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  font-variant-ligatures: none; /* Principal signal: we don't use flashy ligatures */
-}
-
+/* Mono elements need to breathe in light mode */
 [data-theme='light'] .font-mono,
 [data-theme='light'] [class*="font-mono"],
 [data-theme='light'] code,
@@ -254,320 +246,26 @@
   font-variant-ligatures: none;
 }
 
-[data-theme='light'] .metadata-spec {
-  font-weight: 400;
-}
+/* Component-specific light mode styles have been moved to their respective components:
+   - Badge styles → Badge.astro
+   - Terminal styles → SkillsTerminal.astro
+   - Impact card styles → ImpactGrid.astro
+   - Section styles → Section.astro
+   - Content card styles → ContentCard.astro
+*/
 
 /* ==========================================================================
-   LIGHT MODE: Hairline Borders (0.5px)
-   Explicit selectors for specific elements
+   LIGHT MODE: Global Text Transform Reset
+   Removes uppercase transforms site-wide for Swiss typography
    ========================================================================== */
-
-/* Badge borders */
-[data-theme='light'] .badge {
-  border-width: 0.5px;
-}
-
-/* Terminal borders */
-[data-theme='light'] .terminal {
-  border-width: 0.5px;
-}
-
-/* Impact card borders */
-[data-theme='light'] .impact-card {
-  border-width: 0.5px;
-}
-
-/* Content item separators - remove borders entirely */
-[data-theme='light'] .content-item {
-  border-top: none !important;
-}
-
-/* Section dividers as hairlines */
-[data-theme='light'] .section-divider,
-[data-theme='light'] hr {
-  height: 0.5px;
-}
-
-/* ==========================================================================
-   LIGHT MODE: Status indicators
-   ========================================================================== */
-
-/* Status indicators without glow */
-[data-theme='light'] .status-dot,
-[data-theme='light'] [class*="status-"] {
-  box-shadow: none;
-  animation: none;
-}
-
-/* Achievement metrics without glow */
-[data-theme='light'] .achievement-metric-glow {
-  text-shadow: none !important;
-}
-
-/* ==========================================================================
-   LIGHT MODE: Impact Card Hover Effects
-   Hard 2px offset shadow on hover (architectural blueprint style)
-   Disable swirling border animation, use offset shadow instead
-   ========================================================================== */
-
-/* Disable the swirling conic-gradient border animation for light mode */
-[data-theme='light'] .impact-card-wrapper::before {
-  display: none !important;
-}
-
-/* Impact cards - border color change and offset shadow on hover */
-[data-theme='light'] .impact-card-wrapper {
-  transition: box-shadow 0.15s ease-out;
-}
-
-[data-theme='light'] .impact-card-wrapper:hover {
-  box-shadow: 2px 2px 0px color-mix(in srgb, var(--card-accent) 40%, white);
-}
-
-/* Impact card inner element styling for light mode */
-[data-theme='light'] .impact-card {
-  border-width: 0.5px;
-  transition: border-color 0.15s ease-out;
-}
-
-[data-theme='light'] .impact-card-wrapper:hover .impact-card {
-  border-color: var(--card-accent);
-}
-
-/* Badge hover effect */
-[data-theme='light'] .badge:hover {
-  box-shadow: 2px 2px 0px var(--color-accent-purple);
-}
-
-/* ==========================================================================
-   LIGHT MODE: Swiss Standard Case Typography
-   Remove SCREAMING_SNAKE and // terminal coding
-   ========================================================================== */
-
-/* Light mode: hide terminal-style title, show clean title */
-[data-theme='light'] .section-title {
-  display: none !important;
-}
-
-/* Light mode screen titles - clean Swiss style */
-[data-theme='light'] .section-title-print {
-  display: block !important;
-  order: -1;
-  color: var(--color-foreground);
-  font-family: 'IBM Plex Sans', system-ui, sans-serif;
-  font-size: var(--text-fluid-sm);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding-bottom: 0;
-  margin-bottom: 0;
-}
-
-/* lg (1024px-1279px): full-width underline */
-@media (min-width: 1024px) and (max-width: 1279px) {
-  [data-theme='light'] .section-title-print {
-    display: block !important;
-    padding-bottom: 0.5rem;
-    margin-bottom: 0.25rem;
-    border-bottom: 0.5px solid var(--color-border);
-  }
-}
-
-/* xl+ (1280px+): text-width underline */
-@media (min-width: 1280px) {
-  [data-theme='light'] .section-title-print {
-    display: inline-block !important;
-    padding-bottom: 0.5rem;
-    margin-bottom: 0.25rem;
-    border-bottom: 0.5px solid var(--color-border);
-  }
-}
-
-/* Dark mode: Keep terminal title visible but hide the // prefix */
-/* The section-title-text shows PROJECTS, section-prefix shows // */
-
-/* Remove uppercase from all light mode text */
 [data-theme='light'] .uppercase,
 [data-theme='light'] [class*='uppercase'] {
   text-transform: none !important;
 }
 
-/* Achievement labels - Standard case instead of SCREAMING_SNAKE */
-[data-theme='light'] .achievement-label {
-  text-transform: none !important;
-  letter-spacing: 0.02em !important;
-}
-
-/* Tech tags - Standard case */
-[data-theme='light'] .tech-tag {
-  text-transform: none !important;
-}
-
-/* Card labels (company names) - show clean version in light mode */
-[data-theme='light'] .label-text {
-  text-transform: none !important;
-}
-
-[data-theme='light'] .label-text .screen-only {
-  display: none !important;
-}
-
-[data-theme='light'] .label-text .print-only {
-  display: inline !important;
-}
-
-/* Impact card headers - remove brackets and snake case */
-[data-theme='light'] .card-header {
-  text-transform: capitalize !important;
-  letter-spacing: 0.02em !important;
-}
-
-/* Sidebar section titles */
-[data-theme='light'] .sidebar-section-title {
-  text-transform: none !important;
-  letter-spacing: 0 !important;
-}
-
-/* Education separator: // becomes · (dot) */
-[data-theme='light'] .spec-separator {
-  font-size: 0;
-}
-
-[data-theme='light'] .spec-separator::before {
-  content: '·';
-  font-size: 10px;
-  padding: 0 0.25em;
-}
-
-/* Education meta - remove uppercase */
-[data-theme='light'] .edu-meta {
-  text-transform: none !important;
-  letter-spacing: 0.01em !important;
-}
-
-/* Skill category titles - Standard case */
-[data-theme='light'] .skill-category-title {
-  text-transform: none !important;
-}
-
-/* Terminal section titles on mobile - Standard case */
-[data-theme='light'] .terminal-section-title {
-  text-transform: none !important;
-}
-
-/* Section prefix (// ) - hide in light mode */
-[data-theme='light'] .section-prefix {
-  display: none !important;
-}
-
-/* Section context separator - use dot instead of / */
-[data-theme='light'] .section-context::before {
-  content: ' · ' !important;
-}
-
-
-/* ==========================================================================
-   LIGHT MODE: Button & CTA Styling
-   Replace [BRACKET_STYLE] with bold underlined text
-   ========================================================================== */
-
-/* ActionButton - hide brackets, use heavier font weight */
-[data-theme='light'] .action-button .bracket {
-  display: none !important;
-}
-
-[data-theme='light'] .action-button .label {
-  font-weight: 600;
-  text-transform: none !important;
-}
-
-/* Details toggle (VIEW_DETAILS) - Standard case with heavy weight */
-[data-theme='light'] .details-toggle .bracket {
-  display: none !important;
-}
-
-[data-theme='light'] .details-toggle .toggle-text {
-  font-weight: 700;
-  text-transform: none !important;
-}
-
-/* Terminal trigger buttons */
-[data-theme='light'] .terminal-trigger .bracket {
-  display: none !important;
-}
-
-[data-theme='light'] .terminal-trigger .toggle-text {
-  font-weight: 700;
-  text-transform: none !important;
-}
-
-
-/* Impact card header - heavier weight for legibility */
-[data-theme='light'] .impact-card .card-header {
-  font-weight: 600;
-}
-
-/* Impact card CTA - hide brackets, just show arrow */
-[data-theme='light'] .card-cta .cta-bracket {
-  display: none !important;
-}
-
-[data-theme='light'] .card-cta {
-  font-weight: 600;
-}
-
-[data-theme='light'] .card-cta .cta-arrow {
-  padding: 0 0.25em;
-}
-
-/* Impact card header - hide brackets */
-[data-theme='light'] .impact-card .header-bracket {
-  display: none !important;
-}
-
-[data-theme='light'] .impact-card .card-header {
-  font-size: 9px !important;
-  text-transform: capitalize !important;
-  letter-spacing: 0.02em !important;
-}
-
-/* Achievement labels in sidebar - show Title Case version in light mode */
-[data-theme='light'] .achievement-label {
-  text-transform: none !important;
-  letter-spacing: 0.01em !important;
-}
-
-/* Theme visibility now handled via Tailwind light: variant */
-
-/* Sidebar role - heavier weight in light mode */
-[data-theme='light'] .sidebar-role {
-  font-weight: 500;
-}
-
-/* Tag-styled elements - heavier weight in light mode for legibility */
-[data-theme='light'] .tag-text,
-[data-theme='light'] .link-tag,
-[data-theme='light'] .label-text,
-[data-theme='light'] .toggle-text,
-[data-theme='light'] .tech-tag,
-[data-theme='light'] .achievement-label {
-  font-weight: 500;
-}
-
-/* In light mode, hide screen-only inside achievement labels and show print-only/light-mode-only */
-[data-theme='light'] .achievement-label .screen-only {
-  display: none !important;
-}
-
-[data-theme='light'] .achievement-label .print-only {
-  display: inline !important;
-}
-
-/* Hero button - also use bold underline style */
-[data-theme='light'] .no-print.inline-flex[class*="border"] {
-  border: none !important;
-  background: none !important;
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 @layer base {
@@ -687,18 +385,6 @@
 }
 
 @layer components {
-  /* Unified tag text styling - for labels, CTAs, headers, etc. */
-  .tag-text {
-    font-family: var(--font-mono);
-    font-size: var(--text-fluid-2xs);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .tracking-widest-plus {
-    letter-spacing: var(--tracking-widest-plus);
-  }
-
   .badge {
     display: inline-flex;
     align-items: center;
@@ -712,49 +398,11 @@
     letter-spacing: 0.02em;
   }
 
-  .badge-success {
-    color: var(--color-foreground);
-    border-color: var(--color-border);
-  }
-
-  .badge-outline {
-    background-color: transparent;
-    border-color: var(--color-border);
-  }
-
   .terminal {
     background-color: var(--color-terminal-bg);
     color: var(--color-terminal-text);
     font-family: var(--font-mono);
     border: 1px solid var(--color-border);
-  }
-
-  .terminal-prompt::before {
-    content: '$ ';
-    color: var(--color-terminal-prompt);
-  }
-
-  .terminal-output::before {
-    content: '> ';
-    color: var(--color-terminal-accent);
-  }
-
-  .micro-label {
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--color-muted-foreground);
-  }
-
-  .metric-display {
-    font-family: var(--font-mono);
-    font-size: var(--text-fluid-2xl);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    color: var(--color-foreground);
   }
 
   .link-subtle {
@@ -788,13 +436,6 @@
     background: var(--color-border);
     border: none;
   }
-
-  .grid-12 {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: var(--spacing-fluid-md);
-  }
-
 }
 
 @media not print {
@@ -834,11 +475,6 @@
     display: block !important;
   }
 
-  /* Override Tailwind's responsive hidden utilities for print-critical elements */
-  .sidebar-section-title.hidden,
-  .sidebar-section-title.md\:block {
-    display: block !important;
-  }
 
   /* ==========================================================================
      PRINT: Force light mode typography patterns (hide terminal-style titles)
@@ -851,7 +487,7 @@
     display: none !important;
   }
 
-  .section-title-print {
+  .section-title-clean {
     display: inline-block !important;
     color: #1a1a1a !important;
   }
@@ -870,24 +506,12 @@
     display: inline !important;
   }
 
-  /* Achievement labels: show print-friendly versions */
-  .achievement-label .screen-only {
-    display: none !important;
-  }
-
-  .achievement-label .print-only {
-    display: inline !important;
-  }
-
   /* Remove uppercase transforms for print legibility */
   .uppercase,
   [class*='uppercase'],
-  .achievement-label,
   .tech-tag,
   .label-text,
-  .card-header,
-  .sidebar-section-title,
-  .edu-meta {
+  .card-header {
     text-transform: none !important;
   }
 
@@ -1100,11 +724,6 @@
     padding: 0;
   }
 
-  .terminal-prompt::before,
-  .terminal-output::before {
-    content: none;
-  }
-
   .badge {
     border: none;
     background: none;
@@ -1144,17 +763,17 @@
     text-transform: none;
   }
 
-  .metric-display {
-    font-size: 13px;
-    font-weight: 700;
-    color: #1a1a1a;
+  /* Content list print styles */
+  .content-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 
-  .micro-label {
-    font-size: 9px;
-    text-transform: none;
-    letter-spacing: 0.02em;
-    color: #666;
+  .content-list-item {
+    border-top: none !important;
+    padding-top: 0.1rem !important;
+    padding-bottom: 0.1rem !important;
   }
 
   /* ==========================================================================
