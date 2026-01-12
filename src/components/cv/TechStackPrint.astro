@@ -1,5 +1,8 @@
 ---
 import type { TechTag } from '../../lib/cv-data';
+import PrintOnly from '../layout/PrintOnly.astro';
+import Stack from '../layout/Stack.astro';
+import Label from '../typography/Label.astro';
 
 interface Props {
   technologies: TechTag[];
@@ -44,71 +47,24 @@ const sortedGroups = Object.keys(techByGroup).sort((a, b) => {
 });
 ---
 
-<section class="tech-stack-print print-only" aria-label="Technical Skills">
-  <h2 class="sidebar-section-title">Tech Stack</h2>
-  <div class="tech-groups">
+<PrintOnly as="section" class="print:mt-10 print:block" aria-label="Technical Skills">
+  <Label
+    as="h2"
+    variant="micro"
+    class="print:text-[10px] print:font-medium print:tracking-widest print:text-[#666666] print:border-b print:border-[#4a4a4a] print:pb-1.5 print:mb-2 print:w-fit"
+  >
+    Tech Stack
+  </Label>
+  <Stack gap="xs" class="print:mt-2 print:gap-2">
     {sortedGroups.map((group) => (
-      <div class="tech-group">
-        <h3 class="group-title">{group}</h3>
-        <p class="tech-list">
+      <div class="flex flex-col print:gap-px">
+        <h3 class="font-sans print:text-[9px] print:font-semibold print:text-[#1a1a1a] print:leading-tight print:m-0">
+          {group}
+        </h3>
+        <p class="font-mono print:text-[10px] print:text-[#4a4a4a] print:leading-snug print:m-0">
           {Array.from(techByGroup[group]?.values() ?? []).map((t) => t.name).join(' · ')}
         </p>
       </div>
     ))}
-  </div>
-</section>
-
-<style>
-  .tech-stack-print {
-    margin-top: 2.5rem;
-  }
-
-  .tech-groups {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-  }
-
-  .tech-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-  }
-
-  .group-title {
-    font-family: 'IBM Plex Sans', system-ui, sans-serif;
-    font-size: 9px;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin: 0;
-    line-height: 1.2;
-  }
-
-  .tech-list {
-    font-family: 'IBM Plex Mono', 'Consolas', monospace;
-    font-size: 10px;
-    color: #4a4a4a;
-    margin: 0;
-    line-height: 1.4;
-  }
-
-  @media print {
-    .tech-stack-print {
-      display: block !important;
-    }
-
-    .sidebar-section-title {
-      font-family: 'IBM Plex Mono', 'Consolas', monospace;
-      font-size: 10px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #666666 !important;
-      border-bottom: 1px solid #4a4a4a;
-      padding-bottom: 0.375rem;
-      margin-bottom: 0.5rem;
-      width: fit-content;
-    }
-  }
-</style>
+  </Stack>
+</PrintOnly>

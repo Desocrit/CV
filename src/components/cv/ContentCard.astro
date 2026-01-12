@@ -1,5 +1,11 @@
 ---
 import TechTag from '../ui/TechTag.astro';
+import Heading from '../typography/Heading.astro';
+import Text from '../typography/Text.astro';
+import Label from '../typography/Label.astro';
+import CardGrid from '../layout/CardGrid.astro';
+import ScreenOnly from '../layout/ScreenOnly.astro';
+import PrintOnly from '../layout/PrintOnly.astro';
 import type { TechTag as TechTagType } from '../../lib/cv-data';
 
 interface Props {
@@ -22,91 +28,67 @@ const { title, subtitle, tag, label, technologies = [], headline, bulletPoints, 
 // Convert label to SCREAMING_CASE for display
 const labelText = label?.toUpperCase().replace(/\s+/g, '_').replace(/'/g, '');
 
-// Escape HTML entities to prevent XSS (apostrophes are safe in text content)
-const escapeHtml = (text: string): string => {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-};
-
-// Highlight metrics (numbers, percentages, multipliers) in bullet points
-const highlightMetrics = (text: string): string => {
-  // Escape HTML first to prevent XSS, then apply highlighting
-  const escaped = escapeHtml(text);
-  return escaped.replace(
-    /(\d+(?:\.\d+)?(?:\s*[xX%])?|\d+(?:,\d{3})*(?:\+)?)/g,
-    '<span class="metric-highlight">$1</span>'
-  );
-};
+const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')).slice(0, 4);
 ---
 
-<article class="content-card group">
-  <div class="card-grid">
-    <!-- Left Column: Title, Subtitle, Tag, Label, Technologies -->
-    <div class="card-meta">
-      <h3 class="card-title text-fluid-base font-medium tracking-tight text-foreground transition-colors">
+<article class="content-card group [--card-accent:var(--color-accent-purple)] py-[0.35rem] print:py-[0.35rem]">
+  <CardGrid>
+    <Fragment slot="meta">
+      <Heading
+        as="h3"
+        tiny
+        class="card-title transition-[text-shadow] duration-150 ease-out hover:[text-shadow:0_0_4px_var(--card-accent),0_0_12px_color-mix(in_srgb,var(--card-accent)_60%,transparent),0_0_24px_color-mix(in_srgb,var(--card-accent)_30%,transparent)] light:hover:[text-shadow:none] print:text-[12px] print:font-semibold print:break-after-avoid flex-none order-1 sm:flex-initial sm:order-none"
+      >
         {title}
-      </h3>
+      </Heading>
 
       {tag && (
-        <p class="font-mono text-fluid-2xs text-muted-foreground">
+        <Label as="p" variant="plain" class="print:text-[9px] order-2 ml-auto mt-0 has-[~.label-text]:order-3 has-[~.label-text]:basis-full has-[~.label-text]:ml-0 sm:order-none sm:ml-0 sm:has-[~.label-text]:order-none sm:has-[~.label-text]:basis-auto">
           <span>{tag}</span>
-        </p>
+        </Label>
       )}
 
       {label && (
-        <p class="label-text font-mono text-fluid-2xs uppercase tracking-widest mt-2">
-          <span class="screen-only">{labelText}</span>
-          <span class="print-only">{label}</span>
-        </p>
+        <Label
+          as="p"
+          variant="accent"
+          class="label-text mt-0 order-2 ml-auto text-[var(--card-accent)] transition-[text-shadow] duration-150 ease-out hover:[text-shadow:0_0_4px_var(--card-accent),0_0_10px_color-mix(in_srgb,var(--card-accent)_50%,transparent),0_0_20px_color-mix(in_srgb,var(--card-accent)_25%,transparent)] light:hover:[text-shadow:none] print:text-[10px] print:text-[#4a4a4a] print:normal-case print:tracking-normal print:mt-0.5 sm:mt-2 sm:order-none sm:ml-0"
+        >
+          <ScreenOnly as="span">{labelText}</ScreenOnly>
+          <PrintOnly as="span">{label}</PrintOnly>
+        </Label>
       )}
 
       {subtitle && (
-        <p class="text-fluid-2xs text-muted-foreground mt-1">
+        <Text muted class="order-1 ml-2 mt-0 sm:order-none sm:ml-0 sm:mt-1 print:text-[9px]">
           {subtitle}
-        </p>
+        </Text>
       )}
 
-      <!-- Tech stack as diagnostic nodes (dark mode) -->
-      {technologies.length > 0 && (
-        <div class="tech-tags mt-fluid-xs">
-          {technologies.filter(t => !t.name.startsWith('TODO')).slice(0, 4).map((tech) => (
+      <!-- Tech stack as diagnostic nodes (screen mode) -->
+      {filteredTechnologies.length > 0 && (
+        <ScreenOnly class="!flex flex-wrap gap-1.5 mt-[var(--spacing-fluid-sm)] mb-[var(--spacing-fluid-sm)] basis-full order-[10] sm:mt-fluid-xs sm:mb-0 sm:mr-2 sm:basis-auto sm:order-none">
+          {filteredTechnologies.map((tech) => (
             <TechTag name={tech.name} url={tech.url} tooltip={tech.professional_tooltip ?? tech.tooltip} />
           ))}
-        </div>
+        </ScreenOnly>
       )}
+    </Fragment>
 
-      <!-- Tech stack as simple list (light mode) -->
-      {technologies.length > 0 && (
-        <div class="tech-list-light">
-          <hr class="tech-divider" />
-          <div class="tech-list-text">
-            {technologies.filter(t => !t.name.startsWith('TODO')).slice(0, 4).map((tech) => (
-              <span class="tech-item">{tech.name}</span>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-
-    <!-- Right Column: Headline, Bullets, Details -->
-    <div class="card-content">
+    <Fragment slot="content">
       <!-- Headline -->
-      <p class="text-fluid-sm text-muted-foreground leading-relaxed font-medium">
+      <Text lead class="print:text-[10px] print:leading-[1.4] print:text-[#333] print:break-before-avoid print:[orphans:3] print:[widows:3]">
         {headline.trim()}
-      </p>
+      </Text>
 
       <!-- Bullet Points -->
-      <ul class="bullet-list mt-fluid-xs space-y-1 text-fluid-xs">
+      <ul class="bullet-list mt-fluid-xs space-y-1 print:pl-4 print:mt-2 print:has-[li:nth-child(-n+4):last-child]:break-inside-avoid print:has-[li:nth-child(5)]:break-inside-auto">
         {bulletPoints.map((item) => {
           const cleanItem = item.replace(/^["']|["']$/g, '');
-          const highlighted = highlightMetrics(cleanItem);
           return (
-            <li class="flex items-baseline gap-2 text-muted-foreground">
-              <span class="item-separator shrink-0" aria-hidden="true">–</span>
-              <span set:html={highlighted} />
+            <li class="flex items-baseline gap-2 text-fluid-xs text-muted-foreground print:block print:list-disc print:my-1 print:text-[10px] print:leading-[1.35] print:text-[#4a4a4a] print:break-inside-avoid print:[orphans:2] print:[widows:2]">
+              <span class="shrink-0 text-[var(--card-accent)] print:hidden" aria-hidden="true">–</span>
+              <span>{cleanItem}</span>
             </li>
           );
         })}
@@ -114,14 +96,13 @@ const highlightMetrics = (text: string): string => {
 
       <!-- Supporting Data -->
       {supportingData.length > 0 && (
-        <ul class="supporting-list mt-fluid-xs space-y-1 text-fluid-xs">
+        <ul class="supporting-list mt-fluid-xs space-y-1 print:pl-4 print:mt-0">
           {supportingData.map((item) => {
             const cleanItem = item.replace(/^["']|["']$/g, '');
-            const highlighted = highlightMetrics(cleanItem);
             return (
-              <li class="flex items-baseline gap-2 text-muted-foreground">
-                <span class="item-separator shrink-0" aria-hidden="true">–</span>
-                <span set:html={highlighted} />
+              <li class="flex items-baseline gap-2 text-fluid-xs text-muted-foreground print:block print:list-disc print:my-1 print:text-[10px] print:leading-[1.35] print:text-[#4a4a4a] print:break-inside-avoid print:[orphans:2] print:[widows:2]">
+                <span class="shrink-0 text-[var(--card-accent)] print:hidden" aria-hidden="true">–</span>
+                <span>{cleanItem}</span>
               </li>
             );
           })}
@@ -130,16 +111,16 @@ const highlightMetrics = (text: string): string => {
 
       <!-- Optional Details Toggle -->
       {details && !useTerminal && (
-        <details class="group/details mt-fluid-sm" data-print="hide">
-          <summary class="details-toggle inline-flex cursor-pointer list-none items-center gap-0.5 font-mono text-fluid-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors">
+        <details class="group/details mt-fluid-sm print:block" data-print="hide">
+          <summary class="inline-flex cursor-pointer list-none items-center gap-0.5 font-mono uppercase text-fluid-2xs text-muted-foreground light:normal-case light:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors [&::-webkit-details-marker]:hidden [&::marker]:hidden [&::marker]:content-['']">
             <span class="bracket">[</span>
-            <span class="toggle-text light:hidden group-open/details:hidden"> VIEW_DETAILS </span>
-            <span class="toggle-text hidden light:hidden group-open/details:inline"> HIDE_DETAILS </span>
-            <span class="toggle-text hidden light:inline light:group-open/details:hidden">View details →</span>
-            <span class="toggle-text hidden light:group-open/details:inline">← Hide details</span>
+            <span class="light:hidden group-open/details:hidden"> VIEW_DETAILS </span>
+            <span class="hidden light:hidden group-open/details:inline"> HIDE_DETAILS </span>
+            <span class="hidden light:inline light:group-open/details:hidden">View details &#8594;</span>
+            <span class="hidden light:group-open/details:inline">&#8592; Hide details</span>
             <span class="bracket">]</span>
           </summary>
-          <div class="details-content mt-fluid-xs pl-3 border-l-2 text-fluid-xs leading-relaxed whitespace-pre-line">
+          <div class="mt-fluid-xs pl-3 border-l-2 border-[var(--card-accent)] text-fluid-xs text-muted-foreground leading-relaxed whitespace-pre-line print:pl-0 print:mt-0.5 print:border-none print:text-[10px] print:text-[#4a4a4a]">
             {details.trim()}
           </div>
         </details>
@@ -149,363 +130,37 @@ const highlightMetrics = (text: string): string => {
       {prompt && useTerminal && (
         <button
           type="button"
-          class="terminal-trigger inline-flex cursor-pointer items-center gap-1 text-fluid-xs font-medium mt-fluid-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors"
+          class="terminal-trigger inline-flex cursor-pointer items-center gap-1 text-fluid-xs font-medium text-muted-foreground-light mt-fluid-xs border-none p-0 hover:text-[var(--card-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors group-[.is-active-card]:text-[var(--card-accent)] xl:group-[.is-active-card]:text-muted-foreground-light"
           data-prompt={prompt.trim()}
           data-print="hide"
           aria-label={`View details for ${title}`}
         >
-          <span class="cta-text">{cta ?? 'View details'}</span>
-          <span class="cta-arrow" aria-hidden="true">→</span>
+          <span>{cta ?? 'View details'}</span>
+          <span class="transition-transform duration-150 ease-out group-hover/trigger:translate-x-0.5" aria-hidden="true">&#8594;</span>
         </button>
       )}
-    </div>
-  </div>
+    </Fragment>
+  </CardGrid>
 </article>
 
 <style>
-  /* Default card accent color - can be overridden by parent */
-  .content-card {
-    --card-accent: var(--color-accent-purple);
+  /* Light mode: heavier weight and normal case for label text */
+  :global([data-theme='light']) .label-text {
+    text-transform: none !important;
+    font-weight: 500;
   }
 
-  /* Two-column grid layout matching Experience style */
-  .card-grid {
-    display: grid;
-    grid-template-columns: minmax(125px, 165px) 1fr;
-    gap: var(--spacing-fluid-md);
+  :global([data-theme='light']) .label-text .screen-only {
+    display: none !important;
   }
 
-  /* Tech tags: flow naturally */
-  .tech-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.375rem;
-    margin-right: 0.5rem;
+  :global([data-theme='light']) .label-text .print-only {
+    display: inline !important;
   }
 
-  /* Right column content */
-  .card-content {
-    min-width: 0;
-  }
-
-  /* Label text - uses card accent color */
-  .label-text {
-    color: var(--card-accent);
-  }
-
-  /* Metric highlighting - uses card accent color */
-  .metric-highlight {
-    color: var(--card-accent);
-  }
-
-  /* Screen/Print visibility utilities */
-  .print-only {
-    display: none;
-  }
-
-  .screen-only {
-    display: inline;
-  }
-
-  /* Item separator - uses card accent color */
-  .item-separator {
-    color: var(--card-accent);
-  }
-
-  /* Remove default marker */
-  summary::-webkit-details-marker {
-    display: none;
-  }
-
-  summary::marker {
-    display: none;
-    content: '';
-  }
-
-  /* Terminal trigger button - CTA style */
-  .terminal-trigger {
-    background: none;
-    border: none;
-    padding: 0;
-    color: var(--color-muted-foreground-light);
-  }
-
-  .terminal-trigger:hover {
-    color: var(--card-accent);
-  }
-
-  .terminal-trigger .cta-text {
-    color: inherit;
-  }
-
-  .terminal-trigger .cta-arrow {
-    color: inherit;
-    transition: transform 0.15s ease;
-  }
-
-  .terminal-trigger:hover .cta-arrow {
-    transform: translateX(2px);
-  }
-
-  /* CRT-style neon glow on hover - dark mode only */
-  .card-title,
-  .label-text {
-    transition: text-shadow 0.15s ease-out;
-  }
-
-  .card-title:hover {
-    text-shadow:
-      0 0 4px var(--card-accent),
-      0 0 12px color-mix(in srgb, var(--card-accent) 60%, transparent),
-      0 0 24px color-mix(in srgb, var(--card-accent) 30%, transparent);
-  }
-
-  .label-text:hover {
-    text-shadow:
-      0 0 4px var(--card-accent),
-      0 0 10px color-mix(in srgb, var(--card-accent) 50%, transparent),
-      0 0 20px color-mix(in srgb, var(--card-accent) 25%, transparent);
-  }
-
-  /* Light mode: no glow effects */
-  :global([data-theme='light']) .card-title:hover,
-  :global([data-theme='light']) .label-text:hover {
-    text-shadow: none;
-  }
-
-  /* Details content panel */
-  .details-content {
-    border-color: var(--card-accent);
-    color: var(--color-muted-foreground);
-  }
-
-  /* Print tech list - hidden on screen */
-  .tech-list-light {
-    display: none;
-  }
-
-  /* Responsive: Stack on smaller screens */
-  @media (max-width: 640px) {
-    .card-grid {
-      grid-template-columns: 1fr;
-      gap: var(--spacing-fluid-xs);
-    }
-
-    /* Mobile: Flex layout for card-meta to enable space-between rows */
-    .card-meta {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 0;
-    }
-
-    .card-meta h3 {
-      flex: 0 0 auto;
-      order: 1;
-    }
-
-    /* Tag element (first p): goes to the right for projects */
-    .card-meta > p:first-of-type {
-      order: 2;
-      margin-left: auto;
-      margin-top: 0;
-    }
-
-    /* When label exists (history cards): label goes right, tag goes to next row */
-    .card-meta .label-text {
-      order: 2;
-      margin-left: auto;
-      margin-top: 0 !important;
-    }
-
-    /* Push tag (date) to next row when label exists */
-    .card-meta:has(.label-text) > p:not(.label-text) {
-      order: 3;
-      flex-basis: 100%;
-      margin-left: 0;
-    }
-
-    /* Tech tags: sm spacing above/below, ensure full width on own row */
-    .tech-tags {
-      margin-top: var(--spacing-fluid-sm) !important;
-      margin-bottom: var(--spacing-fluid-sm);
-      flex-basis: 100%;
-      order: 10;
-    }
-
-  }
-
-  /* Mobile: Light up CTA when card is active */
-  @media (max-width: 1023px) {
-    .content-card.is-active-card .terminal-trigger {
-      color: var(--card-accent);
-    }
-  }
-
-  /* ===== PRINT STYLES - Professional Content Cards ===== */
-  @media print {
-    /* Screen/Print visibility toggles */
-    .print-only {
-      display: inline !important;
-    }
-
-    .screen-only {
-      display: none !important;
-    }
-
-    .content-card {
-      padding-top: 0.35rem;
-      padding-bottom: 0.35rem;
-      border-bottom: none;
-    }
-
-    .content-card:last-child {
-      border-bottom: none;
-    }
-
-    /* Maintain two-column layout in cards */
-    .card-grid {
-      grid-template-columns: 105px 1fr !important;
-      gap: 0.75rem;
-    }
-
-    /* ========================================================================
-       ORPHAN/WIDOW CONTROL - LaTeX-quality page break handling
-       ======================================================================== */
-
-    /* Card meta (header column) - NEVER break inside */
-    .card-meta {
-      margin-top: 0;
-      break-inside: avoid;
-      page-break-inside: avoid;
-    }
-
-    .card-meta h3 {
-      font-size: 12px;
-      font-weight: 600;
-      break-after: avoid;
-      page-break-after: avoid;
-    }
-
-    /* Card meta text (tag, subtitle) */
-    .card-meta p {
-      font-size: 9px;
-    }
-
-    /* Headline - keep with header, avoid orphaning */
-    .card-content > p:first-child {
-      font-size: 10px;
-      line-height: 1.4;
-      color: #333;
-      break-before: avoid;
-      page-break-before: avoid;
-      orphans: 3;
-      widows: 3;
-    }
-
-    /* Bullet list - conditional breaking based on item count
-       Short lists (≤4 items): keep together to avoid awkward splits
-       Long lists (>4 items): allow breaking to prevent large white gaps */
-    .bullet-list {
-      padding-left: 1rem;
-      margin-top: 0.5rem;
-    }
-
-    /* Default: keep bullet lists together */
-    .bullet-list:has(li:nth-child(-n+4):last-child) {
-      break-inside: avoid;
-      page-break-inside: avoid;
-    }
-
-    /* Long lists (>4 items): allow page breaks between items */
-    .bullet-list:has(li:nth-child(5)) {
-      break-inside: auto;
-      page-break-inside: auto;
-    }
-
-    /* Individual list items - avoid breaking mid-item */
-    .bullet-list li {
-      display: list-item;
-      list-style-type: disc;
-      margin: 0.25rem 0;
-      font-size: 10px;
-      line-height: 1.35;
-      color: #4a4a4a;
-      break-inside: avoid;
-      page-break-inside: avoid;
-      orphans: 2;
-      widows: 2;
-    }
-
-    /* Supporting data list - same styling as bullet list, no extra spacing */
-    .supporting-list {
-      padding-left: 1rem;
-      margin-top: 0;
-    }
-
-    .supporting-list li {
-      display: list-item;
-      list-style-type: disc;
-      margin: 0.25rem 0;
-      font-size: 10px;
-      line-height: 1.35;
-      color: #4a4a4a;
-      break-inside: avoid;
-      page-break-inside: avoid;
-      orphans: 2;
-      widows: 2;
-    }
-
-    /* Label text - professional, not uppercase */
-    .label-text {
-      color: #4a4a4a;
-      text-transform: none;
-      font-size: 10px;
-      letter-spacing: 0;
-      margin-top: 0.15rem;
-    }
-
-    /* Metric highlighting - use weight instead of color */
-    .metric-highlight {
-      color: #1a1a1a;
-      font-weight: 700;
-    }
-
-    /* Details section - expand for print */
-    details {
-      display: block;
-    }
-
-    summary {
-      display: none;
-    }
-
-    details > div {
-      display: block;
-      padding-left: 0;
-      margin-top: 0.15rem;
-      border: none;
-    }
-
-    .details-content {
-      color: #4a4a4a;
-      border-color: transparent;
-      font-size: 10px;
-      padding-left: 0;
-    }
-
-    /* Hide the dash separator */
-    .item-separator {
-      display: none;
-    }
-
-    /* Tech tags - hide both styled tags and simple list in print
-       (consolidated Tech Stack section in sidebar handles this) */
-    .tech-tags,
-    .tech-list-light {
-      display: none !important;
-    }
+  /* Light mode: hide brackets in details toggle */
+  :global([data-theme='light']) details .bracket {
+    display: none !important;
   }
 </style>
 

@@ -1,4 +1,6 @@
 ---
+import ScreenOnly from '../layout/ScreenOnly.astro';
+
 interface SkillCategory {
   name: string;
   displayName: string;
@@ -18,36 +20,36 @@ const toSnakeCase = (str: string) =>
 
 <section aria-label="Skills" class="mt-fluid-lg mb-fluid-md">
   <h2 class="mb-fluid-sm flex items-baseline gap-2 text-foreground border-b border-border pb-fluid-xs">
-    <span class="section-prefix font-mono text-fluid-xs tracking-wider" aria-hidden="true">
+    <span class="section-prefix font-mono text-fluid-xs tracking-wider text-accent-green print:text-[#333]" aria-hidden="true">
       // {sectionNumber}
     </span>
     <span class="font-mono text-fluid-sm tracking-wide">SKILLS</span>
   </h2>
 
-  <div class="terminal overflow-hidden border border-border">
-    <div class="terminal-header flex items-center gap-1 border-b border-border px-3 py-1.5 no-print" aria-hidden="true">
-      <span class="h-2 w-2 rounded-full bg-[#FF5F56]"></span>
-      <span class="h-2 w-2 rounded-full bg-[#FFBD2E]"></span>
-      <span class="h-2 w-2 rounded-full bg-[#27C93F]"></span>
-      <span class="ml-2 font-mono text-[10px] text-foreground opacity-70">capabilities.sh</span>
-    </div>
+  <div class="terminal overflow-hidden border border-border print:border-[#ccc] print:bg-transparent print:p-[0.3rem]">
+    <ScreenOnly class="terminal-header flex items-center gap-1 border-b border-border px-3 py-1.5" aria-hidden="true">
+      <span class="size-2 rounded-full bg-[#FF5F56]"></span>
+      <span class="size-2 rounded-full bg-[#FFBD2E]"></span>
+      <span class="size-2 rounded-full bg-[#27C93F]"></span>
+      <span class="ml-2 font-mono text-fluid-xs text-foreground opacity-70">capabilities.sh</span>
+    </ScreenOnly>
 
     <div class="p-3 font-mono text-fluid-xs" role="region" aria-label="Skill categories">
       {categories.map((category, index) => (
         <div class:list={['terminal-command-group', index > 0 && 'mt-3']}>
-          <p class="text-terminal-text flex items-center gap-1.5">
-            <span class="terminal-dollar">$</span>
+          <p class="text-terminal-text flex items-center gap-1.5 print:hidden">
+            <span class="terminal-dollar text-accent-green print:text-[#333]">$</span>
             <span class="sr-only">Category:</span>
-            <code class="terminal-command">cat</code>
+            <code class="terminal-command text-accent-purple print:text-[#333]">cat</code>
             <code class="text-foreground">{toSnakeCase(category.name)}</code>
           </p>
 
           <ul
-            class="mt-1 flex flex-wrap gap-x-1 gap-y-0.5 text-terminal-text"
+            class="mt-1 flex flex-wrap gap-x-1 gap-y-0.5 text-terminal-text print:inline print:mt-0"
             aria-label={category.displayName}
           >
             {category.skills.map((skill, i) => (
-              <li class="inline">
+              <li class="inline print:inline">
                 <span class="text-foreground">{skill}</span>
                 {i < category.skills.length - 1 && <span class="text-muted-foreground">,</span>}
               </li>
@@ -56,72 +58,20 @@ const toSnakeCase = (str: string) =>
         </div>
       ))}
 
-      <div class="mt-3 flex items-center gap-1.5">
-        <span class="terminal-dollar">$</span>
-        <span class="cursor-blink text-foreground" aria-hidden="true">_</span>
-      </div>
+      <ScreenOnly class="mt-3 flex items-center gap-1.5">
+        <span class="terminal-dollar text-accent-green">$</span>
+        <span
+          class="text-foreground animate-[blink_1s_step-end_infinite] motion-reduce:animate-none"
+          aria-hidden="true"
+        >_</span>
+      </ScreenOnly>
     </div>
   </div>
 </section>
 
 <style>
-  .section-prefix {
-    color: var(--color-accent-green);
-  }
-
-  .terminal-dollar {
-    color: var(--color-accent-green);
-  }
-
-  .terminal-command {
-    color: var(--color-accent-purple);
-  }
-
-  .cursor-blink {
-    animation: blink 1s step-end infinite;
-  }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .cursor-blink {
-      animation: none;
-    }
-  }
-
-  @media print {
-    .section-prefix,
-    .terminal-dollar,
-    .terminal-command {
-      color: #333 !important;
-    }
-    .terminal {
-      background: none !important;
-      border: 1px solid #ccc !important;
-      padding: 0.3rem !important;
-    }
-
-    .terminal-header {
-      display: none !important;
-    }
-
-    .terminal-command-group p {
-      display: none;
-    }
-
-    .terminal-command-group ul {
-      display: inline;
-    }
-
-    .terminal-command-group ul li {
-      display: inline;
-    }
-
-    .cursor-blink {
-      display: none !important;
-    }
+  /* Light mode: hairline border */
+  :global([data-theme='light']) .terminal {
+    border-width: 0.5px;
   }
 </style>

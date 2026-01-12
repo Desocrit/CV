@@ -1,5 +1,9 @@
 ---
 import Odometer from '../ui/Odometer.astro';
+import Metric from '../typography/Metric.astro';
+import Label from '../typography/Label.astro';
+import Text from '../typography/Text.astro';
+import Stack from '../layout/Stack.astro';
 
 interface Achievement {
   metric: string;
@@ -21,75 +25,38 @@ const toSnakeCase = (str: string) =>
 
 <section
   aria-label="Key Achievements"
-  class:list={['achievement-grid', className]}
+  class:list={['print:m-0', className]}
+  data-achievement-grid
 >
-  <!-- Pass 3: Three borderless columns separated by whitespace -->
-  <div class="flex flex-col md:flex-row md:justify-between gap-8">
+  <!-- Three borderless columns separated by whitespace -->
+  <div class="flex flex-col lg:flex-row lg:justify-between gap-8 print:flex-row print:gap-4">
     {achievements.map((achievement) => (
-      <div class="flex flex-col gap-1 items-center text-center">
+      <Stack gap="xs" class="items-center text-center print:flex-1">
         <!-- Metric: Large Geist Mono in White with odometer animation -->
-        <data
-          value={achievement.headline}
-          class="font-mono text-fluid-xl font-semibold tracking-tight text-foreground whitespace-nowrap leading-none"
+        <Metric
+          as="data"
+          size="lg"
+          class="whitespace-nowrap transition-[text-shadow] duration-500 ease-out print:shadow-none"
+          data-achievement-metric
         >
           <Odometer value={achievement.headline} />
-        </data>
+        </Metric>
         <!-- Label: Small-caps Geist Mono in Purple -->
-        <span class="achievement-label font-mono text-[10px] uppercase tracking-[0.15em] mt-0.5">
+        <Label variant="micro" color="purple" class="mt-0.5">
           {toSnakeCase(achievement.metric)}
-        </span>
+        </Label>
         <!-- Description: One sentence in Geist Sans Slate -->
-        <p class="text-fluid-xs text-muted-foreground leading-snug mt-1">
+        <Text small class="leading-snug mt-1">
           {achievement.description}
-        </p>
-      </div>
+        </Text>
+      </Stack>
     ))}
   </div>
 </section>
 
-<style>
-  /* Label - purple accent */
-  .achievement-label {
-    color: var(--color-accent-purple);
-  }
-
-  /* Metric hero glow state when in view */
-  .achievement-metric-glow {
-    text-shadow:
-      0 0 8px color-mix(in srgb, var(--color-accent-purple) 40%, transparent),
-      0 0 16px color-mix(in srgb, var(--color-accent-purple) 20%, transparent);
-    transition: text-shadow 0.6s ease-out;
-  }
-
-  /* Print: Compact inline display */
-  @media print {
-    .achievement-grid {
-      margin: 0;
-    }
-
-    .achievement-grid > div {
-      display: flex;
-      flex-direction: row;
-      gap: 1rem;
-    }
-
-    .achievement-grid > div > div {
-      flex: 1;
-    }
-
-    .achievement-label {
-      color: #333 !important;
-    }
-
-    .achievement-metric-glow {
-      text-shadow: none;
-    }
-  }
-</style>
-
 <script>
   function initAchievementGlow() {
-    const metrics = document.querySelectorAll('.achievement-grid data');
+    const metrics = document.querySelectorAll('[data-achievement-metric]');
     if (metrics.length === 0) return;
 
     // Respect reduced motion preference
@@ -99,7 +66,12 @@ const toSnakeCase = (str: string) =>
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('achievement-metric-glow');
+            // Apply glow effect via inline style (Tailwind can't do color-mix text-shadow)
+            const el = entry.target as HTMLElement;
+            el.style.textShadow = `
+              0 0 8px color-mix(in srgb, var(--color-accent-purple) 40%, transparent),
+              0 0 16px color-mix(in srgb, var(--color-accent-purple) 20%, transparent)
+            `.trim();
           }
         });
       },

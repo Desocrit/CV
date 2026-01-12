@@ -1,335 +1,112 @@
 ---
 import type { ImpactNode } from '../../lib/cv-data';
-import Section from '../ui/Section.astro';
+import ImpactCard from './ImpactCard.astro';
 
 interface Props {
   nodes: ImpactNode[];
 }
 
 const { nodes } = Astro.props;
+
+// Screen: filter out print-only nodes
+const screenNodes = nodes.filter((node) => !node.print_only);
+
+// Print: group nodes by header for Swiss-style layout
+const categoryNumbers: Record<string, string> = {
+  'Developer Velocity': '01',
+  'System Integrity': '02',
+  'Talent Density': '03',
+  'Global Scale': '04',
+};
+
+const groupedNodes = nodes.reduce<Record<string, ImpactNode[]>>((acc, node) => {
+  const existing = acc[node.header];
+  if (existing) {
+    existing.push(node);
+  } else {
+    acc[node.header] = [node];
+  }
+  return acc;
+}, {});
+
+const orderedHeaders = [...new Set(nodes.map((n) => n.header))];
 ---
 
-<div class="impact-section">
-  <Section title="Impact" id="impact">
-    <div class="impact-grid">
-      {nodes.map((node) => (
-        <div
-          class:list={['impact-card-wrapper', `impact-card-wrapper--${node.color}`, { 'print-only-card': node.print_only }]}
-          data-print={node.print_only ? 'only' : undefined}
-        >
-          <button
-            class="impact-card"
-            type="button"
-            aria-label={`${node.title}: ${node.description}`}
-            data-prompt={node.prompt}
-          >
-            <div class="card-content" aria-hidden="true">
-              <span class="card-header"><span class="header-bracket">[ </span>{node.header}<span class="header-bracket"> ]</span></span>
-              <h3 class="card-title">{node.title}</h3>
-              <p class="card-description">{node.description}</p>
-            </div>
-            <span class="card-cta" aria-hidden="true">
-              <span class="cta-bracket">[</span><span class="cta-arrow">&gt;</span><span class="cta-bracket">]</span>
-            </span>
-          </button>
-        </div>
-      ))}
-    </div>
-  </Section>
+{/* Screen: Interactive card grid */}
+<div
+  class="impact-grid
+    grid grid-cols-1 gap-4 items-start
+    sm:grid-cols-2
+    print:hidden"
+>
+  {screenNodes.map((node) => (
+    <ImpactCard node={node} />
+  ))}
 </div>
 
-<style>
-  .impact-section :global(.section-with-label:not(.is-collapsed)) {
-    margin-bottom: var(--spacing-fluid-md);
-  }
+{/* Print: Swiss-style grouped metrics */}
+<div class="hidden print:flex print:flex-col print:gap-[0.35rem]">
+  {orderedHeaders.map((header) => {
+    const items = groupedNodes[header] ?? [];
+    const number = categoryNumbers[header] ?? '00';
+    const shortHeader = items[0]?.short_header ?? header.toUpperCase();
 
-  .impact-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    align-items: start;
-  }
+    return (
+      <article class="w-full break-inside-avoid">
+        {/* Swiss hairline rule */}
+        <div
+          class="border-0 border-t-[0.5px] border-solid border-border m-0 mb-[0.4rem] mr-8"
+          role="presentation"
+        />
 
-  /* Wrapper for border animation */
-  .impact-card-wrapper {
-    --card-accent: var(--color-accent-green);
-    position: relative;
-    z-index: 1;
-    background: var(--color-background);
-  }
+        {/* Category header */}
+        <header class="flex items-baseline gap-[0.15rem] mt-[0.3rem] mb-[0.35rem]">
+          <span class="font-mono text-[8px] font-medium tracking-wider text-muted-foreground-light">
+            {number}
+          </span>
+          <span class="font-mono text-[8px] font-medium text-muted-foreground">/</span>
+          <span class="font-mono text-[8px] font-medium uppercase tracking-widest text-muted-foreground-light">
+            {shortHeader}
+          </span>
+        </header>
 
-  .impact-card-wrapper::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    background: conic-gradient(
-      from var(--border-angle, 0deg),
-      transparent 0%,
-      transparent 25%,
-      var(--card-accent) 50%,
-      transparent 75%,
-      transparent 100%
+        {/* Two-column metric rows */}
+        <div class="flex flex-col">
+          {items.map((node) => (
+            <div class="grid grid-cols-[25%_1fr] gap-2 items-baseline mt-0">
+              <div class="whitespace-nowrap">
+                {node.metric_value && (
+                  <span class="font-sans text-[13px] font-bold text-foreground mr-[0.2em]">
+                    {node.metric_value}
+                  </span>
+                )}{' '}
+                <span class="font-mono text-[9px] font-semibold normal-case tracking-[0.01em] text-muted-foreground-light">
+                  {node.metric_label}
+                </span>
+              </div>
+              <p class="font-sans text-[9px] font-normal text-muted-foreground leading-[1.4] m-0">
+                {node.long_description || node.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </article>
     );
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 0;
-  }
+  })}
+</div>
 
-  .impact-card-wrapper:hover::before {
-    opacity: 1;
-    animation: spin-border 3s linear infinite;
-  }
-
+{/* Keyframes and CSS Houdini property for border animation */}
+<style is:global>
   @keyframes spin-border {
     to {
       --border-angle: 360deg;
     }
   }
 
-  /* Register custom property for animation */
   @property --border-angle {
     syntax: '<angle>';
     initial-value: 0deg;
     inherits: false;
-  }
-
-  /* Color variants */
-  .impact-card-wrapper--green  { --card-accent: var(--color-accent-green); }
-  .impact-card-wrapper--purple { --card-accent: var(--color-accent-purple); }
-  .impact-card-wrapper--blue   { --card-accent: var(--color-accent-blue); }
-  .impact-card-wrapper--orange { --card-accent: var(--color-accent-orange); }
-  .impact-card-wrapper--red    { --card-accent: var(--color-accent-red); }
-  .impact-card-wrapper--cyan   { --card-accent: var(--color-accent-cyan); }
-
-  /* Print-only cards: hidden on screen, shown in print */
-  .print-only-card {
-    display: none;
-  }
-
-  .impact-card {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    border: 1px solid var(--color-border);
-    background: var(--color-background);
-    cursor: pointer;
-    text-align: left;
-    width: 100%;
-  }
-
-  .impact-card:focus-visible {
-    outline: 1px solid var(--card-accent);
-    outline-offset: 2px;
-  }
-
-  /* Light mode: colored left border */
-  :global([data-theme='light']) .impact-card {
-    border-left: 3px solid var(--card-accent);
-  }
-
-  .card-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .card-header {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 9px;
-    font-weight: 400;
-    color: var(--card-accent);
-    opacity: 0.5;
-    letter-spacing: 0.15em;
-    margin-bottom: 0.25rem;
-    transition: opacity 0.15s ease;
-    text-transform: uppercase; /* Dark mode: SCREAMING_SNAKE style */
-  }
-
-  /* Light mode: Title Case, higher opacity, increased weight */
-  :global([data-theme='light']) .card-header {
-    text-transform: capitalize;
-    opacity: 0.8;
-    font-weight: 600;
-  }
-
-  .impact-card-wrapper:hover .card-header {
-    opacity: 1;
-  }
-
-  /* Light mode: keep header at 80% even on hover */
-  :global([data-theme='light']) .impact-card-wrapper:hover .card-header {
-    opacity: 0.8;
-  }
-
-  .card-title {
-    font-family: var(--font-sans);
-    font-size: var(--text-fluid-sm);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    color: var(--color-foreground);
-    margin: 0;
-    line-height: 1.2;
-  }
-
-  .card-description {
-    font-size: 11px;
-    font-style: italic;
-    color: var(--color-muted-foreground);
-    margin: 0.25rem 0 0 0;
-    line-height: 1.4;
-  }
-
-  :global([data-theme='light']) .card-description {
-    font-style: normal;
-  }
-
-  .card-cta {
-    flex-shrink: 0;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--card-accent);
-    opacity: 0.5;
-    transition: opacity 0.15s ease;
-    margin-left: 1rem;
-  }
-
-  .impact-card-wrapper:hover .card-cta {
-    opacity: 1;
-  }
-
-  /* Light up header and CTA when card is active (scroll-triggered) */
-  .impact-card-wrapper.is-active-card .card-header,
-  .impact-card-wrapper.is-active-card .card-cta {
-    opacity: 1;
-  }
-
-  /* Section title color on hover - lg desktop only (mobile/md use scroll-based color) */
-  @media (min-width: 1200px) {
-    .impact-section:has(.impact-card-wrapper--green:hover) :global(.section-title) {
-      color: var(--color-accent-green);
-    }
-    .impact-section:has(.impact-card-wrapper--blue:hover) :global(.section-title) {
-      color: var(--color-accent-blue);
-    }
-    .impact-section:has(.impact-card-wrapper--purple:hover) :global(.section-title) {
-      color: var(--color-accent-purple);
-    }
-    .impact-section:has(.impact-card-wrapper--orange:hover) :global(.section-title) {
-      color: var(--color-accent-orange);
-    }
-    .impact-section:has(.impact-card-wrapper--red:hover) :global(.section-title) {
-      color: var(--color-accent-red);
-    }
-    .impact-section:has(.impact-card-wrapper--cyan:hover) :global(.section-title) {
-      color: var(--color-accent-cyan);
-    }
-  }
-
-  /* Responsive: stack on mobile */
-  @media (max-width: 640px) {
-    .impact-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* ==========================================================================
-     PRINT STYLES: 3x3 grid layout for printed CV
-     ========================================================================== */
-  @media print {
-    .impact-section {
-      break-inside: avoid;
-      page-break-inside: avoid;
-    }
-
-    .impact-section :global(.section-with-label) {
-      margin-bottom: 0.5rem;
-    }
-
-    .impact-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.5rem 0.75rem;
-    }
-
-    /* Show print-only cards in print */
-    .print-only-card {
-      display: block;
-    }
-
-    /* Reset wrapper styles for print */
-    .impact-card-wrapper {
-      position: static;
-      background: none;
-    }
-
-    /* Hide animated border pseudo-element */
-    .impact-card-wrapper::before {
-      display: none;
-    }
-
-    /* Style cards as simple text blocks */
-    .impact-card {
-      display: block;
-      padding: 0;
-      border: none;
-      border-left: 1.5px solid var(--color-muted-foreground-light);
-      padding-left: 0.5rem;
-      background: none;
-      cursor: default;
-      text-align: left;
-      width: 100%;
-    }
-
-    .card-content {
-      display: block;
-    }
-
-    /* Category header styling - mono font like sidebar titles */
-    .card-header {
-      display: block;
-      font-family: var(--font-mono);
-      font-size: 8px;
-      font-weight: 500;
-      color: var(--color-muted-foreground-light);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 0.1rem;
-      opacity: 1;
-    }
-
-    /* Hide brackets in print */
-    .header-bracket {
-      display: none;
-    }
-
-    /* Title styling */
-    .card-title {
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--color-foreground);
-      line-height: 1.25;
-      margin: 0;
-    }
-
-    /* Description styling */
-    .card-description {
-      font-size: 9px;
-      font-style: normal;
-      color: var(--color-muted-foreground);
-      line-height: 1.35;
-      margin: 0.1rem 0 0 0;
-    }
-
-    /* Hide interactive CTA element */
-    .card-cta {
-      display: none;
-    }
   }
 </style>
 

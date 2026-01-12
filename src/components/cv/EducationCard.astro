@@ -1,4 +1,8 @@
 ---
+import Heading from '../typography/Heading.astro';
+import Text from '../typography/Text.astro';
+import Label from '../typography/Label.astro';
+
 interface Props {
   institution: string;
   degree: string;
@@ -9,26 +13,13 @@ interface Props {
 const { institution, degree, year, notable } = Astro.props;
 ---
 
-<article class="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-fluid-sm">
-  <h3 class="font-medium text-foreground">{degree}</h3>
-  <span class="text-muted-foreground">·</span>
-  <p class="text-muted-foreground">{institution}</p>
-  <span class="text-muted-foreground">·</span>
-  <time class="font-mono text-fluid-xs text-muted-foreground">{year}</time>
+<article class="flex flex-wrap items-baseline gap-x-2 gap-y-1 print:text-[10px]">
+  <Heading as="h3" tiny>{degree}</Heading>
+  <Text as="span" small class="opacity-60">·</Text>
+  <Text as="span" small>{institution}</Text>
+  <Text as="span" small class="opacity-60">·</Text>
+  <Label as="time">{year}</Label>
   {notable && (
-    <span class="notable-text w-full font-mono text-fluid-xs">{notable}</span>
+    <Label color="purple" class="w-full">{notable}</Label>
   )}
 </article>
-
-<style>
-  /* Notable text - purple accent */
-  .notable-text {
-    color: var(--color-accent-purple);
-  }
-
-  @media print {
-    .notable-text {
-      color: #333 !important;
-    }
-  }
-</style>
