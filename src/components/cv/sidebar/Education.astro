@@ -9,6 +9,7 @@ import Label from '../../typography/Label.astro';
 import Text from '../../typography/Text.astro';
 import ScreenOnly from '../../layout/ScreenOnly.astro';
 import PrintOnly from '../../layout/PrintOnly.astro';
+import Stack from '../../layout/Stack.astro';
 
 interface Props {
   degree: string;
@@ -22,28 +23,32 @@ interface Props {
 const { degree, degree_title, score_short, specialism, institution, year } = Astro.props;
 ---
 
-<section class:list={[
-  'hidden',
-  'print:!block print:mb-10',
-]} aria-label="Education">
+<Stack
+  as="section"
+  gap="sm"
+  class:list={[
+    'hidden',
+    'print:!flex print:mb-10',
+  ]}
+  aria-label="Education"
+>
   <Label
     as="h2"
     variant="section"
-    class="mb-2 print:!block print:text-[10px] print:!text-[#666666] print:border-[#4a4a4a]"
   >
     Education
   </Label>
-  <div class="mt-[var(--spacing-fluid-xs)]">
-    <Text small class="print:text-[10px]">
-      {degree_title} {degree}
+  <Stack gap="none" class="print:gap-0.5">
+    <Text small>
+      {degree_title} · {degree}
     </Text>
-    <Label as="p" class="mt-1 print:font-sans print:!normal-case print:text-[10px] print:tracking-normal">
+    <Text small>
       <ScreenOnly as="span">{institution} <span class="opacity-60 font-medium mx-[0.25em]" aria-hidden="true">//</span> {year}</ScreenOnly>
-      <PrintOnly as="span" class="print:!inline">{institution} · {year}</PrintOnly>
-    </Label>
-    <Label as="p" class="mt-0.5 print:font-sans print:!normal-case print:text-[10px] print:tracking-normal">
+      <PrintOnly as="span">{institution} · {year}</PrintOnly>
+    </Text>
+    <Text small>
       <ScreenOnly as="span">{specialism} <span class="opacity-60 font-medium mx-[0.25em]" aria-hidden="true">//</span> {score_short}</ScreenOnly>
-      <PrintOnly as="span" class="print:!inline">{specialism} · {score_short}</PrintOnly>
-    </Label>
-  </div>
-</section>
+      <PrintOnly as="span">{specialism} · {score_short}</PrintOnly>
+    </Text>
+  </Stack>
+</Stack>

@@ -84,8 +84,8 @@ describe('CSS Spacing Consistency Tests', () => {
     const sectionPath = join(srcPath, 'components', 'ui', 'Section.astro');
     const content = readFileSync(sectionPath, 'utf-8');
 
-    // Section uses fluid spacing variable for margin-top (in scoped CSS)
-    expect(content).toContain('margin-top: var(--spacing-fluid-sm)');
+    // Section uses fluid spacing variable via Tailwind arbitrary value class
+    expect(content).toContain('my-[var(--spacing-fluid-sm)]');
   });
 
   it('ListItem component has symmetric padding', () => {
@@ -98,12 +98,12 @@ describe('CSS Spacing Consistency Tests', () => {
     expect(content).toContain('py-[var(--spacing-fluid-sm)]');
   });
 
-  it('Section grid children align to top in scoped CSS', () => {
+  it('Section grid children align to top via Tailwind', () => {
     const sectionPath = join(srcPath, 'components', 'ui', 'Section.astro');
     const content = readFileSync(sectionPath, 'utf-8');
 
-    // Section uses scoped CSS for grid alignment at xl breakpoint
-    // align-self: start aligns the header to top of grid cell
-    expect(content).toContain('align-self: start');
+    // Section uses Tailwind utility for grid alignment at xl breakpoint
+    // xl:self-start aligns the header to top of grid cell
+    expect(content).toContain('xl:self-start');
   });
 });

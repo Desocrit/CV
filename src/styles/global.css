@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import './section-styles.css';
 @plugin '@tailwindcss/typography';
 
 /* Custom variant for light mode (dark is default, light is opt-in via data-theme) */
@@ -122,7 +121,7 @@
   --color-secondary-foreground: #f2f2f2;
 
   --color-muted: #111111;
-  --color-muted-foreground: #888888;
+  --color-muted-foreground: #767676;
   --color-muted-foreground-light: #a0a0a0;
 
   --color-accent: #111111;
@@ -140,22 +139,29 @@
   --color-achievement-foreground: #050505;
 
   --color-terminal-bg: #050505;
-  --color-terminal-text: #888888;
-  --color-terminal-prompt: #888888;
+  --color-terminal-text: #767676;
+  --color-terminal-prompt: #767676;
   --color-terminal-accent: #f2f2f2;
 
   --color-status-live: #f2f2f2;
-  --color-status-completed: #888888;
-  --color-status-active: #888888;
+  --color-status-completed: #767676;
+  --color-status-active: #767676;
 
   --color-accent-purple: #9d7cd8;
   --color-accent-green: #37BF51;
 
   /* Tokyo Night terminal palette */
   --color-accent-blue: #1ab8d6;
-  --color-accent-orange: #ff9e64;
+  --color-accent-orange: #f59456;
   --color-accent-red: #f7768e;
   --color-accent-cyan: #73daca;
+
+  /* Geometry tokens */
+  --hairline-border: 1px;
+  --shadow-offset: 2px;
+
+  /* Glow effects base color (for dark mode text glows) */
+  --glow-text-base: rgba(242, 242, 242, 0.6);
 }
 
 [data-theme='light'] {
@@ -204,8 +210,34 @@
   --color-accent-cyan: #3D6B6B; /* Verdigris */
 
   /* Light mode geometry */
-  --border-width: 0.5px; /* Hairline borders */
-  --shadow-offset: #D1D1D6; /* Hard offset shadow color */
+  --hairline-border: 0.5px;
+  --shadow-offset: 2px;
+  --shadow-offset-color: #D1D1D6; /* Hard offset shadow color */
+
+  /* Glow effects base color (for light mode text glows) */
+  --glow-text-base: rgba(29, 29, 31, 0.5);
+}
+
+/* ==========================================================================
+   PRINT: Custom Properties for Print Styles
+   Optimized for professional black & white printing
+   ========================================================================== */
+@media print {
+  :root {
+    /* Print-specific color definitions */
+    --color-print-foreground: #1a1a1a;
+    --color-print-muted: #666666;
+    --color-print-body: #4a4a4a;
+    --color-print-border: #d0d0d0;
+    --color-print-background: #ffffff;
+
+    /* Override semantic tokens for print */
+    --color-background: var(--color-print-background);
+    --color-foreground: var(--color-print-foreground);
+    --color-muted-foreground: var(--color-print-muted);
+    --color-muted-foreground-light: var(--color-print-body);
+    --color-border: var(--color-print-border);
+  }
 }
 
 /* ==========================================================================
@@ -257,10 +289,14 @@
 /* ==========================================================================
    LIGHT MODE: Global Text Transform Reset
    Removes uppercase transforms site-wide for Swiss typography
+   Note: !important needed to override Tailwind's uppercase utility class
+   Note: Excluded from print - print uses uppercase for section titles
    ========================================================================== */
-[data-theme='light'] .uppercase,
-[data-theme='light'] [class*='uppercase'] {
-  text-transform: none !important;
+@media not print {
+  [data-theme='light'] .uppercase,
+  [data-theme='light'] [class*='uppercase'] {
+    text-transform: none !important;
+  }
 }
 
 @keyframes blink {
@@ -346,19 +382,6 @@
     box-shadow: inset 0 -2px 0 var(--color-accent-green);
   }
 
-  /* Screen reader only utility */
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
   ::selection {
     background-color: var(--color-foreground);
     color: var(--color-background);
@@ -384,60 +407,8 @@
   }
 }
 
-@layer components {
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.625rem;
-    font-family: var(--font-mono);
-    font-size: var(--text-fluid-xs);
-    border-radius: 0;
-    border: 1px solid var(--color-border);
-    background-color: transparent;
-    color: var(--color-muted-foreground);
-    letter-spacing: 0.02em;
-  }
 
-  .terminal {
-    background-color: var(--color-terminal-bg);
-    color: var(--color-terminal-text);
-    font-family: var(--font-mono);
-    border: 1px solid var(--color-border);
-  }
-
-  .link-subtle {
-    color: var(--color-muted-foreground);
-    text-decoration: none;
-    position: relative;
-    transition: color 0.2s ease;
-  }
-
-  .link-subtle:hover {
-    color: var(--color-foreground);
-  }
-
-  .link-subtle::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background-color: var(--color-foreground);
-    transition: width 0.2s ease;
-  }
-
-  .link-subtle:hover::after {
-    width: 100%;
-  }
-
-  .section-divider {
-    height: 1px;
-    background: var(--color-border);
-    border: none;
-  }
-}
-
+/* Print/screen visibility utilities - full print styles in print.css */
 @media not print {
   .print-only {
     display: none;
@@ -447,356 +418,5 @@
 @media print {
   .screen-only {
     display: none;
-  }
-}
-
-@media print {
-  @page {
-    size: A4;
-    margin: 1.2cm 1.5cm;
-  }
-
-  /* ==========================================================================
-     PRINT: Force light mode display patterns regardless of current theme
-     Elements with light:hidden should be hidden, light:inline should show
-     ========================================================================== */
-
-  /* Hide dark-mode-only elements (those using light:hidden to hide in light mode) */
-  .light\:hidden {
-    display: none !important;
-  }
-
-  /* Show light-mode elements (those using hidden light:inline) */
-  .light\:inline {
-    display: inline !important;
-  }
-
-  .light\:block {
-    display: block !important;
-  }
-
-
-  /* ==========================================================================
-     PRINT: Force light mode typography patterns (hide terminal-style titles)
-     These rules ensure print ALWAYS uses light mode patterns regardless of
-     whether [data-theme='light'] is set on the document
-     ========================================================================== */
-
-  /* Section titles: hide terminal-style, show clean print version */
-  .section-title {
-    display: none !important;
-  }
-
-  .section-title-clean {
-    display: inline-block !important;
-    color: #1a1a1a !important;
-  }
-
-  /* Hide terminal prefixes and brackets */
-  .section-prefix {
-    display: none !important;
-  }
-
-  /* Labels: show print-friendly versions */
-  .label-text .screen-only {
-    display: none !important;
-  }
-
-  .label-text .print-only {
-    display: inline !important;
-  }
-
-  /* Remove uppercase transforms for print legibility */
-  .uppercase,
-  [class*='uppercase'],
-  .tech-tag,
-  .label-text,
-  .card-header {
-    text-transform: none !important;
-  }
-
-  /* Hide action buttons and brackets in print */
-  .action-button .bracket,
-  .details-toggle .bracket,
-  .terminal-trigger .bracket,
-  .card-cta .cta-bracket,
-  .impact-card .header-bracket {
-    display: none !important;
-  }
-
-  :root {
-    /* Font overrides for print - use IBM Plex family */
-    --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
-    --font-mono: 'IBM Plex Mono', 'Consolas', monospace;
-
-    /* Color overrides for print */
-    --color-background: #ffffff;
-    --color-foreground: #1a1a1a;
-    --color-card: #ffffff;
-    --color-card-foreground: #1a1a1a;
-    --color-border: #d0d0d0;
-    --color-muted-foreground: #4a4a4a;
-    --color-muted-foreground-light: #666666;
-    --color-achievement: #1a1a1a;
-    --color-terminal-bg: transparent;
-    --color-terminal-text: #1a1a1a;
-
-    /* High-contrast grayscale mapping for B&W laser printers */
-    --color-accent-purple: #333333;
-    --color-accent-green: #222222;
-    --color-accent-blue: #444444;
-    --color-accent-orange: #3a3a3a;
-    --color-accent-red: #2a2a2a;
-    --color-accent-cyan: #4a4a4a;
-  }
-
-  /* ==========================================================================
-     HYBRID LAYOUT: Fixed sidebar + fluid main column
-     ========================================================================== */
-  .cv-layout {
-    display: grid;
-    grid-template-columns: 200px minmax(0, 1fr);
-    gap: 1.5rem;
-    width: 100%;
-  }
-
-  .sidebar-column {
-    width: 200px;
-    flex-shrink: 0;
-  }
-
-  .main-column {
-    min-width: 0;
-    flex: 1;
-  }
-
-  html {
-    font-size: 10px;
-    line-height: 1.45;
-  }
-
-  body {
-    color: #1a1a1a;
-    background: #fff;
-    padding: 0;
-    margin: 0;
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
-    overflow: visible;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .font-mono,
-  [class*="font-mono"] {
-    font-weight: 500;
-  }
-
-  main {
-    padding: 2rem 0;
-    max-width: none;
-  }
-
-  h1 {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0 0 0.25rem 0;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    text-transform: none;
-  }
-
-  h2 {
-    font-size: 12px;
-    font-weight: 600;
-    margin: 0 0 0.25rem 0;
-    letter-spacing: 0;
-    text-transform: none;
-    color: #1a1a1a;
-  }
-
-  h3 {
-    font-size: 12px;
-    font-weight: 600;
-    margin: 0;
-    letter-spacing: 0;
-    text-transform: none;
-  }
-
-  h4 {
-    font-size: 11px;
-    font-weight: 500;
-    margin: 0;
-    text-transform: none;
-  }
-
-  p {
-    margin: 0.15rem 0;
-    line-height: 1.45;
-  }
-
-  section {
-    margin-bottom: 0.75rem;
-    padding-bottom: 0;
-  }
-
-  .sidebar-column header {
-    margin-bottom: 0.5rem;
-    padding-bottom: 0;
-    border-bottom: none;
-  }
-
-  .no-print,
-  .theme-toggle,
-  .terminal-header,
-  .skip-link,
-  [data-print='hide'] {
-    display: none;
-  }
-
-  [data-print='only'] {
-    display: block;
-  }
-
-  * {
-    position: static;
-  }
-
-  .relative {
-    position: relative;
-  }
-
-  p,
-  li,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    orphans: 3;
-    widows: 3;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    break-after: avoid;
-    page-break-after: avoid;
-  }
-
-  article,
-  section,
-  blockquote,
-  figure,
-  table,
-  pre {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-
-  li {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-
-  * {
-    box-shadow: none;
-    text-shadow: none;
-    transition: none;
-    animation: none;
-  }
-
-  article {
-    border: none;
-    background: none;
-    padding: 0.3rem 0;
-  }
-
-  .terminal {
-    background: none;
-    border: none;
-    padding: 0;
-  }
-
-  .badge {
-    border: none;
-    background: none;
-    padding: 0;
-    font-size: 10px;
-    text-transform: none;
-  }
-
-  a {
-    color: #1a1a1a;
-    text-decoration: none;
-  }
-
-  a::after {
-    content: none;
-  }
-
-  address {
-    margin-top: 0.3rem;
-    font-style: normal;
-  }
-
-  ul,
-  ol {
-    margin: 0.2rem 0;
-    padding-left: 1rem;
-  }
-
-  li {
-    margin: 0.1rem 0;
-    padding: 0;
-    line-height: 1.45;
-  }
-
-  .uppercase,
-  [class*='uppercase'] {
-    text-transform: none;
-  }
-
-  /* Content list print styles */
-  .content-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .content-list-item {
-    border-top: none !important;
-    padding-top: 0.1rem !important;
-    padding-bottom: 0.1rem !important;
-  }
-
-  /* ==========================================================================
-     LINK FOOTNOTES: Append URLs for high-value external links only
-     ========================================================================== */
-  a[href*="linkedin.com"]::after,
-  a[href*="github.com"]::after {
-    content: " (" attr(href) ")";
-    font-size: 9px;
-    font-weight: 400;
-    color: #666666;
-    word-break: break-all;
-  }
-
-  /* Exclude icon-only links, navigation elements, and tech tags from footnotes */
-  a[href*="linkedin.com"]:empty::after,
-  a[href*="github.com"]:empty::after,
-  nav a[href*="linkedin.com"]::after,
-  nav a[href*="github.com"]::after,
-  .sidebar-link[href*="linkedin.com"]::after,
-  .sidebar-link[href*="github.com"]::after,
-  .tech-tag[href*="linkedin.com"]::after,
-  .tech-tag[href*="github.com"]::after {
-    content: none;
   }
 }

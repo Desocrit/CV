@@ -1,0 +1,69 @@
+/**
+ * Print-specific styles for CV
+ * Minimal rules for things components can't handle themselves
+ */
+
+@media print {
+  /* ==========================================================================
+     PAGE SETUP
+     ========================================================================== */
+  @page {
+    size: A4;
+    margin: 1.5cm 2cm;
+  }
+
+  /* ==========================================================================
+     ORPHANS/WIDOWS PROTECTION
+     ========================================================================== */
+  p, li, h1, h2, h3, h4, h5, h6 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* ==========================================================================
+     PAGE BREAK CONTROL
+     ========================================================================== */
+  h1, h2, h3, h4, h5, h6 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  article, section, blockquote, figure, table, pre, li {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* ==========================================================================
+     LIGHT MODE COLOR SCHEME ENFORCEMENT
+     ========================================================================== */
+  :root {
+    --color-background: #ffffff;
+    --color-foreground: #1a1a1a;
+    --color-card: #ffffff;
+    --color-card-foreground: #1a1a1a;
+    --color-border: #d0d0d0;
+    --color-muted-foreground: #4a4a4a;
+  }
+
+  body {
+    color: #1a1a1a;
+    background: #fff;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* ==========================================================================
+     VISIBILITY UTILITIES
+     ========================================================================== */
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .screen-only {
+    display: none !important;
+  }
+}

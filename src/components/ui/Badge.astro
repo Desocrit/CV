@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 const badge = cva(
   // Base styles
   [
-    'badge', // For global.css light mode overrides
+    'badge', // For component <style> light mode overrides
     'inline-flex',
     'items-center',
     'font-mono',
@@ -13,8 +13,11 @@ const badge = cva(
     'transition-colors',
     'light:normal-case',
     'light:font-medium',
-    'print:border-[0.5px]',
-    'print:border-foreground/30',
+    // Print: minimal styling, inherit colors from print.css
+    'print:border-none',
+    'print:bg-transparent',
+    'print:p-0',
+    'print:normal-case',
   ],
   {
     variants: {
@@ -51,16 +54,12 @@ const badge = cva(
           'py-0.5',
           'text-fluid-2xs',
           'tracking-wider',
-          'print:text-[8px]',
-          'print:px-1.5',
         ],
         default: [
           'px-2.5',
           'py-0.5',
           'text-fluid-xs',
           'tracking-wide',
-          'print:text-[9px]',
-          'print:px-2',
         ],
       },
     },
@@ -89,10 +88,10 @@ const classes = badge({ variant, size, class: className });
 <style>
   /* Light mode: hairline borders and offset shadow hover */
   :global([data-theme='light']) .badge {
-    border-width: 0.5px;
+    border-width: var(--hairline-border);
   }
 
   :global([data-theme='light']) .badge:hover {
-    box-shadow: 2px 2px 0px var(--color-accent-purple);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--color-accent-purple);
   }
 </style>

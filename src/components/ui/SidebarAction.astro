@@ -1,0 +1,183 @@
+---
+/**
+ * SidebarAction - Unified component for sidebar links, buttons, and toggles
+ *
+ * Layout behavior:
+ * - Mobile dark: Shows bracketed shortform tag like [@], [/in], [--light]
+ * - Mobile light: Shows icon only (larger touch target)
+ * - Desktop (lg+): Shows icon + longform text with animated underline
+ * - Print: Hidden entirely
+ *
+ * Supports dual-state rendering for theme toggle via alt* props and alt-icon slot.
+ * When altLongform is provided, switches between states based on light: variant.
+ */
+interface Props {
+  /** Link URL - if provided, renders as <a> */
+  href?: string;
+  /** Opens link in new tab */
+  external?: boolean;
+  /** Click handler - if provided without href, renders as <button> */
+  onClick?: string;
+  /** Element ID */
+  id?: string;
+  /** Unix-style shortform tag displayed in brackets on mobile dark (e.g., "@", "/in", "--light") */
+  shortform: string;
+  /** Full text label shown on desktop (e.g., "LinkedIn", "Light Mode") */
+  longform: string;
+  /** Alternative shortform for light mode (theme toggle) */
+  altShortform?: string;
+  /** Alternative longform for light mode (theme toggle) */
+  altLongform?: string;
+  /** Accessibility label */
+  'aria-label': string;
+  /** Hide in print (default: true for all sidebar actions) */
+  screenOnly?: boolean;
+  /** Additional classes */
+  class?: string;
+}
+
+const {
+  href,
+  external = false,
+  onClick,
+  id,
+  shortform,
+  longform,
+  altShortform,
+  altLongform,
+  'aria-label': ariaLabel,
+  screenOnly = false,
+  class: className = '',
+} = Astro.props;
+
+const isButton = !href;
+const hasDualState = !!altLongform;
+
+// Base button/link classes
+const baseClasses = [
+  // Layout - relative for touch target pseudo-element
+  'relative inline-flex items-center gap-2',
+  // Typography
+  'font-mono text-fluid-xs not-italic',
+  // Colors & transitions
+  'text-muted-foreground hover:text-foreground transition-colors duration-200',
+  // Focus states
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+  // Button reset (for when it's a button)
+  isButton && 'cursor-pointer border-none p-0 text-left',
+  // Visibility modifiers
+  screenOnly && 'screen-only',
+  // Print: hide all sidebar actions
+  'print:hidden',
+  // Expanded touch target - using before pseudo
+  "before:content-[''] before:absolute before:inset-[-0.5rem] before:min-w-[44px] before:min-h-[44px]",
+  // Touch target group for hover states
+  'group',
+].filter(Boolean);
+
+// Icon wrapper classes (single icon mode)
+const iconWrapperClasses = [
+  'flex items-center shrink-0',
+  // Mobile dark: hidden, Mobile light: larger icons, Desktop: normal icons
+  '[&>svg]:hidden [&>svg]:shrink-0',
+  'light:[&>svg]:block light:[&>svg]:size-[1.125rem] light:[&>svg]:opacity-70',
+  'lg:[&>svg]:block lg:[&>svg]:size-3 lg:[&>svg]:opacity-50',
+].join(' ');
+
+// Primary icon classes (for dual-state: shown in dark mode)
+const primaryIconClasses = [
+  'hidden shrink-0',
+  // Desktop dark: show icon
+  'lg:block lg:size-3 lg:opacity-50',
+  // Light mode: always hidden (alt icon shows instead)
+  'light:hidden',
+].join(' ');
+
+// Alt icon classes (for dual-state: shown in light mode)
+const altIconClasses = [
+  'hidden shrink-0',
+  // Mobile light: show larger icon
+  'light:block light:size-[1.125rem] light:opacity-70',
+  // Desktop light: show smaller icon
+  'lg:light:size-3 lg:light:opacity-50',
+].join(' ');
+
+// Link text classes - with animated underline on hover
+const linkTextClasses = [
+  'relative hidden',
+  // Desktop: show text
+  'lg:inline',
+  // Animated underline (desktop only)
+  "after:content-[''] after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-px after:bg-foreground after:transition-[width] after:duration-200 after:ease-out",
+  'group-hover:after:w-full',
+].join(' ');
+
+// Tag classes - unix-style brackets on mobile dark mode
+const tagClasses = [
+  // Mobile dark: show with brackets
+  'inline-flex items-center font-mono text-fluid-xs text-accent-purple tracking-normal transition-[filter] duration-150',
+  "before:content-['['] before:mr-[0.125em]",
+  "after:content-[']'] after:ml-[0.125em]",
+  'group-hover:brightness-[1.2]',
+  // Mobile light: hidden (icons shown instead)
+  'light:hidden',
+  // Desktop: hidden
+  'lg:hidden',
+].join(' ');
+
+// Element type
+const Element = isButton ? 'button' : 'a';
+---
+
+<Element
+  href={!isButton ? href : undefined}
+  type={isButton ? 'button' : undefined}
+  id={id}
+  class:list={[baseClasses, className]}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+  onclick={onClick}
+  aria-label={ariaLabel}
+>
+  {/* Icon section */}
+  {hasDualState ? (
+    <span class="flex items-center shrink-0">
+      {/* Primary icon (shown in dark mode on desktop) */}
+      <span class={primaryIconClasses}>
+        <slot name="icon" />
+      </span>
+      {/* Alt icon (shown in light mode) */}
+      <span class={altIconClasses}>
+        <slot name="alt-icon" />
+      </span>
+    </span>
+  ) : (
+    <span class={iconWrapperClasses}>
+      <slot name="icon" />
+    </span>
+  )}
+
+  {/* Text section */}
+  <span class={linkTextClasses}>
+    {hasDualState ? (
+      <>
+        <span class="block light:hidden">{longform}</span>
+        <span class="hidden light:block">{altLongform}</span>
+      </>
+    ) : (
+      longform
+    )}
+  </span>
+
+  {/* Tag section (mobile dark only) */}
+  <span class={tagClasses}>
+    {hasDualState ? (
+      <>
+        <span class="block light:hidden">{shortform}</span>
+        <span class="hidden light:block">{altShortform}</span>
+      </>
+    ) : (
+      shortform
+    )}
+  </span>
+</Element>

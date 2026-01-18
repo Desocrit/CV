@@ -8,7 +8,6 @@
 import Layout from './Layout.astro';
 import Header from './Header.astro';
 import Nav from './Nav.astro';
-import PrintContact from './PrintContact.astro';
 import Profile from './Profile.astro';
 import Achievements from './Achievements.astro';
 import Education from './Education.astro';
@@ -49,7 +48,7 @@ const {
   name,
   role,
   email,
-  phone,
+  phone: _phone,
   location,
   linkedin,
   github,
@@ -63,10 +62,7 @@ const {
 <Layout>
   <Header slot="header" name={name} role={role} location={location} />
 
-  <Fragment slot="nav">
-    <Nav email={email} linkedin={linkedin} github={github} />
-    <PrintContact phone={phone} email={email} linkedin={linkedin} github={github} />
-  </Fragment>
+  <Nav slot="nav" email={email} linkedin={linkedin} github={github} />
 
   <Profile profile={profile} />
   <Achievements achievements={achievements} />

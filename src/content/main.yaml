@@ -10,19 +10,19 @@ linkedin: https://www.linkedin.com/in/christopher-saunders-48b092110/
 
 # Abstract
 summary: |
-  Scales infrastructure and prunes complexity
+  Scales infra and simplifies systems
   Specialist in AI, reliability, and tooling
 
 outlier_achievements:
   - metric: Throughput
     headline: 1000x
-    description: Improved burst capacity for the London Marathon
+    description: Improved system burst throughput
   - metric: Cost Savings
     headline: $500k
-    description: Per annum savings from infrastructure optimisations
+    description: Per annum savings on infrastructure
   - metric: Contributions
     headline: "3000+"
-    description: Average contributions per year in company code
+    description: Average Github contributions per year
 
 projects:
   - project_title: Nova
@@ -39,27 +39,27 @@ projects:
     war_story: []
     stack_and_tools:
       - name: MongoDB
-        group: Databases
+        group: Infrastructure
         url: https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1
         tooltip: The database for startups who fear schemas
         professional_tooltip: For when 'eventually consistent' is consistent enough
       - name: MCP
-        group: Transport
+        group: AI & APIs
         url: https://modelcontextprotocol.io/introduction
         tooltip: Anthropic's protocol for AI world domination
         professional_tooltip: Attempting to be the POSIX of the agentic era
       - name: AI SDK
-        group: AI
+        group: AI & APIs
         url: https://sdk.vercel.ai/docs/introduction
         tooltip: Vercel's gift to the agentic masses
         professional_tooltip: A standard library for non-deterministic state machines
       - name: mem0
-        group: AI
+        group: AI & APIs
         url: https://mem0.ai/research
         tooltip: Because LLMs have the memory of a goldfish
         professional_tooltip: A hippocampal bypass for stateless transformers
       - name: RAG
-        group: AI
+        group: AI & APIs
         url: https://arxiv.org/abs/2005.11401
         tooltip: Ctrl+F for robots
         professional_tooltip: Open-book exams for latent space
@@ -77,22 +77,22 @@ projects:
     prompt: How did Chris handle dependency cycles in the System Test framework?
     stack_and_tools:
       - name: GraphQL
-        group: Transport
+        group: AI & APIs
         url: https://graphql.org/learn/
         tooltip: Over-fetching's arch-nemesis
         professional_tooltip: Solving over-fetching by inviting N+1 to dinner
       - name: SQS
-        group: Cloud
+        group: Infrastructure
         url: https://aws.amazon.com/sqs/
         tooltip: Bezos's waiting room
         professional_tooltip: At-least-once semantics, at-most-once documented
       - name: Docker
-        group: Cloud
+        group: Infrastructure
         url: https://docs.docker.com/get-started/
         tooltip: '"Works on my machine" as a service'
         professional_tooltip: A few namespaces and a cgroup in a trench coat
       - name: gRPC
-        group: Transport
+        group: AI & APIs
         url: https://grpc.io/docs/what-is-grpc/introduction/
         tooltip: HTTP/2's favourite child
         professional_tooltip: Strongly-typed telepathy for services that hate overhead
@@ -102,7 +102,7 @@ projects:
     headline: Rebuilt the checkout from scratch for stability and scalability
     metric:
       - Secured 10-year partnership with London Marathon via 3 successful ballots
-      - Earned three sweet months without an incident, letting us rebuild client trust
+      - Earned three months without an incident, letting us rebuild client trust
     action:
       - Enforced strict state management, trading raw speed for stability
       # - Quarantined bespoke logic, so the edge cases couldn't infect the critical path
@@ -111,12 +111,12 @@ projects:
     war_story: []
     stack_and_tools:
       - name: GraphQL
-        group: Transport
+        group: AI & APIs
         url: https://engineering.fb.com/2015/09/14/core-infra/graphql-a-data-query-language/
         tooltip: Over-fetching's arch-nemesis
         professional_tooltip: Solving over-fetching by inviting N+1 to dinner
       - name: Stripe
-        group: Transport
+        group: AI & APIs
         url: https://stripe.com/docs/payments/payment-intents
         tooltip: The 3% tax on internet commerce
         professional_tooltip: PCI-DSS compliance as an API primitive
@@ -183,22 +183,22 @@ work_history:
     supporting_data: []
     tech_stack:
       - name: TypeScript
-        group: Languages
+        group: Core
         url: https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes-func.html
         tooltip: JavaScript for mass adoption
         professional_tooltip: Gradual typing for JavaScript's billion-dollar mistake
       - name: AWS
-        group: Cloud
+        group: Infrastructure
         url: https://aws.amazon.com/
         tooltip: Bezos's retirement fund, one Lambda at a time
         professional_tooltip: Shared responsibility model for your infrastructure and your sanity
       - name: MongoDB
-        group: Databases
+        group: Infrastructure
         url: https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1
         tooltip: The database for startups who fear schemas
         professional_tooltip: For when 'eventually consistent' is consistent enough
       - name: GraphQL
-        group: Transport
+        group: AI & APIs
         url: https://engineering.fb.com/2015/09/14/core-infra/graphql-a-data-query-language/
         tooltip: Over-fetching's arch-nemesis
         professional_tooltip: Solving over-fetching by inviting N+1 to dinner
@@ -214,22 +214,22 @@ work_history:
     supporting_data: []
     tech_stack:
       - name: Ruby on Rails
-        group: Backend
+        group: Core
         url: https://rubyonrails.org/doctrine
         tooltip: Opinions over configuration
         professional_tooltip: ActiveRecord — the ORM that launched a thousand N+1s
       - name: Java
-        group: Languages
+        group: Core
         url: https://www.oracle.com/java/technologies/language-environment.html
         tooltip: Write once, debug everywhere
         professional_tooltip: Trading startup latency for peak throughput
       - name: PGSQL
-        group: Databases
+        group: Infrastructure
         url: https://www.postgresql.org/docs/current/history.html
         tooltip: The database your DBA actually respects
         professional_tooltip: The MVCC implementation everyone else benchmarks against
       - name: Python
-        group: Languages
+        group: Core
         url: https://peps.python.org/pep-0020/
         tooltip: Executable pseudocode
         professional_tooltip: The world's favorite pseudocode, despite the GIL
@@ -245,12 +245,12 @@ work_history:
     supporting_data: []
     tech_stack:
       - name: SQL Server
-        group: Databases
+        group: Infrastructure
         url: https://www.microsoft.com/en-us/research/publication/hekaton-sql-servers-memory-optimized-oltp-engine/
         tooltip: When your budget says no to Oracle
         professional_tooltip: Enterprise-grade query optimization with a per-core tax
       - name: .NET
-        group: Backend
+        group: Core
         url: https://github.com/dotnet/runtime/blob/main/docs/design/coreclr/botr/README.md
         tooltip: Microsoft's apology for COM
         professional_tooltip: The CLR's belated revenge on the JVM

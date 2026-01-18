@@ -1,5 +1,6 @@
 ---
 import type { ImpactNode } from '../../lib/cv-data';
+import Label from '../typography/Label.astro';
 
 interface Props {
   node: ImpactNode;
@@ -24,6 +25,7 @@ const { node } = Astro.props;
     'print:hidden',
   ]}
   style={`--card-accent: var(--color-accent-${node.color});`}
+  data-header={node.header}
 >
   <button
     class="impact-card
@@ -39,17 +41,12 @@ const { node } = Astro.props;
     data-prompt={node.prompt}
   >
     <div class="card-content flex flex-col flex-1 min-w-0" aria-hidden="true">
-      <span
-        class="card-header
-          block mb-1
-          font-mono text-fluid-2xs font-normal tracking-widest uppercase
-          text-[var(--card-accent)] opacity-50
-          transition-opacity duration-150 ease-out
-          group-hover/card:opacity-100 group-[.is-active-card]:opacity-100
-          light:capitalize light:font-semibold light:opacity-80 light:group-hover/card:opacity-80 light:tracking-wider"
+      <Label
+        variant="cardHeader"
+        class="block mb-1 text-[var(--card-accent)] group-hover/card:opacity-100 group-[.is-active-card]/card:opacity-100 light:group-hover/card:opacity-80"
       >
-        <span class="header-bracket">[ </span>{node.header}<span class="header-bracket"> ]</span>
-      </span>
+        <span class="light:hidden">[ </span>{node.header}<span class="light:hidden"> ]</span>
+      </Label>
       <h3
         class="card-title
           m-0
@@ -72,7 +69,7 @@ const { node } = Astro.props;
         font-mono text-fluid-xs
         text-[var(--card-accent)] opacity-50
         transition-opacity duration-150 ease-out
-        group-hover/card:opacity-100 group-[.is-active-card]:opacity-100"
+        group-hover/card:opacity-100 group-[.is-active-card]/card:opacity-100"
       aria-hidden="true"
     >
       <span class="cta-bracket">[</span><span class="cta-arrow">&gt;</span><span class="cta-bracket">]</span>
@@ -81,6 +78,14 @@ const { node } = Astro.props;
 </div>
 
 <style is:global>
+  /* ==========================================================================
+     ACTIVE STATE: Trigger hover effects when card is at viewport top
+     ========================================================================== */
+  .impact-card-wrapper.is-active-card::before {
+    opacity: 1;
+    animation: spin-border 3s linear infinite;
+  }
+
   /* ==========================================================================
      LIGHT MODE: Impact Card Hover Effects
      Hard offset shadow on hover (architectural blueprint style)
@@ -92,18 +97,26 @@ const { node } = Astro.props;
     display: none !important;
   }
 
+  [data-theme='light'] .impact-card-wrapper.is-active-card {
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px color-mix(in srgb, var(--card-accent) 40%, white);
+  }
+
+  [data-theme='light'] .impact-card-wrapper.is-active-card .impact-card {
+    border-color: var(--card-accent);
+  }
+
   /* Impact cards - border color change and offset shadow on hover */
   [data-theme='light'] .impact-card-wrapper {
     transition: box-shadow 0.15s ease-out;
   }
 
   [data-theme='light'] .impact-card-wrapper:hover {
-    box-shadow: 2px 2px 0px color-mix(in srgb, var(--card-accent) 40%, white);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px color-mix(in srgb, var(--card-accent) 40%, white);
   }
 
   /* Impact card inner element styling for light mode */
   [data-theme='light'] .impact-card {
-    border-width: 0.5px;
+    border-width: var(--hairline-border);
     transition: border-color 0.15s ease-out;
   }
 
@@ -124,13 +137,4 @@ const { node } = Astro.props;
     padding: 0 0.25em;
   }
 
-  /* Impact card header - hide brackets */
-  [data-theme='light'] .impact-card .header-bracket {
-    display: none !important;
-  }
-
-  [data-theme='light'] .impact-card .card-header {
-    font-size: 9px !important;
-    font-weight: 600;
-  }
 </style>

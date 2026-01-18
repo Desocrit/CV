@@ -623,7 +623,7 @@ export default function RAGTerminal({
             border-left: 1px solid rgba(55, 191, 81, 0.15) !important;
             font-family: var(--font-mono);
             font-size: 11px;
-            color: #888 !important;
+            color: #767676 !important;
             box-shadow:
               0 -10px 40px rgba(0, 0, 0, 0.4),
               0 0 30px rgba(55, 191, 81, 0.06),
@@ -872,7 +872,7 @@ export default function RAGTerminal({
           }
 
           .terminal-response {
-            color: #888;
+            color: #767676;
           }
 
           .terminal-response-text {
@@ -957,7 +957,7 @@ export default function RAGTerminal({
             border-left: 2px solid #9d7cd8;
             padding-left: 0.75rem;
             margin: 0.5rem 0;
-            color: #888;
+            color: #767676;
             font-style: italic;
           }
 

@@ -51,6 +51,7 @@ export const projectSchema = z.object({
 
 export const workHistorySchema = z.object({
   company: nonEmptyString,
+  color: impactColorSchema.optional(),
   role: nonEmptyString,
   tenure: nonEmptyString,
   summary: nonEmptyString,
@@ -61,6 +62,7 @@ export const workHistorySchema = z.object({
 
 export const educationSchema = z.object({
   degree: nonEmptyString,
+  color: impactColorSchema.optional(),
   degree_title: nonEmptyString.optional(),
   score_short: nonEmptyString.optional(),
   score_long: nonEmptyString.optional(),

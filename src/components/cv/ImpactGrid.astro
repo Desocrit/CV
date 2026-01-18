@@ -1,6 +1,7 @@
 ---
 import type { ImpactNode } from '../../lib/cv-data';
 import ImpactCard from './ImpactCard.astro';
+import Label from '../typography/Label.astro';
 
 interface Props {
   nodes: ImpactNode[];
@@ -35,7 +36,7 @@ const orderedHeaders = [...new Set(nodes.map((n) => n.header))];
 {/* Screen: Interactive card grid */}
 <div
   class="impact-grid
-    grid grid-cols-1 gap-4 items-start
+    grid grid-cols-1 gap-4 items-start mt-2
     sm:grid-cols-2
     print:hidden"
 >
@@ -55,19 +56,15 @@ const orderedHeaders = [...new Set(nodes.map((n) => n.header))];
       <article class="w-full break-inside-avoid">
         {/* Swiss hairline rule */}
         <div
-          class="border-0 border-t-[0.5px] border-solid border-border m-0 mb-[0.4rem] mr-8"
+          class="border-0 border-t-[0.5px] border-solid border-border m-0 mb-[0.4rem] mr-8 print:hidden"
           role="presentation"
         />
 
         {/* Category header */}
-        <header class="flex items-baseline gap-[0.15rem] mt-[0.3rem] mb-[0.35rem]">
-          <span class="font-mono text-[8px] font-medium tracking-wider text-muted-foreground-light">
-            {number}
-          </span>
-          <span class="font-mono text-[8px] font-medium text-muted-foreground">/</span>
-          <span class="font-mono text-[8px] font-medium uppercase tracking-widest text-muted-foreground-light">
-            {shortHeader}
-          </span>
+        <header class="mt-[0.3rem] mb-[0.35rem]">
+          <Label variant="subtitle" class="print:pb-0.5">
+            {number} / {shortHeader}
+          </Label>
         </header>
 
         {/* Two-column metric rows */}

@@ -11,30 +11,53 @@ const label = cva(
         default: [
           'text-fluid-2xs',
           'text-muted-foreground',
+          'print:text-[9px]',
+          'print:text-[var(--color-print-muted)]',
         ],
         // Accent: Company labels with tracking (matches ContentCard .label-text)
         accent: [
           'text-fluid-2xs',
           'tracking-widest',
+          'print:text-[10px]',
+          'print:normal-case',
+          'print:tracking-normal',
+          'print:text-[var(--color-print-muted)]',
         ],
         // Achievement: Sidebar achievement labels
         achievement: [
           'text-fluid-2xs',
           'tracking-widest',
+          'print:text-[9px]',
+          'print:normal-case',
+          'print:tracking-[0.02em]',
+          'print:text-[var(--color-print-muted)]',
         ],
-        // Micro: Smallest labels (used in AchievementGrid)
+        // Micro: Smallest labels (used in TechStackPrint section titles)
         micro: [
           'text-fluid-2xs',
           'tracking-widest',
           'text-muted-foreground',
           'light:tracking-wider',
+          'print:text-[10px]',
+          'print:font-medium',
+          'print:text-[var(--color-print-muted)]',
+          'print:border-solid',
+          'print:border-b',
+          'print:border-[var(--color-print-body)]',
+          'print:pb-1.5',
+          'print:mb-2',
+          'print:w-fit',
         ],
-        // Plain: No uppercase transform, for location/subtitle text
+        // Plain: No uppercase transform, for location/subtitle text (sans-serif in print)
         plain: [
           'text-fluid-2xs',
           'text-muted-foreground',
           '!normal-case',
           'light:normal-case',
+          'print:font-sans',
+          'print:text-[10px]',
+          'print:tracking-normal',
+          'print:text-[var(--color-print-muted)]',
         ],
         // Section: Sidebar section titles with border underline
         section: [
@@ -45,14 +68,91 @@ const label = cva(
           'border-b',
           'border-[var(--color-muted-foreground)]',
           'pb-1.5',
-          'w-fit',
-          'light:uppercase',
+          'block',
+          'w-full',
+          'light:!uppercase',
+          // Desktop lg: tighter spacing
+          'lg:pb-1',
+          'lg:mb-1',
+          // Print: 0.5px hairline border above, full width, 10px, uppercase
+          'print:block',
+          'print:uppercase',
+          'print:text-[10px]',
+          'print:text-[var(--color-print-muted)]',
+          'print:border-solid',
+          'print:border-t-[0.5px]',
+          'print:border-b-0',
+          'print:border-[var(--color-print-body)]',
+          'print:w-full',
+          'print:pb-0',
+          'print:pt-1.5',
+          'print:mb-1',
         ],
-        // Terminal: Terminal-style prompt text (mobile dark mode)
+        // Subtitle: Category headers like "01 / EFFICIENCY" with underline for print
+        subtitle: [
+          'text-fluid-2xs',
+          'font-medium',
+          'tracking-widest',
+          'text-muted-foreground-light',
+          'uppercase',
+          // Print: hairline border below, full width, 1pt smaller than section
+          'print:border-solid',
+          'print:border-b',
+          'print:border-[var(--color-print-body)]',
+          'print:border-t-0',
+          'print:w-full',
+          'print:text-[9px]',
+          'print:text-[var(--color-print-muted)]',
+        ],
+        // Terminal: Terminal-style prompt text (mobile dark mode, hidden in print)
         terminal: [
           'text-fluid-xs',
           'font-medium',
           '!normal-case',
+          'print:hidden',
+        ],
+        // Contact: Print contact field labels (sans-serif, semibold)
+        contact: [
+          'text-fluid-2xs',
+          'text-muted-foreground',
+          '!normal-case',
+          'print:font-sans',
+          'print:text-[9px]',
+          'print:font-semibold',
+          'print:text-[var(--color-print-foreground)]',
+          'print:leading-tight',
+        ],
+        // Tech: Tech group names (sans-serif for print)
+        tech: [
+          'text-fluid-2xs',
+          'tracking-widest',
+          'print:font-sans',
+          'print:text-[9px]',
+          'print:font-semibold',
+          'print:text-[var(--color-print-foreground)]',
+          'print:leading-tight',
+          'print:normal-case',
+          'print:mb-px',
+        ],
+        // Card header: Impact/Content card category headers with brackets
+        cardHeader: [
+          'text-fluid-2xs',
+          'font-normal',
+          'tracking-widest',
+          'opacity-50',
+          'transition-opacity',
+          'duration-150',
+          'ease-out',
+          // Light mode overrides
+          'light:text-[9px]',
+          'light:!capitalize',
+          'light:!font-semibold',
+          'light:tracking-wider',
+          'light:opacity-80',
+          // Print
+          'print:text-[9px]',
+          'print:normal-case',
+          'print:opacity-100',
         ],
       },
       color: {
@@ -81,7 +181,7 @@ const {
   class: className,
   ...attrs
 } = Astro.props as LabelVariants & {
-  as?: 'span' | 'div' | 'label' | 'p';
+  as?: 'span' | 'div' | 'label' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
   class?: string;
 };
 

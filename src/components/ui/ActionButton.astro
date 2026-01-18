@@ -5,7 +5,6 @@ interface Props {
   external?: boolean;
   class?: string;
   screenReaderLabel?: string;
-  'data-print'?: string;
 }
 
 const { label, href, external = false, class: className = '', screenReaderLabel, ...attrs } = Astro.props;
@@ -29,8 +28,8 @@ const baseClasses = [
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]',
 ];
 
-const bracketClasses = 'text-[var(--color-accent-purple)] light:hidden';
-const labelClasses = 'text-[var(--color-accent-purple)] light:font-semibold';
+const bracketClasses = 'bracket text-[var(--color-accent-purple)] light:hidden';
+const labelClasses = 'label text-[var(--color-accent-purple)] light:font-semibold';
 ---
 
 {isLink ? (

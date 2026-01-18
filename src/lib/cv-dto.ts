@@ -39,6 +39,7 @@ export const layoutDTO = {
   })),
   knowsAbout: cvData.meta.keywords,
   summary: cvData.summary,
+  keywords: cvData.meta.keywords,
 };
 
 // ===== SIDEBAR DTO =====
@@ -74,7 +75,10 @@ export const impactGridDTO = {
 };
 
 // ===== PROJECTS DTO =====
-export const projectCards = cvData.projects.slice(0, 4).map((project) => ({
+// Color cycle: green → orange → blue → purple
+const projectAccentColors = ['green', 'orange', 'blue', 'purple'] as const;
+
+export const projectCards = cvData.projects.slice(0, 4).map((project, index) => ({
   title: project.project_title,
   tag: project.subtitle,
   technologies: project.stack_and_tools,
@@ -84,10 +88,15 @@ export const projectCards = cvData.projects.slice(0, 4).map((project) => ({
   cta: project.cta,
   prompt: project.prompt,
   useTerminal: true,
+  metaWidth: 'narrow' as const,
+  accentColor: projectAccentColors[index % projectAccentColors.length],
 }));
 
 // ===== WORK HISTORY DTO =====
-export const workHistoryCards = cvData.work_history.map((job) => ({
+// Color cycle: green → purple → blue
+const historyAccentColors = ['green', 'purple', 'blue'] as const;
+
+export const workHistoryCards = cvData.work_history.map((job, index) => ({
   title: job.role,
   tag: job.tenure,
   label: job.company,
@@ -95,6 +104,8 @@ export const workHistoryCards = cvData.work_history.map((job) => ({
   headline: job.summary,
   bulletPoints: job.impact,
   supportingData: job.supporting_data,
+  metaWidth: 'wide' as const,
+  accentColor: historyAccentColors[index % historyAccentColors.length],
 }));
 
 // ===== EDUCATION DTO =====
@@ -108,4 +119,6 @@ export const educationCard = {
     `Masters of Engineering in ${cvData.education[0]?.specialism}`,
     cvData.education[0]?.notable ?? '',
   ].filter(Boolean),
+  metaWidth: 'wide' as const,
+  accentColor: 'green' as const,
 };

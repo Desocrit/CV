@@ -41,6 +41,7 @@ interface Props {
   education?: Education[];
   knowsAbout?: string[];
   summary?: string;
+  keywords?: string[];
 }
 
 const {
@@ -58,6 +59,7 @@ const {
   education = [],
   knowsAbout = [],
   summary,
+  keywords = [],
 } = Astro.props;
 
 // Build JSON-LD structured data
@@ -115,30 +117,112 @@ const jsonLd = {
     <meta name="title" content={title} />
     <meta name="description" content={description} />
     <meta name="author" content={name} />
+    {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
 
     <meta property="og:type" content="profile" />
     <meta property="og:url" content={url} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(image, Astro.url).href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content={`${name} - ${jobTitle ?? 'Professional CV'}`} />
+    <meta property="og:site_name" content={`${name} CV`} />
     <meta property="og:locale" content="en_GB" />
     <meta property="profile:first_name" content={name.split(' ')[0]} />
     <meta property="profile:last_name" content={name.split(' ').slice(1).join(' ')} />
 
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={url} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={new URL(image, Astro.url).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={url} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(image, Astro.url).href} />
+    <meta name="twitter:image:alt" content={`${name} - ${jobTitle ?? 'Professional CV'}`} />
 
     <link rel="canonical" href={url} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/IBMPlexSans-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/IBMPlexMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- Print stylesheet - loaded with media="print" to avoid blocking initial render -->
+    <link rel="stylesheet" href="/styles/print.css" media="print" />
+
+    <!-- DNS prefetch and preconnect hints for external services -->
+    <link rel="dns-prefetch" href="https://gateway.ai.cloudflare.com" />
+    <link rel="preconnect" href="https://gateway.ai.cloudflare.com" crossorigin />
+    <link rel="dns-prefetch" href="https://neon.tech" />
+    <link rel="preconnect" href="https://neon.tech" crossorigin />
 
     <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
 
+    <!-- Critical CSS variables - must load before external CSS to prevent FOUC -->
+    <style is:inline>
+      :root {
+        --color-background: #050505;
+        --color-foreground: #f2f2f2;
+        --color-card: #050505;
+        --color-card-foreground: #f2f2f2;
+        --color-primary: #f2f2f2;
+        --color-primary-foreground: #050505;
+        --color-secondary: #0a0a0a;
+        --color-secondary-foreground: #f2f2f2;
+        --color-muted: #111111;
+        --color-muted-foreground: #767676;
+        --color-muted-foreground-light: #a0a0a0;
+        --color-accent: #111111;
+        --color-accent-foreground: #f2f2f2;
+        --color-border: rgba(255, 255, 255, 0.06);
+        --color-border-subtle: rgba(255, 255, 255, 0.03);
+        --color-input: rgba(255, 255, 255, 0.1);
+        --color-ring: #f2f2f2;
+        --color-terminal-bg: #050505;
+        --color-terminal-text: #767676;
+        --color-terminal-prompt: #767676;
+        --color-terminal-accent: #f2f2f2;
+      }
+      [data-theme='light'] {
+        --color-background: #F5F5F7;
+        --color-foreground: #1D1D1F;
+        --color-card: #F5F5F7;
+        --color-card-foreground: #1D1D1F;
+        --color-popover: #F5F5F7;
+        --color-popover-foreground: #1D1D1F;
+        --color-primary: #1D1D1F;
+        --color-primary-foreground: #F5F5F7;
+        --color-secondary: #EBEBED;
+        --color-secondary-foreground: #1D1D1F;
+        --color-muted: #E8E8EA;
+        --color-muted-foreground: #636366;
+        --color-muted-foreground-light: #86868B;
+        --color-accent: #EBEBED;
+        --color-accent-foreground: #1D1D1F;
+        --color-border: rgba(0, 0, 0, 0.12);
+        --color-border-subtle: rgba(0, 0, 0, 0.06);
+        --color-input: rgba(0, 0, 0, 0.08);
+        --color-ring: #1D1D1F;
+        --color-achievement: #1D1D1F;
+        --color-achievement-foreground: #F5F5F7;
+        --color-terminal-bg: rgba(255, 255, 255, 0.8);
+        --color-terminal-text: #1D1D1F;
+        --color-terminal-prompt: #636366;
+        --color-terminal-accent: #1D1D1F;
+        --color-accent-purple: #9A5B4C;
+        --color-accent-green: #2D6A4F;
+        --color-accent-blue: #2A5A8A;
+        --color-accent-orange: #B5651D;
+        --color-accent-red: #8B3A3A;
+        --color-accent-cyan: #3D6B6B;
+        --hairline-border: 0.5px;
+        --shadow-offset: 2px;
+        --shadow-offset-color: #D1D1D6;
+        --glow-text-base: rgba(29, 29, 31, 0.5);
+      }
+    </style>
     <script is:inline>
       (function() {
         const saved = localStorage.getItem('theme');
@@ -170,7 +254,7 @@ const jsonLd = {
       <slot />
     </main>
 
-    <TerminalWrapper client:only="react" />
+    <TerminalWrapper client:idle />
 
     <GlitchEffect />
     <BlueprintSpotlight />

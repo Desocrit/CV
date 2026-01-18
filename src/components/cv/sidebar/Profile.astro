@@ -20,14 +20,11 @@ const { profile, class: className = '' } = Astro.props;
   class:list={[
     'sm:col-start-1 sm:row-start-2 sm:m-0',
     '[&:has(+_.print-only)]:mb-0',
+    'print:hidden',
     className,
   ]}
 >
-  <Text muted class:list={[
-    'max-w-[50ch] whitespace-pre-line',
-    'mt-1 lg:mt-0',
-    'print:text-[10px] print:leading-[1.4] print:text-[#4a4a4a]',
-  ]}>
+  <Text muted class="max-w-[50ch] whitespace-pre-line">
     {profile}
   </Text>
 </Section>

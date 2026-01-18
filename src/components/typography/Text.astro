@@ -9,6 +9,9 @@ const text = cva('', {
         'text-fluid-base',
         'text-foreground',
         'leading-relaxed',
+        'print:text-[10px]',
+        'print:leading-[1.4]',
+        'print:text-[var(--color-print-body)]',
       ],
       // Lead: Headline/intro text (matches ContentCard headline)
       lead: [
@@ -16,6 +19,9 @@ const text = cva('', {
         'text-muted-foreground',
         'leading-relaxed',
         'font-medium',
+        'print:text-[10px]',
+        'print:leading-[1.4]',
+        'print:text-[var(--color-print-foreground)]',
       ],
       // Summary: Hero summary style
       summary: [
@@ -23,6 +29,9 @@ const text = cva('', {
         'text-foreground',
         'leading-relaxed',
         'opacity-80',
+        'print:text-[10px]',
+        'print:leading-[1.4]',
+        'print:opacity-100',
       ],
       // Subtitle: Role/subtitle text (sidebar header role)
       subtitle: [
@@ -32,17 +41,35 @@ const text = cva('', {
         'text-[var(--color-muted-foreground-light)]',
         'light:text-foreground',
         'light:font-medium',
+        'print:text-[11px]',
+        'print:leading-[1.4]',
+        'print:text-[var(--color-print-body)]',
       ],
       // Small: Bullet points, secondary content
       small: [
         'text-fluid-xs',
         'text-muted-foreground',
+        'print:text-[10px]',
+        'print:leading-[1.4]',
+        'print:text-[var(--color-print-body)]',
       ],
-      // Muted: De-emphasized text, smallest readable (subtitle style)
+      // Muted: De-emphasized text, descriptions, secondary info
       muted: [
         'text-fluid-xs',
         'text-muted-foreground',
         'leading-relaxed',
+        'print:text-[10px]',
+        'print:leading-[1.35]',
+        'print:text-[var(--color-print-body)]',
+      ],
+      // Mono: Monospace text for technical content (tech lists)
+      mono: [
+        'font-mono',
+        'text-fluid-xs',
+        'text-muted-foreground',
+        'print:text-[10px]',
+        'print:leading-snug',
+        'print:text-[var(--color-print-body)]',
       ],
     },
   },
@@ -51,7 +78,7 @@ const text = cva('', {
   },
 });
 
-type Variant = 'body' | 'lead' | 'summary' | 'subtitle' | 'small' | 'muted';
+type Variant = 'body' | 'lead' | 'summary' | 'subtitle' | 'small' | 'muted' | 'mono';
 
 interface Props {
   as?: 'p' | 'span' | 'div';
@@ -62,6 +89,7 @@ interface Props {
   subtitle?: boolean;
   small?: boolean;
   muted?: boolean;
+  mono?: boolean;
 }
 
 const {
@@ -72,11 +100,12 @@ const {
   subtitle,
   small,
   muted,
+  mono,
   ...attrs
 } = Astro.props as Props;
 
 // Determine variant from boolean props (first truthy wins, default to body)
-const variant: Variant = lead ? 'lead' : summary ? 'summary' : subtitle ? 'subtitle' : small ? 'small' : muted ? 'muted' : 'body';
+const variant: Variant = lead ? 'lead' : summary ? 'summary' : subtitle ? 'subtitle' : small ? 'small' : muted ? 'muted' : mono ? 'mono' : 'body';
 
 const classes = text({ variant, class: className });
 ---

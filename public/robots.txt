@@ -1,0 +1,5 @@
+# robots.txt for cs-cv.vercel.app
+User-agent: *
+Allow: /
+
+Sitemap: https://cs-cv.vercel.app/sitemap-index.xml

@@ -37,7 +37,7 @@
     spotlight.style.background = `
       radial-gradient(
         circle ${SPOTLIGHT_RADIUS}px at ${x}px ${y}px,
-        rgba(55, 191, 81, 0.015) 0%,
+        rgba(55, 191, 81, 0.025) 0%,
         transparent 100%
       )
     `;
@@ -55,11 +55,11 @@
     // Grid pattern as background
     spotlight.style.backgroundColor = 'transparent';
     spotlight.style.backgroundImage = `
-      linear-gradient(to right, rgba(55, 191, 81, 0.04) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(55, 191, 81, 0.04) 1px, transparent 1px),
+      linear-gradient(to right, rgba(55, 191, 81, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(55, 191, 81, 0.06) 1px, transparent 1px),
       radial-gradient(
         circle ${SPOTLIGHT_RADIUS * 0.7}px at ${x}px ${y}px,
-        rgba(55, 191, 81, 0.01) 0%,
+        rgba(55, 191, 81, 0.02) 0%,
         transparent 100%
       )
     `;

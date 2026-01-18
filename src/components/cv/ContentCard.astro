@@ -8,6 +8,10 @@ import ScreenOnly from '../layout/ScreenOnly.astro';
 import PrintOnly from '../layout/PrintOnly.astro';
 import type { TechTag as TechTagType } from '../../lib/cv-data';
 
+type AccentColor = 'green' | 'orange' | 'blue' | 'purple';
+
+type HeadingLevel = 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+
 interface Props {
   title: string;
   subtitle?: string;
@@ -21,9 +25,26 @@ interface Props {
   cta?: string;
   prompt?: string;
   useTerminal?: boolean;
+  metaWidth?: 'narrow' | 'default' | 'wide';
+  accentColor?: AccentColor;
+  /** Hide all bullets except the first on screen (show all in print) */
+  hideExtraBullets?: boolean;
+  /** Heading level for the card title (default: h3 for proper hierarchy under h2 section headings) */
+  headingLevel?: HeadingLevel;
 }
 
-const { title, subtitle, tag, label, technologies = [], headline, bulletPoints, supportingData = [], details, cta, prompt, useTerminal = false } = Astro.props;
+const { title, subtitle, tag, label, technologies = [], headline, bulletPoints, supportingData = [], details, cta, prompt, useTerminal = false, metaWidth, accentColor = 'purple', hideExtraBullets = false, headingLevel = 'h3' } = Astro.props;
+
+// Classes to hide extra bullets on screen, show all in print
+const extraBulletClasses = hideExtraBullets ? '[&:nth-child(n+2)]:hidden print:[&:nth-child(n+2)]:!list-item' : '';
+
+// Map color names to CSS variable classes
+const accentColorClass: Record<AccentColor, string> = {
+  green: '[--card-accent:var(--color-accent-green)]',
+  orange: '[--card-accent:var(--color-accent-orange)]',
+  blue: '[--card-accent:var(--color-accent-blue)]',
+  purple: '[--card-accent:var(--color-accent-purple)]',
+};
 
 // Convert label to SCREAMING_CASE for display
 const labelText = label?.toUpperCase().replace(/\s+/g, '_').replace(/'/g, '');
@@ -31,114 +52,118 @@ const labelText = label?.toUpperCase().replace(/\s+/g, '_').replace(/'/g, '');
 const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')).slice(0, 4);
 ---
 
-<article class="content-card group [--card-accent:var(--color-accent-purple)] py-[0.35rem] print:py-[0.35rem]">
-  <CardGrid>
+<article class:list={['content-card', 'group', accentColorClass[accentColor], 'py-[0.35rem]', 'print:py-[0.35rem]']}>
+  <CardGrid metaWidth={metaWidth}>
     <Fragment slot="meta">
-      <Heading
-        as="h3"
-        tiny
-        class="card-title transition-[text-shadow] duration-150 ease-out hover:[text-shadow:0_0_4px_var(--card-accent),0_0_12px_color-mix(in_srgb,var(--card-accent)_60%,transparent),0_0_24px_color-mix(in_srgb,var(--card-accent)_30%,transparent)] light:hover:[text-shadow:none] print:text-[12px] print:font-semibold print:break-after-avoid flex-none order-1 sm:flex-initial sm:order-none"
-      >
-        {title}
-      </Heading>
-
-      {tag && (
-        <Label as="p" variant="plain" class="print:text-[9px] order-2 ml-auto mt-0 has-[~.label-text]:order-3 has-[~.label-text]:basis-full has-[~.label-text]:ml-0 sm:order-none sm:ml-0 sm:has-[~.label-text]:order-none sm:has-[~.label-text]:basis-auto">
-          <span>{tag}</span>
-        </Label>
-      )}
-
-      {label && (
-        <Label
-          as="p"
-          variant="accent"
-          class="label-text mt-0 order-2 ml-auto text-[var(--card-accent)] transition-[text-shadow] duration-150 ease-out hover:[text-shadow:0_0_4px_var(--card-accent),0_0_10px_color-mix(in_srgb,var(--card-accent)_50%,transparent),0_0_20px_color-mix(in_srgb,var(--card-accent)_25%,transparent)] light:hover:[text-shadow:none] print:text-[10px] print:text-[#4a4a4a] print:normal-case print:tracking-normal print:mt-0.5 sm:mt-2 sm:order-none sm:ml-0"
+        <Heading
+          as={headingLevel}
+          tiny
+          class="card-title transition-[text-shadow] duration-150 ease-out hover:[text-shadow:0_0_4px_var(--card-accent),0_0_12px_color-mix(in_srgb,var(--card-accent)_60%,transparent),0_0_24px_color-mix(in_srgb,var(--card-accent)_30%,transparent)] light:hover:[text-shadow:none] flex-none order-1 sm:flex-initial sm:order-none"
         >
-          <ScreenOnly as="span">{labelText}</ScreenOnly>
-          <PrintOnly as="span">{label}</PrintOnly>
-        </Label>
-      )}
+          {title}
+        </Heading>
 
-      {subtitle && (
-        <Text muted class="order-1 ml-2 mt-0 sm:order-none sm:ml-0 sm:mt-1 print:text-[9px]">
-          {subtitle}
-        </Text>
-      )}
+        {tag && (
+          <Label as="p" variant="plain" class="order-2 ml-auto mt-0 has-[~.label-text]:order-3 has-[~.label-text]:basis-full has-[~.label-text]:ml-0 sm:order-none sm:ml-0 sm:has-[~.label-text]:order-none sm:has-[~.label-text]:basis-auto">
+            <span>{tag}</span>
+          </Label>
+        )}
 
-      <!-- Tech stack as diagnostic nodes (screen mode) -->
-      {filteredTechnologies.length > 0 && (
-        <ScreenOnly class="!flex flex-wrap gap-1.5 mt-[var(--spacing-fluid-sm)] mb-[var(--spacing-fluid-sm)] basis-full order-[10] sm:mt-fluid-xs sm:mb-0 sm:mr-2 sm:basis-auto sm:order-none">
-          {filteredTechnologies.map((tech) => (
-            <TechTag name={tech.name} url={tech.url} tooltip={tech.professional_tooltip ?? tech.tooltip} />
-          ))}
-        </ScreenOnly>
-      )}
+        {label && (
+          <Label
+            as="p"
+            variant="accent"
+            class="label-text mt-0 order-2 ml-auto text-[var(--card-accent)] transition-[text-shadow] duration-150 ease-out hover:[text-shadow:0_0_4px_var(--card-accent),0_0_10px_color-mix(in_srgb,var(--card-accent)_50%,transparent),0_0_20px_color-mix(in_srgb,var(--card-accent)_25%,transparent)] light:hover:[text-shadow:none] print:mt-0.5 sm:mt-2 sm:order-none sm:ml-0"
+          >
+            <ScreenOnly as="span">{labelText}</ScreenOnly>
+            <PrintOnly as="span">{label}</PrintOnly>
+          </Label>
+        )}
+
+        {subtitle && (
+          <Label
+            variant="cardHeader"
+            class="order-1 ml-2 mt-0 block text-[var(--card-accent)] group-hover:opacity-100 sm:order-none sm:ml-0 sm:mt-1"
+          >
+            <span class="light:hidden">[ </span>{subtitle}<span class="light:hidden"> ]</span>
+          </Label>
+        )}
+
+        <!-- Tech stack as diagnostic nodes (screen mode) -->
+        {filteredTechnologies.length > 0 ? (
+          <ScreenOnly class="!flex flex-wrap gap-1.5 mt-[var(--spacing-fluid-sm)] mb-[var(--spacing-fluid-sm)] basis-full order-[10] sm:mt-fluid-xs sm:mb-0 sm:mr-2 sm:basis-auto sm:order-none">
+            {filteredTechnologies.map((tech) => (
+              <TechTag name={tech.name} url={tech.url} tooltip={tech.professional_tooltip ?? tech.tooltip} />
+            ))}
+          </ScreenOnly>
+        ) : (
+          <ScreenOnly class="mt-[var(--spacing-fluid-sm)] mb-[var(--spacing-fluid-sm)] basis-full order-[10] sm:hidden" aria-hidden="true" />
+        )}
     </Fragment>
 
     <Fragment slot="content">
-      <!-- Headline -->
-      <Text lead class="print:text-[10px] print:leading-[1.4] print:text-[#333] print:break-before-avoid print:[orphans:3] print:[widows:3]">
-        {headline.trim()}
-      </Text>
+        <!-- Headline -->
+        <Text lead class="print:break-before-avoid">
+          {headline.trim()}
+        </Text>
 
-      <!-- Bullet Points -->
-      <ul class="bullet-list mt-fluid-xs space-y-1 print:pl-4 print:mt-2 print:has-[li:nth-child(-n+4):last-child]:break-inside-avoid print:has-[li:nth-child(5)]:break-inside-auto">
-        {bulletPoints.map((item) => {
-          const cleanItem = item.replace(/^["']|["']$/g, '');
-          return (
-            <li class="flex items-baseline gap-2 text-fluid-xs text-muted-foreground print:block print:list-disc print:my-1 print:text-[10px] print:leading-[1.35] print:text-[#4a4a4a] print:break-inside-avoid print:[orphans:2] print:[widows:2]">
-              <span class="shrink-0 text-[var(--card-accent)] print:hidden" aria-hidden="true">–</span>
-              <span>{cleanItem}</span>
-            </li>
-          );
-        })}
-      </ul>
-
-      <!-- Supporting Data -->
-      {supportingData.length > 0 && (
-        <ul class="supporting-list mt-fluid-xs space-y-1 print:pl-4 print:mt-0">
-          {supportingData.map((item) => {
+        <!-- Bullet Points -->
+        <ul class="bullet-list space-y-1 mt-[var(--spacing-fluid-xs)] print:pl-4 print:mt-2 print:has-[li:nth-child(-n+4):last-child]:break-inside-avoid print:has-[li:nth-child(5)]:break-inside-auto">
+          {bulletPoints.map((item) => {
             const cleanItem = item.replace(/^["']|["']$/g, '');
             return (
-              <li class="flex items-baseline gap-2 text-fluid-xs text-muted-foreground print:block print:list-disc print:my-1 print:text-[10px] print:leading-[1.35] print:text-[#4a4a4a] print:break-inside-avoid print:[orphans:2] print:[widows:2]">
+              <li class:list={["flex items-baseline gap-2 text-fluid-xs text-muted-foreground print:block print:list-disc print:my-1 print:text-[10px] print:leading-[1.35] print:text-muted-foreground", extraBulletClasses]}>
                 <span class="shrink-0 text-[var(--card-accent)] print:hidden" aria-hidden="true">–</span>
                 <span>{cleanItem}</span>
               </li>
             );
           })}
         </ul>
-      )}
 
-      <!-- Optional Details Toggle -->
-      {details && !useTerminal && (
-        <details class="group/details mt-fluid-sm print:block" data-print="hide">
-          <summary class="inline-flex cursor-pointer list-none items-center gap-0.5 font-mono uppercase text-fluid-2xs text-muted-foreground light:normal-case light:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors [&::-webkit-details-marker]:hidden [&::marker]:hidden [&::marker]:content-['']">
-            <span class="bracket">[</span>
-            <span class="light:hidden group-open/details:hidden"> VIEW_DETAILS </span>
-            <span class="hidden light:hidden group-open/details:inline"> HIDE_DETAILS </span>
-            <span class="hidden light:inline light:group-open/details:hidden">View details &#8594;</span>
-            <span class="hidden light:group-open/details:inline">&#8592; Hide details</span>
-            <span class="bracket">]</span>
-          </summary>
-          <div class="mt-fluid-xs pl-3 border-l-2 border-[var(--card-accent)] text-fluid-xs text-muted-foreground leading-relaxed whitespace-pre-line print:pl-0 print:mt-0.5 print:border-none print:text-[10px] print:text-[#4a4a4a]">
-            {details.trim()}
-          </div>
-        </details>
-      )}
+        <!-- Supporting Data -->
+        {supportingData.length > 0 && (
+          <ul class="supporting-list space-y-1 print:pl-4 print:mt-0">
+            {supportingData.map((item) => {
+              const cleanItem = item.replace(/^["']|["']$/g, '');
+              return (
+                <li class:list={["flex items-baseline gap-2 text-fluid-xs text-muted-foreground print:block print:list-disc print:my-1 print:text-[10px] print:leading-[1.35] print:text-muted-foreground", extraBulletClasses]}>
+                  <span class="shrink-0 text-[var(--card-accent)] print:hidden" aria-hidden="true">–</span>
+                  <span>{cleanItem}</span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
 
-      <!-- Terminal trigger for projects -->
-      {prompt && useTerminal && (
-        <button
-          type="button"
-          class="terminal-trigger inline-flex cursor-pointer items-center gap-1 text-fluid-xs font-medium text-muted-foreground-light mt-fluid-xs border-none p-0 hover:text-[var(--card-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors group-[.is-active-card]:text-[var(--card-accent)] xl:group-[.is-active-card]:text-muted-foreground-light"
-          data-prompt={prompt.trim()}
-          data-print="hide"
-          aria-label={`View details for ${title}`}
-        >
-          <span>{cta ?? 'View details'}</span>
-          <span class="transition-transform duration-150 ease-out group-hover/trigger:translate-x-0.5" aria-hidden="true">&#8594;</span>
-        </button>
-      )}
+        <!-- Optional Details Toggle -->
+        {details && !useTerminal && (
+          <details class="group/details print:hidden">
+            <summary class="inline-flex cursor-pointer list-none items-center gap-0.5 font-mono uppercase text-fluid-2xs text-muted-foreground light:normal-case light:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors [&::-webkit-details-marker]:hidden [&::marker]:hidden [&::marker]:content-['']">
+              <span class="bracket">[</span>
+              <span class="light:hidden group-open/details:hidden"> VIEW_DETAILS </span>
+              <span class="hidden light:hidden group-open/details:inline"> HIDE_DETAILS </span>
+              <span class="hidden light:inline light:group-open/details:hidden">View details &#8594;</span>
+              <span class="hidden light:group-open/details:inline">&#8592; Hide details</span>
+              <span class="bracket">]</span>
+            </summary>
+            <div class="mt-fluid-xs pl-3 border-l-2 border-[var(--card-accent)] text-fluid-xs text-muted-foreground leading-relaxed whitespace-pre-line print:pl-0 print:mt-0.5 print:border-none print:text-[10px] print:text-muted-foreground">
+              {details.trim()}
+            </div>
+          </details>
+        )}
+
+        <!-- Terminal trigger for projects -->
+        {prompt && useTerminal && (
+          <button
+            type="button"
+            class="terminal-trigger inline-flex cursor-pointer items-center gap-1 text-fluid-xs font-medium text-muted-foreground-light border-none p-0 mt-[var(--spacing-fluid-xs)] hover:text-[var(--card-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors group-[.is-active-card]:text-[var(--card-accent)] xl:group-[.is-active-card]:text-muted-foreground-light print:hidden"
+            data-prompt={prompt.trim()}
+            aria-label={`View details for ${title}`}
+          >
+            <span>{cta ?? 'View details'}</span>
+            <span class="transition-transform duration-150 ease-out group-hover/trigger:translate-x-0.5" aria-hidden="true">&#8594;</span>
+          </button>
+        )}
     </Fragment>
   </CardGrid>
 </article>

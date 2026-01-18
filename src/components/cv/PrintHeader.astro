@@ -1,0 +1,46 @@
+---
+/**
+ * PrintHeader - Full-width print-only header
+ *
+ * Spans page width with name/title left, contact right, strong rule below.
+ * Includes profile summary below the title.
+ * Hidden on screen, visible only in print.
+ */
+import Stack from '../layout/Stack.astro';
+import Heading from '../typography/Heading.astro';
+import Text from '../typography/Text.astro';
+
+interface Props {
+  name: string;
+  role: string;
+  location: string;
+  phone?: string;
+  email: string;
+  linkedin: string;
+  github: string;
+  profile: string;
+}
+
+const { name, role, location, phone, email, linkedin, github, profile } = Astro.props;
+
+// Extract usernames from URLs
+const linkedinHandle = linkedin.replace(/https?:\/\/(www\.)?linkedin\.com\/in\//, '');
+const githubHandle = github.replace(/https?:\/\/(www\.)?github\.com\//, '');
+---
+
+<Stack as="header" gap="xs" class="hidden print:!flex print:pb-4 print:border-b-2 print:border-black print:mb-1.5">
+  <div class="print:flex print:justify-between print:items-start">
+    <Stack gap="xs">
+      <Heading as="h1" name class="print:!text-[24pt] print:!leading-none">{name}</Heading>
+      <Text subtitle class="print:!text-[11pt]">{role}</Text>
+      <Text muted class="print:max-w-[85ch]">{profile.split('\n')[1]}</Text>
+    </Stack>
+
+    <Stack as="address" gap="xs" class="not-italic text-right mt-2">
+      <Text as="div">{location}{phone ? ` · ${phone}` : ''}</Text>
+      <Text as="div">{email}</Text>
+      <Text as="div">linkedin.com/in/{linkedinHandle}</Text>
+      <Text as="div">github.com/{githubHandle}</Text>
+    </Stack>
+  </div>
+</Stack>

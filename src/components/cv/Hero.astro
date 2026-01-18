@@ -1,10 +1,13 @@
 ---
-import ThemeToggle from '../ui/ThemeToggle.astro';
+import SidebarAction from '../ui/SidebarAction.astro';
+import SunIcon from '../icons/SunIcon.astro';
+import MoonIcon from '../icons/MoonIcon.astro';
 import AchievementGrid from './AchievementGrid.astro';
 import Heading from '../typography/Heading.astro';
 import Text from '../typography/Text.astro';
 import Link from '../typography/Link.astro';
 import ScreenOnly from '../layout/ScreenOnly.astro';
+import Stack from '../layout/Stack.astro';
 
 interface Achievement {
   metric: string;
@@ -37,10 +40,21 @@ interface Props {
 const { name, role, email, location, linkedin, github, website, summary, achievements, education } = Astro.props;
 ---
 
-<header class="relative mb-fluid-md text-center">
+<Stack as="header" gap="sm" class="relative mb-fluid-md text-center pt-8">
   <!-- Actions (top-right, floating) -->
   <ScreenOnly class="absolute right-0 top-0 flex items-center gap-2">
-    <ThemeToggle />
+    <SidebarAction
+      id="theme-toggle"
+      onClick=""
+      longform="Light Mode"
+      shortform=":sun:"
+      altLongform="Dark Mode"
+      altShortform=":moon:"
+      aria-label="Light Mode: Switch to light theme"
+    >
+      <SunIcon slot="icon" />
+      <MoonIcon slot="alt-icon" />
+    </SidebarAction>
     <button
       type="button"
       onclick="window.print()"
@@ -54,16 +68,19 @@ const { name, role, email, location, linkedin, github, website, summary, achieve
     </button>
   </ScreenOnly>
 
-  <!-- Name -->
-  <Heading as="h1" display class="mt-8 mb-4">{name}</Heading>
+  <!-- Name and subtitle info -->
+  <Stack gap="xs">
+    <!-- Name -->
+    <Heading as="h1" display>{name}</Heading>
 
-  <!-- Role / Location / Education -->
-  <Text muted as="p" class="text-fluid-xs font-light tracking-wide text-foreground opacity-70 print:opacity-100 print:text-[#4a4a4a]">
-    {role}<span class="mx-2 text-accent-purple print:text-[#666]">//</span>{location}<span class="mx-2 text-accent-purple print:text-[#666]">//</span>{education.degree_title} {education.degree} ({education.specialism}), {education.score_short}<span class="mx-2 text-accent-purple print:text-[#666]">//</span>{education.institution}
-  </Text>
+    <!-- Role / Location / Education (custom hero subtitle styling) -->
+    <p class="text-fluid-xs font-light tracking-wide text-foreground opacity-70 print:opacity-100 print:text-[10px] print:text-[var(--color-print-body)]">
+      {role}<span class="mx-2 text-accent-purple print:text-[var(--color-print-muted)]">//</span>{location}<span class="mx-2 text-accent-purple print:text-[var(--color-print-muted)]">//</span>{education.degree_title} {education.degree} ({education.specialism}), {education.score_short}<span class="mx-2 text-accent-purple print:text-[var(--color-print-muted)]">//</span>{education.institution}
+    </p>
+  </Stack>
 
   <!-- Links -->
-  <address class="mt-3 flex flex-wrap items-center justify-center gap-5 not-italic font-mono text-fluid-xs">
+  <address class="flex flex-wrap items-center justify-center gap-5 not-italic font-mono text-fluid-xs">
     <Link href={`mailto:${email}`} variant="subtle" class="inline-flex items-center gap-1.5">
       <svg class="size-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -96,13 +113,64 @@ const { name, role, email, location, linkedin, github, website, summary, achieve
 
   <!-- Summary -->
   <ScreenOnly>
-    <Text summary class="mt-5 mx-auto max-w-2xl">
+    <Text summary class="mx-auto max-w-2xl">
       {summary}
     </Text>
   </ScreenOnly>
 
   <!-- Outlier Dashboard - The Data Visualization -->
-  <div class="mt-fluid-md pt-fluid-md pb-fluid-sm border-t border-border print:border-[#d0d0d0]">
+  <div class="pt-fluid-md pb-fluid-sm border-t border-border print:border-[var(--color-print-border)]">
     <AchievementGrid achievements={achievements} />
   </div>
-</header>
+</Stack>
+
+<script>
+  function initThemeToggle() {
+    const toggle = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+
+    if (!toggle) return;
+
+    // Update aria-label based on current theme
+    const updateAriaLabel = () => {
+      const isLight = html.getAttribute('data-theme') === 'light';
+      toggle.setAttribute(
+        'aria-label',
+        isLight ? 'Dark Mode: Switch to dark theme' : 'Light Mode: Switch to light theme'
+      );
+    };
+
+    // Set initial aria-label
+    updateAriaLabel();
+
+    // Handle toggle click - CSS handles icon/text visibility via data-theme attribute
+    toggle.addEventListener('click', () => {
+      const isCurrentlyLight = html.getAttribute('data-theme') === 'light';
+      const newTheme = isCurrentlyLight ? 'dark' : 'light';
+
+      localStorage.setItem('theme', newTheme);
+
+      if (newTheme === 'dark') {
+        html.removeAttribute('data-theme');
+      } else {
+        html.setAttribute('data-theme', 'light');
+      }
+
+      updateAriaLabel();
+    });
+
+    // Also update aria-label if theme changes externally
+    const observer = new MutationObserver(updateAriaLabel);
+    observer.observe(html, { attributes: true, attributeFilter: ['data-theme'] });
+  }
+
+  // Initialize on DOMContentLoaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initThemeToggle);
+  } else {
+    initThemeToggle();
+  }
+
+  // Re-initialize after Astro page transitions
+  document.addEventListener('astro:page-load', initThemeToggle);
+</script>

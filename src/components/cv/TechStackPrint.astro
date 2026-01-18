@@ -3,6 +3,7 @@ import type { TechTag } from '../../lib/cv-data';
 import PrintOnly from '../layout/PrintOnly.astro';
 import Stack from '../layout/Stack.astro';
 import Label from '../typography/Label.astro';
+import Text from '../typography/Text.astro';
 
 interface Props {
   technologies: TechTag[];
@@ -24,17 +25,21 @@ const techByGroup = visibleTechnologies.reduce<Record<string, Map<string, TechTa
   return acc;
 }, {});
 
-// Define the order of groups for consistent display
+// Define the order of groups for consistent display (consolidated from 7 to 4)
 const groupOrder = [
-  'Languages',
-  'Databases',
-  'Cloud',
-  'APIs',
+  'Core',
+  'Infrastructure',
+  'AI & APIs',
   'Frontend',
-  'Design Tools',
-  'AI',
-  'Backend',
 ];
+
+// Explicit item order within each group (balances line lengths)
+const itemOrder: Record<string, string[]> = {
+  Core: ['TypeScript', 'Java', 'Python', 'Ruby on Rails', '.NET'],
+  Infrastructure: ['MongoDB', 'PGSQL', 'SQL Server', 'AWS', 'SQS', 'Docker'],
+  'AI & APIs': ['GraphQL', 'gRPC', 'MCP', 'AI SDK', 'mem0', 'RAG'],
+  Frontend: ['NextJS', 'Angular', 'Tailwind'],
+};
 
 // Sort groups by defined order, with unknown groups at the end
 const sortedGroups = Object.keys(techByGroup).sort((a, b) => {
@@ -45,26 +50,41 @@ const sortedGroups = Object.keys(techByGroup).sort((a, b) => {
   if (bIndex === -1) return -1;
   return aIndex - bIndex;
 });
+
+// Chunk array into groups of n
+const chunk = <T,>(arr: T[], n: number): T[][] =>
+  arr.reduce<T[][]>((acc, item, i) => {
+    const chunkIndex = Math.floor(i / n);
+    acc[chunkIndex] = acc[chunkIndex] ?? [];
+    acc[chunkIndex].push(item);
+    return acc;
+  }, []);
 ---
 
-<PrintOnly as="section" class="print:mt-10 print:block" aria-label="Technical Skills">
-  <Label
-    as="h2"
-    variant="micro"
-    class="print:text-[10px] print:font-medium print:tracking-widest print:text-[#666666] print:border-b print:border-[#4a4a4a] print:pb-1.5 print:mb-2 print:w-fit"
-  >
+<PrintOnly as="section" aria-label="Technical Skills">
+  <Label as="h2" variant="section">
     Tech Stack
   </Label>
   <Stack gap="xs" class="print:mt-2 print:gap-2">
     {sortedGroups.map((group) => (
-      <div class="flex flex-col print:gap-px">
-        <h3 class="font-sans print:text-[9px] print:font-semibold print:text-[#1a1a1a] print:leading-tight print:m-0">
+      <Stack gap="none">
+        <Label as="h3" variant="tech">
           {group}
-        </h3>
-        <p class="font-mono print:text-[10px] print:text-[#4a4a4a] print:leading-snug print:m-0">
-          {Array.from(techByGroup[group]?.values() ?? []).map((t) => t.name).join(' · ')}
-        </p>
-      </div>
+        </Label>
+        {chunk(
+          Array.from(techByGroup[group]?.values() ?? [])
+            .map((t) => t.name)
+            .sort((a, b) => {
+              const order = itemOrder[group] ?? [];
+              return (order.indexOf(a) === -1 ? 999 : order.indexOf(a)) - (order.indexOf(b) === -1 ? 999 : order.indexOf(b));
+            }),
+          3
+        ).map((line) => (
+          <Text small class="m-0">
+            {line.join(' · ')}
+          </Text>
+        ))}
+      </Stack>
     ))}
   </Stack>
 </PrintOnly>

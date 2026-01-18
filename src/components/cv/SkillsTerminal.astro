@@ -20,13 +20,13 @@ const toSnakeCase = (str: string) =>
 
 <section aria-label="Skills" class="mt-fluid-lg mb-fluid-md">
   <h2 class="mb-fluid-sm flex items-baseline gap-2 text-foreground border-b border-border pb-fluid-xs">
-    <span class="section-prefix font-mono text-fluid-xs tracking-wider text-accent-green print:text-[#333]" aria-hidden="true">
+    <span class="section-prefix font-mono text-fluid-xs tracking-wider text-accent-green print:text-[var(--color-print-foreground)]" aria-hidden="true">
       // {sectionNumber}
     </span>
     <span class="font-mono text-fluid-sm tracking-wide">SKILLS</span>
   </h2>
 
-  <div class="terminal overflow-hidden border border-border print:border-[#ccc] print:bg-transparent print:p-[0.3rem]">
+  <div class="bg-terminal-bg text-terminal-text font-mono overflow-hidden border border-border light:border-[0.5px] print:border-[var(--color-print-border)] print:bg-transparent print:p-[0.3rem]">
     <ScreenOnly class="terminal-header flex items-center gap-1 border-b border-border px-3 py-1.5" aria-hidden="true">
       <span class="size-2 rounded-full bg-[#FF5F56]"></span>
       <span class="size-2 rounded-full bg-[#FFBD2E]"></span>
@@ -38,9 +38,9 @@ const toSnakeCase = (str: string) =>
       {categories.map((category, index) => (
         <div class:list={['terminal-command-group', index > 0 && 'mt-3']}>
           <p class="text-terminal-text flex items-center gap-1.5 print:hidden">
-            <span class="terminal-dollar text-accent-green print:text-[#333]">$</span>
+            <span class="terminal-dollar text-accent-green print:text-[var(--color-print-foreground)]">$</span>
             <span class="sr-only">Category:</span>
-            <code class="terminal-command text-accent-purple print:text-[#333]">cat</code>
+            <code class="terminal-command text-accent-purple print:text-[var(--color-print-foreground)]">cat</code>
             <code class="text-foreground">{toSnakeCase(category.name)}</code>
           </p>
 
@@ -68,10 +68,3 @@ const toSnakeCase = (str: string) =>
     </div>
   </div>
 </section>
-
-<style>
-  /* Light mode: hairline border */
-  :global([data-theme='light']) .terminal {
-    border-width: 0.5px;
-  }
-</style>

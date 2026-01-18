@@ -3,14 +3,21 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 const metric = cva(
   // Base: mono font, semibold, tight tracking (matches achievement-metric)
-  ['font-mono', 'font-semibold', 'tracking-tight', 'leading-none'],
+  [
+    'font-mono',
+    'font-semibold',
+    'tracking-tight',
+    'leading-none',
+    'print:text-[var(--color-print-foreground)]',
+    'print:font-bold',
+  ],
   {
     variants: {
       size: {
-        sm: 'text-fluid-base',
-        default: 'text-fluid-lg',
-        lg: 'text-fluid-xl',
-        xl: 'text-fluid-2xl',
+        sm: ['text-fluid-base', 'print:text-[13px]'],
+        default: ['text-fluid-lg', 'print:text-[16px]'],
+        lg: ['text-fluid-xl', 'print:text-[20px]'],
+        xl: ['text-fluid-2xl', 'print:text-[24px]'],
       },
       color: {
         default: 'text-foreground',

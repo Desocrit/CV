@@ -6,24 +6,21 @@
  *   - sidebar: Left column (sticky on desktop, collapsible on mobile)
  *   - default: Main content area (right column)
  */
+import Stack from '../layout/Stack.astro';
 ---
 
 <div class:list={[
   'cv-layout grid grid-cols-1 min-h-screen',
-  'lg:grid-cols-[400px_1fr] lg:h-auto lg:overflow-visible',
-  'print:grid-cols-[200px_minmax(0,1fr)] print:gap-6 print:h-auto print:overflow-visible',
+  'lg:grid-cols-[380px_1fr] lg:h-auto lg:overflow-visible',
+  'print:grid-cols-[175px_minmax(0,1fr)] print:gap-6 print:h-auto print:overflow-visible',
 ]}>
   <slot name="sidebar" />
 
-  <main class="main-column min-w-0 print:mt-0 print:overflow-visible">
-    <div class:list={[
-      'main-content p-[var(--spacing-fluid-md)] pt-0',
-      'max-w-[70ch] lg:max-w-[70ch] xl:max-w-[85ch]',
-      'lg:p-[var(--spacing-fluid-lg)] lg:pl-0',
-      'light:max-w-[86ch] light:xl:max-w-[105ch]',
-      'print:max-w-none print:p-0',
-    ]}>
-      <slot />
-    </div>
-  </main>
+  <Stack
+    as="main"
+    gap="none"
+    class="main-column min-w-0 print:mt-0 print:overflow-visible main-content p-[var(--spacing-fluid-md)] pt-0 max-w-[70ch] lg:max-w-[70ch] xl:max-w-[85ch] lg:p-[var(--spacing-fluid-lg)] lg:pl-0 light:max-w-[86ch] light:xl:max-w-[105ch] print:max-w-none print:p-0"
+  >
+    <slot />
+  </Stack>
 </div>

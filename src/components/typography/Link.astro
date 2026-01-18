@@ -68,5 +68,77 @@ const classes = link({ variant, class: className });
   rel={external ? 'noopener noreferrer' : undefined}
   {...attrs}
 >
-  <slot />
+  <slot />{external && (
+    <>
+      <span class="sr-only"> (opens in new window)</span>
+      <svg
+        class="external-icon"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+        <polyline points="15 3 21 3 21 9" />
+        <line x1="10" y1="14" x2="21" y2="3" />
+      </svg>
+    </>
+  )}
 </a>
+
+<style>
+  /* Subtle variant: animated underline on hover */
+  .link-subtle {
+    position: relative;
+  }
+
+  .link-subtle::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--color-foreground);
+    transition: width 0.2s ease;
+  }
+
+  .link-subtle:hover::after {
+    width: 100%;
+  }
+
+  /* External link icon */
+  .external-icon {
+    display: inline-block;
+    margin-left: 0.25em;
+    vertical-align: baseline;
+    position: relative;
+    top: 0.1em;
+  }
+
+  /* Screen reader only - visually hidden but accessible */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Hide external icon in print */
+  @media print {
+    .external-icon {
+      display: none;
+    }
+  }
+</style>
