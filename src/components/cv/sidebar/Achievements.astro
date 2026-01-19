@@ -4,6 +4,9 @@
  *
  * Displays achievements in a two-column grid with aligned metrics.
  * Responsive styling for desktop, mobile, and print.
+ *
+ * Supports separate grouped content for print via printGroups/printTitle props,
+ * allowing Impact data to be displayed with category subheadings in print.
  */
 import Odometer from '../../ui/Odometer.astro';
 import Label from '../../typography/Label.astro';
@@ -13,17 +16,29 @@ import ScreenOnly from '../../layout/ScreenOnly.astro';
 import PrintOnly from '../../layout/PrintOnly.astro';
 import Stack from '../../layout/Stack.astro';
 
-interface Achievement {
+interface AchievementItem {
   metric: string;
   headline: string;
   description: string;
 }
 
-interface Props {
-  achievements: Achievement[];
+interface PrintGroup {
+  subheading: string;
+  items: AchievementItem[];
 }
 
-const { achievements } = Astro.props;
+interface Props {
+  achievements: AchievementItem[];
+  /** Optional grouped items to display in print mode with subheadings */
+  printGroups?: PrintGroup[];
+  /** Optional title for print mode (defaults to "Achievements") */
+  printTitle?: string;
+}
+
+const { achievements, printGroups, printTitle = 'Achievements' } = Astro.props;
+
+// For print: use groups if provided, otherwise wrap achievements as single group
+const groupsForPrint: PrintGroup[] = printGroups ?? [{ subheading: '', items: achievements }];
 
 const toSnakeCase = (str: string) =>
   str.toUpperCase().replace(/\s+/g, '_');
@@ -31,60 +46,100 @@ const toSnakeCase = (str: string) =>
 
 <Stack
   as="section"
-  gap="xs"
+  gap={{ base: 'xs', print: 'none' }}
   class:list={[
     'sm:col-start-2 sm:row-span-3 sm:self-start',
-    'print:mb-10',
   ]}
   aria-label="Key Achievements"
 >
-  <!-- Desktop & Light mode title (also shown in print) -->
-  <Label
-    as="h2"
-    variant="section"
-    class="hidden light:block sm:!hidden lg:!block print:!block"
-  >
-    Achievements
-  </Label>
+  <!-- Desktop & Light mode title (screen only) -->
+  <ScreenOnly>
+    <Label
+      as="h2"
+      variant="section"
+      class="hidden light:block sm:!hidden lg:!block"
+    >
+      Achievements
+    </Label>
+  </ScreenOnly>
 
-  <!-- Mobile dark mode terminal title -->
+  <!-- Mobile dark mode terminal title (screen only) -->
   <Label
     as="h2"
     variant="terminal"
     color="green"
-    class="block light:hidden sm:hidden"
+    class="block light:hidden sm:hidden print:!hidden"
   >
     &gt; ACHIEVEMENTS
   </Label>
 
-  <!-- Two-column grid with aligned metrics -->
-  <div class="grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5">
-    {achievements.map((achievement, index) => (
-      <div class="contents">
-        <Metric
-          as="data"
-          size="sm"
-          value={achievement.headline}
-          class="text-right self-baseline"
-        >
-          <Odometer value={achievement.headline} />
-        </Metric>
-        <Label variant="achievement" color="purple" class="self-baseline light:font-semibold">
-          <!-- Dark mode terminal style: UPPERCASE_WITH_UNDERSCORES -->
-          <ScreenOnly as="span" class="light:hidden">{toSnakeCase(achievement.metric)}</ScreenOnly>
-          <!-- Light mode: lowercase with spaces -->
-          <ScreenOnly as="span" class="hidden light:inline capitalize">{achievement.metric}</ScreenOnly>
-          <PrintOnly as="span">{achievement.metric}</PrintOnly>
-        </Label>
-        <span class="col-span-2" aria-hidden="true"></span>
-        <Text muted class:list={[
-          'col-span-2 leading-snug max-w-[50ch]',
-          index === achievements.length - 1 ? '' : 'mb-[var(--spacing-fluid-sm)]',
-          'print:mt-0.5 print:mb-1.5',
-        ]}>
-          {achievement.description}
-        </Text>
-      </div>
-    ))}
-  </div>
+  <!-- Print title (uses printTitle prop) -->
+  <PrintOnly>
+    <Label as="h2" variant="section">
+      {printTitle}
+    </Label>
+  </PrintOnly>
+
+  <!-- Screen: Two-column grid with achievements -->
+  <ScreenOnly>
+    <div class="grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5">
+      {achievements.map((achievement, index) => (
+        <div class="contents">
+          <Metric
+            as="data"
+            size="sm"
+            value={achievement.headline}
+            class="text-right self-baseline"
+          >
+            <Odometer value={achievement.headline} />
+          </Metric>
+          <Label variant="achievement" color="purple" class="self-baseline light:font-semibold">
+            <!-- Dark mode terminal style: UPPERCASE_WITH_UNDERSCORES -->
+            <span class="light:hidden">{toSnakeCase(achievement.metric)}</span>
+            <!-- Light mode: lowercase with spaces -->
+            <span class="hidden light:inline capitalize">{achievement.metric}</span>
+          </Label>
+          <span class="col-span-2" aria-hidden="true"></span>
+          <Text muted class:list={[
+            'col-span-2 leading-snug max-w-[50ch]',
+            index === achievements.length - 1 ? '' : 'mb-[var(--spacing-fluid-sm)]',
+          ]}>
+            {achievement.description}
+          </Text>
+        </div>
+      ))}
+    </div>
+  </ScreenOnly>
+
+  <!-- Print: Grouped items with subheadings -->
+  <PrintOnly>
+    <div class="flex flex-col gap-3">
+      {groupsForPrint.map((group, groupIndex) => (
+        <div class="break-inside-avoid">
+          <div class="flex flex-col gap-3">
+            {group.items.map((item, index) => (
+              <div>
+                <div class="flex items-baseline gap-[0.25em]">
+                  <Metric
+                    as="data"
+                    size="sm"
+                    value={item.headline}
+                    class="text-left"
+                  >
+                    {item.headline}
+                  </Metric>
+                  <Label variant="achievement" color="purple" class="font-semibold">
+                    {item.metric}
+                  </Label>
+                </div>
+                <Text muted class="leading-snug max-w-[50ch] mt-0.5">
+                  {item.description}
+                </Text>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </PrintOnly>
 </Stack>

@@ -1,7 +1,6 @@
 ---
 import type { ImpactNode } from '../../lib/cv-data';
 import ImpactCard from './ImpactCard.astro';
-import Label from '../typography/Label.astro';
 
 interface Props {
   nodes: ImpactNode[];
@@ -11,29 +10,9 @@ const { nodes } = Astro.props;
 
 // Screen: filter out print-only nodes
 const screenNodes = nodes.filter((node) => !node.print_only);
-
-// Print: group nodes by header for Swiss-style layout
-const categoryNumbers: Record<string, string> = {
-  'Developer Velocity': '01',
-  'System Integrity': '02',
-  'Talent Density': '03',
-  'Global Scale': '04',
-};
-
-const groupedNodes = nodes.reduce<Record<string, ImpactNode[]>>((acc, node) => {
-  const existing = acc[node.header];
-  if (existing) {
-    existing.push(node);
-  } else {
-    acc[node.header] = [node];
-  }
-  return acc;
-}, {});
-
-const orderedHeaders = [...new Set(nodes.map((n) => n.header))];
 ---
 
-{/* Screen: Interactive card grid */}
+{/* Screen: Interactive card grid (hidden in print - Impact data rendered via sidebar Achievements) */}
 <div
   class="impact-grid
     grid grid-cols-1 gap-4 items-start mt-2
@@ -43,53 +22,6 @@ const orderedHeaders = [...new Set(nodes.map((n) => n.header))];
   {screenNodes.map((node) => (
     <ImpactCard node={node} />
   ))}
-</div>
-
-{/* Print: Swiss-style grouped metrics */}
-<div class="hidden print:flex print:flex-col print:gap-[0.35rem]">
-  {orderedHeaders.map((header) => {
-    const items = groupedNodes[header] ?? [];
-    const number = categoryNumbers[header] ?? '00';
-    const shortHeader = items[0]?.short_header ?? header.toUpperCase();
-
-    return (
-      <article class="w-full break-inside-avoid">
-        {/* Swiss hairline rule */}
-        <div
-          class="border-0 border-t-[0.5px] border-solid border-border m-0 mb-[0.4rem] mr-8 print:hidden"
-          role="presentation"
-        />
-
-        {/* Category header */}
-        <header class="mt-[0.3rem] mb-[0.35rem]">
-          <Label variant="subtitle" class="print:pb-0.5">
-            {number} / {shortHeader}
-          </Label>
-        </header>
-
-        {/* Two-column metric rows */}
-        <div class="flex flex-col">
-          {items.map((node) => (
-            <div class="grid grid-cols-[25%_1fr] gap-2 items-baseline mt-0">
-              <div class="whitespace-nowrap">
-                {node.metric_value && (
-                  <span class="font-sans text-[13px] font-bold text-foreground mr-[0.2em]">
-                    {node.metric_value}
-                  </span>
-                )}{' '}
-                <span class="font-mono text-[9px] font-semibold normal-case tracking-[0.01em] text-muted-foreground-light">
-                  {node.metric_label}
-                </span>
-              </div>
-              <p class="font-sans text-[9px] font-normal text-muted-foreground leading-[1.4] m-0">
-                {node.long_description || node.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </article>
-    );
-  })}
 </div>
 
 {/* Keyframes and CSS Houdini property for border animation */}

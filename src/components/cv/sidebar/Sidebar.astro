@@ -10,24 +10,19 @@ import Header from './Header.astro';
 import Nav from './Nav.astro';
 import Profile from './Profile.astro';
 import Achievements from './Achievements.astro';
-import Education from './Education.astro';
 import QrCode from './QrCode.astro';
 import TechStackPrint from '../TechStackPrint.astro';
 import type { TechTag } from '../../../lib/cv-data';
 
-interface Achievement {
+interface AchievementItem {
   metric: string;
   headline: string;
   description: string;
 }
 
-interface EducationData {
-  degree: string;
-  degree_title: string;
-  score_short: string;
-  specialism: string;
-  institution: string;
-  year: number;
+interface PrintGroup {
+  subheading: string;
+  items: AchievementItem[];
 }
 
 interface Props {
@@ -39,8 +34,9 @@ interface Props {
   linkedin: string;
   github: string;
   profile: string;
-  achievements: Achievement[];
-  education: EducationData;
+  achievements: AchievementItem[];
+  /** Impact nodes grouped by category with subheadings for print */
+  impactPrintGroups?: PrintGroup[];
   technologies: TechTag[];
 }
 
@@ -54,7 +50,7 @@ const {
   github,
   profile,
   achievements,
-  education,
+  impactPrintGroups,
   technologies,
 } = Astro.props;
 ---
@@ -65,8 +61,11 @@ const {
   <Nav slot="nav" email={email} linkedin={linkedin} github={github} />
 
   <Profile profile={profile} />
-  <Achievements achievements={achievements} />
-  <Education {...education} />
+  <Achievements
+    achievements={achievements}
+    printGroups={impactPrintGroups}
+    printTitle="Impact"
+  />
   <TechStackPrint technologies={technologies} />
 
   <QrCode slot="footer" />
