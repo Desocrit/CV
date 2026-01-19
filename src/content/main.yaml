@@ -138,9 +138,9 @@ projects:
     headline: Unified design language to bridge engineering, design, and AI
     metric:
       - Replaced over 10,000 legacy components with accessible Tailwind
-      - Brought rebrand lead time from 12 dev weeks to 1 by clearing design debt
+      - Cut rebrand lead time from 12 dev weeks to 1 by clearing design debt
     action:
-      - Synchronised Figma tokens with code to enable AI driven UI generation
+      - Strictly aligned designer and developer concepts to allow AI driven UI
       # - Seamlessly orchestrated a high-risk 30 day migration of the entire system
     prompt: How did Tempo allow AI to build pixel-perfect designs with Figma MCP?
     cta: How did Tempo allow AI to build pixel-perfect designs with Figma MCP?
@@ -279,7 +279,7 @@ impact_nodes:
     title: CI/CD Architecture
     metric_value: 90%
     metric_label: CI savings
-    description: Cut CI costs by 90% and test execution time by 75%
+    description: Applied cross-branch caching and parallelisation
     long_description: Reduced test latency by 90% and CI costs by 75% using cross-branch caching
     color: green
     print_only: false
@@ -289,8 +289,8 @@ impact_nodes:
     short_header: EFFICIENCY
     title: Monorepo
     metric_value: "100%"
-    metric_label: Compliance
-    description: Consolidated 22 services with 100% strict TypeScript
+    metric_label: Typescript
+    description: Unified 22 services into one strict monorepo
     long_description: Consolidated 22 services into one monorepo with 100% strict Typescript
     color: green
     print_only: false
@@ -302,7 +302,7 @@ impact_nodes:
     title: Capital Efficiency
     metric_value: "$500k"
     metric_label: Recovered
-    description: Saved $500k/year and reduced DB usage by 90%
+    description: Reduced DB usage by 90% and pruned features
     long_description: Saved 500k/year and by optimising the database and pruning unused features
     color: orange
     print_only: false
@@ -313,7 +313,7 @@ impact_nodes:
     title: Security Hardening
     metric_value: "35+"
     metric_label: CVEs Fixed
-    description: Remediated 35+ CVEs and hardened attack surfaces
+    description: Remediated 35+ CVEs via SAST/DAST pipelines
     long_description: Implemented automated SAST/DAST tooling to find and fix 35+ critical CVEs
     color: orange
     print_only: false
@@ -336,7 +336,7 @@ impact_nodes:
     title: Engineering Culture
     metric_value: "100+"
     metric_label: Guides
-    description: Authored core runbooks and "Two Minute Guides"
+    description: Scaled knowledge sharing via 100+ internal guides
     long_description: Authored 100+ guides including the "Two Minute Guides" series and core runbooks
     color: blue
     print_only: false
@@ -348,7 +348,7 @@ impact_nodes:
     title: 1000x Throughput
     metric_value: "1000x"
     metric_label: Throughput
-    description: Engineered 1000x burst capacity on the checkout
+    description: Scaled checkout 1000x for London Marathon spikes
     long_description: Improved burst capacity by 1000x to support the needs of the London Marathon
     color: purple
     print_only: false
@@ -359,7 +359,7 @@ impact_nodes:
     title: 100% Internationalization
     metric_value: "500k"
     metric_label: Translations
-    description: Orchestrated an agentic extraction to reach 100% i18n
+    description: Localised to 100% in 12 languages using AI agents
     long_description: Translated our site into 12+ languages through an agentic translation piepline
     color: purple
     print_only: false
