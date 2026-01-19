@@ -1,6 +1,8 @@
 ---
 import type { ImpactNode } from '../../lib/cv-data';
 import Label from '../typography/Label.astro';
+import Heading from '../typography/Heading.astro';
+import Text from '../typography/Text.astro';
 
 interface Props {
   node: ImpactNode;
@@ -47,21 +49,19 @@ const { node } = Astro.props;
       >
         <span class="light:hidden">[ </span>{node.header}<span class="light:hidden"> ]</span>
       </Label>
-      <h3
-        class="card-title
-          m-0
-          font-sans text-fluid-sm font-semibold tracking-tight text-foreground leading-snug"
+      <Heading
+        as="h3"
+        tiny
+        class="card-title m-0 font-sans font-semibold leading-snug"
       >
         {node.title}
-      </h3>
-      <p
-        class="card-description
-          mt-1 mb-0
-          text-fluid-2xs italic text-muted-foreground leading-snug
-          light:not-italic"
+      </Heading>
+      <Text
+        small
+        class="card-description mt-1 mb-0 italic leading-snug light:not-italic"
       >
         {node.description}
-      </p>
+      </Text>
     </div>
     <span
       class="card-cta
