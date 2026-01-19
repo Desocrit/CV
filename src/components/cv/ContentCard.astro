@@ -81,7 +81,7 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
         </Heading>
 
         {tag && (
-          <Label as="p" variant="plain" class:list={["order-2 ml-auto mt-0 has-[~.label-text]:order-3 has-[~.label-text]:basis-full has-[~.label-text]:ml-0 sm:order-none sm:ml-0 sm:has-[~.label-text]:order-none sm:has-[~.label-text]:basis-auto", (printHideTag || printStackMeta) && "print:hidden"]}>
+          <Label as="p" plain class:list={["order-2 ml-auto mt-0 has-[~.label-text]:order-3 has-[~.label-text]:basis-full has-[~.label-text]:ml-0 sm:order-none sm:ml-0 sm:has-[~.label-text]:order-none sm:has-[~.label-text]:basis-auto", (printHideTag || printStackMeta) && "print:hidden"]}>
             <span>{tag}</span>
           </Label>
         )}
@@ -89,7 +89,7 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
         {label && (
           <Label
             as="p"
-            variant="accent"
+            accent
             class:list={["label-text mt-0 order-2 ml-auto text-[var(--card-accent)] transition-[text-shadow] duration-150 ease-out hover:[text-shadow:0_0_4px_var(--card-accent),0_0_10px_color-mix(in_srgb,var(--card-accent)_50%,transparent),0_0_20px_color-mix(in_srgb,var(--card-accent)_25%,transparent)] light:hover:[text-shadow:none] print:mt-0.5 sm:mt-2 sm:order-none sm:ml-0", printStackMeta && "print:hidden"]}
           >
             <ScreenOnly as="span">{labelText}</ScreenOnly>
@@ -97,20 +97,20 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
           </Label>
         )}
 
-        {/* Print stacked layout: Label (strong) | Date (weaker) on second line */}
+        {/* Print stacked layout: Label (medium) | Date (light) on second line */}
         {printStackMeta && (label || tag) && (
           <PrintOnly class="basis-full mt-0.5">
-            <p class="flex items-baseline gap-1 m-0">
-              {label && <Label as="span" variant="accent" class="!text-foreground !font-semibold">{label}</Label>}
-              {label && tag && <Label as="span" variant="default" class="mx-0.5">·</Label>}
-              {tag && <Label as="span" variant="default" class="!font-normal">{tag}</Label>}
+            <p class="flex items-baseline gap-1 m-0 print:font-sans">
+              {label && <Label as="span" accent class="!text-[var(--color-print-body)] !font-medium print:!font-sans print:mb-0.5">{label}</Label>}
+              {label && tag && <Label as="span" class="mx-0.5 print:!font-sans">·</Label>}
+              {tag && <Label as="span" class="!font-normal !text-[var(--color-print-muted)] print:!font-sans">{tag}</Label>}
             </p>
           </PrintOnly>
         )}
 
         {subtitle && (
           <Label
-            variant="cardHeader"
+            cardHeader
             class="order-1 ml-2 mt-0 block text-[var(--card-accent)] group-hover:opacity-100 sm:order-none sm:ml-0 sm:mt-1"
           >
             <span class="light:hidden">[ </span>{subtitle}<span class="light:hidden"> ]</span>
@@ -131,7 +131,7 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
 
     <Fragment slot="content">
         <!-- Headline -->
-        <Text lead class:list={["print:break-before-avoid", printHeadlineAsBullet && "print:hidden"]}>
+        <Text lead class:list={["print:break-before-avoid print:mt-1", printHeadlineAsBullet && "print:hidden"]}>
           {headline.trim()}
         </Text>
 
@@ -205,18 +205,18 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
   {/* Compact education format for print */}
   {printEducationCompact && (
     <PrintOnly class="space-y-0">
-      <Heading as="p" tiny class="m-0">
+      <Heading as="h3" tiny class="m-0">
         {printDegreeTitle}{' '}{printDegree}
       </Heading>
-      <p class="m-0 flex items-baseline gap-1">
-        <Label as="span" variant="accent" class="!text-[var(--color-print-foreground)] !font-semibold">{printInstitution}</Label>
-        <Label as="span" variant="default" class="mx-0.5">·</Label>
-        <Label as="span" variant="default" class="!font-normal">{printTenure}</Label>
+      <p class="m-0 flex items-baseline gap-1 print:font-sans">
+        <Label as="span" accent class="!text-[var(--color-print-body)] !font-medium print:!font-sans">{printInstitution}</Label>
+        <Label as="span" class="mx-0.5 print:!font-sans">·</Label>
+        <Label as="span" class="!font-normal !text-[var(--color-print-muted)] print:!font-sans">{printTenure}</Label>
       </p>
-      <p class="m-0 flex items-baseline gap-1">
-        <Label as="span" variant="accent" class="!text-[var(--color-print-foreground)] !font-semibold">{printSpecialism}</Label>
-        <Label as="span" variant="default" class="mx-0.5">·</Label>
-        <Label as="span" variant="default" class="!font-normal">{printScore}</Label>
+      <p class="m-0 flex items-baseline gap-1 print:font-sans">
+        <Label as="span" accent class="!text-[var(--color-print-body)] !font-medium print:!font-sans">{printSpecialism}</Label>
+        <Label as="span" class="mx-0.5 print:!font-sans">·</Label>
+        <Label as="span" class="!font-normal !text-[var(--color-print-muted)] print:!font-sans">{printScore}</Label>
       </p>
     </PrintOnly>
   )}

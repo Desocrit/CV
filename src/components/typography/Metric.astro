@@ -8,13 +8,13 @@ const metric = cva(
     'font-semibold',
     'tracking-tight',
     'leading-none',
-    'print:text-[var(--color-print-foreground)]',
     'print:font-bold',
+    'print:tracking-[-0.03em]',
   ],
   {
     variants: {
       size: {
-        sm: ['text-fluid-base', 'print:text-[14px]'],
+        sm: ['text-fluid-base', 'print:text-[16px]'],
         default: ['text-fluid-lg', 'print:text-[18px]'],
         lg: ['text-fluid-xl', 'print:text-[22px]'],
         xl: ['text-fluid-2xl', 'print:text-[26px]'],

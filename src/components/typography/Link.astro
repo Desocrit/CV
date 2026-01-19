@@ -45,20 +45,38 @@ const link = cva(
 );
 
 type LinkVariants = VariantProps<typeof link>;
+type VariantKey = NonNullable<LinkVariants['variant']>;
 
-const {
-  href,
-  variant = 'default',
-  external = false,
-  class: className,
-  ...attrs
-} = Astro.props as LinkVariants & {
+interface Props extends Omit<LinkVariants, 'variant'> {
   href: string;
   external?: boolean;
   class?: string;
-};
+  variant?: VariantKey;
+  // Boolean variant props - use `<Link subtle>` instead of `<Link variant="subtle">`
+  subtle?: boolean;
+  mono?: boolean;
+  action?: boolean;
+}
 
-const classes = link({ variant, class: className });
+const {
+  href,
+  variant,
+  external = false,
+  class: className,
+  // Boolean variants
+  subtle,
+  mono,
+  action,
+  ...attrs
+} = Astro.props as Props;
+
+// Resolve variant from boolean props or explicit variant prop
+const resolvedVariant: VariantKey = subtle ? 'subtle'
+  : mono ? 'mono'
+  : action ? 'action'
+  : variant ?? 'default';
+
+const classes = link({ variant: resolvedVariant, class: className });
 ---
 
 <a

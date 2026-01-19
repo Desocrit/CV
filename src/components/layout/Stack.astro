@@ -36,8 +36,8 @@ export interface Props {
   class?: string;
 }
 
-// CVA for base gap (no breakpoint prefix)
-const baseGap = cva('', {
+// CVA for base gap (no breakpoint prefix) - includes default print styles
+const baseGapWithPrint = cva('', {
   variants: {
     gap: {
       none: 'gap-0 print:gap-0',
@@ -46,6 +46,20 @@ const baseGap = cva('', {
       md: 'gap-[var(--spacing-fluid-md)] print:gap-3',
       lg: 'gap-[var(--spacing-fluid-lg)] print:gap-4',
       xl: 'gap-[var(--spacing-fluid-xl)] print:gap-6',
+    },
+  },
+});
+
+// CVA for base gap without automatic print styles (used when print is explicitly set)
+const baseGapNoPrint = cva('', {
+  variants: {
+    gap: {
+      none: 'gap-0',
+      xs: 'gap-[var(--spacing-fluid-xs)]',
+      sm: 'gap-[var(--spacing-fluid-sm)]',
+      md: 'gap-[var(--spacing-fluid-md)]',
+      lg: 'gap-[var(--spacing-fluid-lg)]',
+      xl: 'gap-[var(--spacing-fluid-xl)]',
     },
   },
 });
@@ -103,17 +117,18 @@ const breakpointGapClasses: Record<Exclude<Breakpoint, 'base'>, Record<GapSize, 
 };
 
 function getGapClasses(gap: GapSize | ResponsiveGap): string {
-  // Simple string value - use CVA directly
+  // Simple string value - use CVA with print defaults
   if (typeof gap === 'string') {
-    return baseGap({ gap });
+    return baseGapWithPrint({ gap });
   }
 
   // Responsive object - build class string
   const classes: string[] = [];
+  const hasExplicitPrint = 'print' in gap;
 
-  // Handle base (no prefix)
+  // Handle base (no prefix) - skip automatic print styles if print is explicitly set
   if (gap.base) {
-    classes.push(baseGap({ gap: gap.base }));
+    classes.push(hasExplicitPrint ? baseGapNoPrint({ gap: gap.base }) : baseGapWithPrint({ gap: gap.base }));
   }
 
   // Handle breakpoint-prefixed classes

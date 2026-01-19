@@ -62,13 +62,13 @@ const chunk = <T,>(arr: T[], n: number): T[][] =>
 ---
 
 <PrintOnly as="section" aria-label="Technical Skills" block>
-  <Label as="h2" variant="section">
+  <Label as="h2" section>
     Tech Stack
   </Label>
-  <Stack gap="xs" class="print:mt-0 print:gap-2">
+  <Stack gap="lg" class="mt-2 !gap-5">
     {sortedGroups.map((group) => (
-      <Stack gap="none">
-        <Label as="h3" variant="tech">
+      <Stack gap="xs">
+        <Label as="h3" tech class="print:pb-0.5">
           {group}
         </Label>
         {chunk(
@@ -80,7 +80,7 @@ const chunk = <T,>(arr: T[], n: number): T[][] =>
             }),
           3
         ).map((line) => (
-          <Text small class="m-0">
+          <Text mono>
             {line.join(' · ')}
           </Text>
         ))}

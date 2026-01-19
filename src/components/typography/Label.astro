@@ -136,6 +136,7 @@ const label = cva(
           'print:leading-tight',
           'print:normal-case',
           'print:mb-px',
+          'print: uppercase'
         ],
         // Card header: Impact/Content card category headers with brackets
         cardHeader: [
@@ -178,19 +179,58 @@ const label = cva(
 );
 
 type LabelVariants = VariantProps<typeof label>;
+type VariantKey = NonNullable<LabelVariants['variant']>;
+
+interface Props extends Omit<LabelVariants, 'variant'> {
+  as?: 'span' | 'div' | 'label' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  class?: string;
+  variant?: VariantKey;
+  // Boolean variant props - use `<Label section>` instead of `<Label variant="section">`
+  accent?: boolean;
+  achievement?: boolean;
+  micro?: boolean;
+  plain?: boolean;
+  section?: boolean;
+  subtitle?: boolean;
+  terminal?: boolean;
+  contact?: boolean;
+  tech?: boolean;
+  cardHeader?: boolean;
+}
 
 const {
   as: Tag = 'span',
-  variant = 'default',
+  variant,
   color = 'default',
   class: className,
+  // Boolean variants
+  accent,
+  achievement,
+  micro,
+  plain,
+  section,
+  subtitle,
+  terminal,
+  contact,
+  tech,
+  cardHeader,
   ...attrs
-} = Astro.props as LabelVariants & {
-  as?: 'span' | 'div' | 'label' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-  class?: string;
-};
+} = Astro.props as Props;
 
-const classes = label({ variant, color, class: className });
+// Resolve variant from boolean props or explicit variant prop
+const resolvedVariant: VariantKey = accent ? 'accent'
+  : achievement ? 'achievement'
+  : micro ? 'micro'
+  : plain ? 'plain'
+  : section ? 'section'
+  : subtitle ? 'subtitle'
+  : terminal ? 'terminal'
+  : contact ? 'contact'
+  : tech ? 'tech'
+  : cardHeader ? 'cardHeader'
+  : variant ?? 'default';
+
+const classes = label({ variant: resolvedVariant, color, class: className });
 ---
 
 <Tag class={classes} {...attrs}>

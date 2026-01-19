@@ -32,13 +32,15 @@ const heading = cva('text-foreground', {
         'text-fluid-base',
         'font-medium',
         'tracking-tight',
-        // Print: 13px, extra bold, pitch black, tight line-height, SANS-SERIF
+        // Print: 14px, black weight, pitch black, tight tracking, SANS-SERIF
         'print:font-sans',
-        'print:text-[13px]',
-        'print:font-extrabold',
+        'print:text-[14px]',
+        'print:font-black',
+        'print:tracking-[-0.02em]',
         'print:leading-[1.1]',
         'print:text-[var(--color-print-foreground)]',
         'print:break-after-avoid',
+        'print:mb-0.5'
       ],
       // Name: Sidebar name display (responsive sizing)
       name: [
@@ -50,8 +52,8 @@ const heading = cva('text-foreground', {
         'tracking-tight',
         'leading-none',
         'print:text-[22px]',
-        'print:font-bold',
-        'print:tracking-[-0.02em]',
+        'print:font-black',
+        'print:tracking-[-0.03em]',
       ],
       // Section: Main content section titles (EXPERIENCE, PROJECTS, etc.)
       section: [

@@ -24,26 +24,26 @@ interface Props {
 const { name, role, location, phone, email, linkedin, github, profile } = Astro.props;
 
 // Extract usernames from URLs
-const linkedinHandle = linkedin.replace(/https?:\/\/(www\.)?linkedin\.com\/in\//, '');
+const linkedinHandle = linkedin.replace(/https?:\/\/(www\.)?linkedin\.com\/in\//, '').slice(0, -1);
 const githubHandle = github.replace(/https?:\/\/(www\.)?github\.com\//, '');
 ---
 
-<Stack as="header" gap="sm" class="hidden print:!flex print:pt-6 print:pb-5 print:border-b-2 print:border-black print:mb-3">
+<Stack as="header" gap="sm" class="hidden print:!flex print:pt-4 print:pb-3 print:border-b-2 print:border-black print:mb-3">
   <div class="print:flex print:justify-between print:items-start">
     <Stack gap="xs">
       <Heading as="h1" name>{name}</Heading>
       <Text subtitle>{role}</Text>
-      <Text muted as="div" class="print:max-w-[85ch]">
+      <Text muted as="div" class="print:max-w-[85ch] mt-1">
         {profile.split('\n').filter(line => line.trim()).map(line => (
           <span class="block">{line}</span>
         ))}
       </Text>
     </Stack>
 
-    <Stack as="address" gap="xs" class="not-italic text-right mt-2">
+    <Stack as="address" gap="sm" class="not-italic text-right mt-2">
       <Text muted as="div">{location}{phone ? ` · ${phone}` : ''}</Text>
       <Text muted as="div">{email}</Text>
-      <Text muted as="div">linkedin.com/in/{linkedinHandle}</Text>
+      <Text muted as="div">/in/{linkedinHandle}</Text>
       <Text muted as="div">github.com/{githubHandle}</Text>
     </Stack>
   </div>

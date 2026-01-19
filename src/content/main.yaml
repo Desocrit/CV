@@ -279,7 +279,7 @@ impact_nodes:
     title: CI/CD Architecture
     metric_value: 90%
     metric_label: CI savings
-    description: Applied cross-branch caching and parallelisation
+    description: Applied cross-branch caching & parallelisation
     long_description: Reduced test latency by 90% and CI costs by 75% using cross-branch caching
     color: green
     print_only: false
@@ -302,7 +302,7 @@ impact_nodes:
     title: Capital Efficiency
     metric_value: "$500k"
     metric_label: Recovered
-    description: Reduced DB usage by 90% and pruned features
+    description: Cut DB usage by 90% and pruned features
     long_description: Saved 500k/year and by optimising the database and pruning unused features
     color: orange
     print_only: false
@@ -313,7 +313,7 @@ impact_nodes:
     title: Security Hardening
     metric_value: "35+"
     metric_label: CVEs Fixed
-    description: Remediated 35+ CVEs via SAST/DAST pipelines
+    description: Implemented automated SAST/DAST pipelines
     long_description: Implemented automated SAST/DAST tooling to find and fix 35+ critical CVEs
     color: orange
     print_only: false
@@ -323,9 +323,9 @@ impact_nodes:
   - header: Talent Density
     short_header: CULTURE
     title: The AI Pivot
-    metric_value: "2.0x"
+    metric_value: "2.0×"
     metric_label: Velocity
-    description: Doubled engineering velocity via 90% AI adoption
+    description: Doubled team velocity via 90% AI upskilling
     long_description: Doubled development velocity by reaching 90% AI generated code across the team
     color: blue
     print_only: false
@@ -336,7 +336,7 @@ impact_nodes:
     title: Engineering Culture
     metric_value: "100+"
     metric_label: Guides
-    description: Scaled knowledge sharing via 100+ internal guides
+    description: Scaled knowledge with 100+ guides and talks
     long_description: Authored 100+ guides including the "Two Minute Guides" series and core runbooks
     color: blue
     print_only: false
@@ -346,9 +346,9 @@ impact_nodes:
   - header: Global Scale
     short_header: INFRASTRUCTURE
     title: 1000x Throughput
-    metric_value: "1000x"
+    metric_value: "1000×"
     metric_label: Throughput
-    description: Scaled checkout 1000x for London Marathon spikes
+    description: Scaled checkout to handle London Marathon
     long_description: Improved burst capacity by 1000x to support the needs of the London Marathon
     color: purple
     print_only: false
@@ -359,7 +359,7 @@ impact_nodes:
     title: 100% Internationalization
     metric_value: "500k"
     metric_label: Translations
-    description: Localised to 100% in 12 languages using AI agents
+    description: Localised to 100% in 12 languages using AI
     long_description: Translated our site into 12+ languages through an agentic translation piepline
     color: purple
     print_only: false

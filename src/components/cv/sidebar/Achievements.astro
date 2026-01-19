@@ -49,6 +49,7 @@ const toSnakeCase = (str: string) =>
   gap={{ base: 'xs', print: 'none' }}
   class:list={[
     'sm:col-start-2 sm:row-span-3 sm:self-start',
+    'print:pb-4 print:mb-4',
   ]}
   aria-label="Key Achievements"
 >
@@ -56,7 +57,7 @@ const toSnakeCase = (str: string) =>
   <ScreenOnly>
     <Label
       as="h2"
-      variant="section"
+      section
       class="hidden light:block sm:!hidden lg:!block"
     >
       Achievements
@@ -66,7 +67,7 @@ const toSnakeCase = (str: string) =>
   <!-- Mobile dark mode terminal title (screen only) -->
   <Label
     as="h2"
-    variant="terminal"
+    terminal
     color="green"
     class="block light:hidden sm:hidden print:!hidden"
   >
@@ -75,7 +76,7 @@ const toSnakeCase = (str: string) =>
 
   <!-- Print title (uses printTitle prop) -->
   <PrintOnly>
-    <Label as="h2" variant="section">
+    <Label as="h2" section>
       {printTitle}
     </Label>
   </PrintOnly>
@@ -93,7 +94,7 @@ const toSnakeCase = (str: string) =>
           >
             <Odometer value={achievement.headline} />
           </Metric>
-          <Label variant="achievement" color="purple" class="self-baseline light:font-semibold">
+          <Label achievement color="purple" class="self-baseline light:font-semibold">
             <!-- Dark mode terminal style: UPPERCASE_WITH_UNDERSCORES -->
             <span class="light:hidden">{toSnakeCase(achievement.metric)}</span>
             <!-- Light mode: lowercase with spaces -->
@@ -113,13 +114,13 @@ const toSnakeCase = (str: string) =>
 
   <!-- Print: Grouped items with subheadings -->
   <PrintOnly>
-    <div class="flex flex-col gap-3">
-      {groupsForPrint.map((group, groupIndex) => (
+    <div class="flex flex-col gap-4 mt-[3px]">
+      {groupsForPrint.map((group) => (
         <div class="break-inside-avoid">
-          <div class="flex flex-col gap-3">
-            {group.items.map((item, index) => (
+          <div class="flex flex-col gap-4">
+            {group.items.map((item) => (
               <div>
-                <div class="flex items-baseline gap-[0.25em]">
+                <div class="flex items-baseline gap-[0.4em]">
                   <Metric
                     as="data"
                     size="sm"
@@ -128,7 +129,7 @@ const toSnakeCase = (str: string) =>
                   >
                     {item.headline}
                   </Metric>
-                  <Label variant="achievement" color="purple" class="font-semibold">
+                  <Label achievement color="purple" class="font-semibold print:font-normal">
                     {item.metric}
                   </Label>
                 </div>

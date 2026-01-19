@@ -41,7 +41,7 @@ const ariaLabel = label ?? title;
   <!-- Desktop & Light mode: Clean mono title with underline -->
   <Label
     as="h2"
-    variant="section"
+    section
     class="hidden light:block sm:!hidden lg:!block"
   >
     {title}
@@ -50,7 +50,7 @@ const ariaLabel = label ?? title;
   <!-- Mobile dark mode: Terminal-style prompt -->
   <Label
     as="h2"
-    variant="terminal"
+    terminal
     color="green"
     class="block light:hidden sm:hidden"
   >

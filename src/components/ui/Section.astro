@@ -12,9 +12,11 @@ interface Props {
   printHide?: boolean;
   /** Hide section title in print (content still visible) */
   printHideTitle?: boolean;
+  /** Add border-bottom divider in print mode */
+  printBorderBottom?: boolean;
 }
 
-const { title, id, class: className = '', titleClass = '', contentClass = '', printHide = false, printHideTitle = false } = Astro.props;
+const { title, id, class: className = '', titleClass = '', contentClass = '', printHide = false, printHideTitle = false, printBorderBottom = false } = Astro.props;
 const headingId = id ? `${id}-heading` : undefined;
 const contentId = id ?? `section-${Math.random().toString(36).slice(2, 9)}`;
 const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
@@ -28,6 +30,7 @@ const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
     '[&.is-collapsed_[data-content]]:hidden',
     'print:my-0',
     printHide && 'print:hidden',
+    printBorderBottom && 'print:mb-4',
     className,
   ]}
   data-section

@@ -24,20 +24,20 @@ const { phone, email, linkedin, github } = Astro.props;
   <Stack gap="xs" class="print:gap-1">
     {phone && (
       <Stack gap="none">
-        <Label variant="contact">Phone</Label>
+        <Label contact>Phone</Label>
         <Text as="span" mono>{phone}</Text>
       </Stack>
     )}
     <Stack gap="none">
-      <Label variant="contact">Email</Label>
+      <Label contact>Email</Label>
       <Text as="span" mono>{email}</Text>
     </Stack>
     <Stack gap="none">
-      <Label variant="contact">LinkedIn</Label>
+      <Label contact>LinkedIn</Label>
       <Text as="span" mono>{linkedin.replace('https://www.', '').replace('https://', '')}</Text>
     </Stack>
     <Stack gap="none">
-      <Label variant="contact">GitHub</Label>
+      <Label contact>GitHub</Label>
       <Text as="span" mono>{github.replace('https://', '')}</Text>
     </Stack>
   </Stack>
