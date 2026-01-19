@@ -5,13 +5,18 @@ const heading = cva('text-foreground', {
   variants: {
     variant: {
       // Display: Hero h1 - inherits base h1 styles from global.css
-      display: [],
+      display: [
+        'print:text-[16px]',
+        'print:leading-tight',
+      ],
       // Default: Section headings
       default: [
         'text-fluid-xl',
         'font-medium',
         'tracking-tight',
         'leading-snug',
+        'print:text-[14px]',
+        'print:leading-snug',
       ],
       // Small: Subsection headings
       small: [
@@ -19,24 +24,56 @@ const heading = cva('text-foreground', {
         'font-medium',
         'tracking-tight',
         'leading-snug',
+        'print:text-[13px]',
+        'print:leading-snug',
       ],
-      // Tiny: Card titles (matches ContentCard .card-title)
+      // Tiny: Card titles (Job/Project heroes - darkest, heaviest)
       tiny: [
         'text-fluid-base',
         'font-medium',
         'tracking-tight',
-        'print:text-[12px]',
-        'print:font-semibold',
+        // Print: 13px, extra bold, pitch black, tight line-height, SANS-SERIF
+        'print:font-sans',
+        'print:text-[13px]',
+        'print:font-extrabold',
+        'print:leading-[1.1]',
+        'print:text-[var(--color-print-foreground)]',
         'print:break-after-avoid',
       ],
       // Name: Sidebar name display (responsive sizing)
       name: [
         'text-xl',
+        'light:text-[26px]',
         'lg:text-3xl',
+        'light:lg:text-[32px]',
         'font-medium',
         'tracking-tight',
         'leading-none',
-        'print:text-[24px]',
+        'print:text-[22px]',
+        'print:font-bold',
+        'print:tracking-[-0.02em]',
+      ],
+      // Section: Main content section titles (EXPERIENCE, PROJECTS, etc.)
+      section: [
+        'text-fluid-sm',
+        'font-semibold',
+        'uppercase',
+        'tracking-[0.1em]',
+        // Print: matches sidebar IMPACT title exactly
+        'print:text-left',
+        'print:uppercase',
+        'print:font-sans',
+        'print:font-bold',
+        'print:text-[10px]',
+        'print:tracking-[0.06em]',
+        'print:text-[var(--color-print-body)]',
+        'print:border-solid',
+        'print:border-b',
+        'print:!border-[#e5e5e5]',
+        'print:w-full',
+        'print:!pb-3',
+        'print:mb-3',
+        'print:leading-tight',
       ],
     },
   },
@@ -45,7 +82,7 @@ const heading = cva('text-foreground', {
   },
 });
 
-type Variant = 'display' | 'default' | 'small' | 'tiny' | 'name';
+type Variant = 'display' | 'default' | 'small' | 'tiny' | 'name' | 'section';
 
 interface Props {
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
@@ -55,6 +92,7 @@ interface Props {
   small?: boolean;
   tiny?: boolean;
   name?: boolean;
+  section?: boolean;
 }
 
 const {
@@ -64,11 +102,12 @@ const {
   small,
   tiny,
   name,
+  section,
   ...attrs
 } = Astro.props as Props;
 
 // Determine variant from boolean props (first truthy wins, default to default)
-const variant: Variant = display ? 'display' : name ? 'name' : small ? 'small' : tiny ? 'tiny' : 'default';
+const variant: Variant = display ? 'display' : name ? 'name' : section ? 'section' : small ? 'small' : tiny ? 'tiny' : 'default';
 
 const classes = heading({ variant, class: className });
 ---
