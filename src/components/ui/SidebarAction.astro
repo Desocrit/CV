@@ -97,9 +97,9 @@ const primaryIconClasses = [
 const altIconClasses = [
   'hidden shrink-0',
   // Mobile light: show larger icon
-  'light:block light:size-[1.125rem] light:opacity-70',
+  'light:block light:[&>svg]:size-[1.125rem] light:opacity-70',
   // Desktop light: show smaller icon
-  'lg:light:size-3 lg:light:opacity-50',
+  'lg:light:[&>svg]:size-3 lg:light:opacity-50',
 ].join(' ');
 
 // Link text classes - with animated underline on hover

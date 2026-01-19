@@ -1,5 +1,7 @@
 ---
 import ActionButton from './ActionButton.astro';
+import Label from '../typography/Label.astro';
+import Heading from '../typography/Heading.astro';
 
 interface Props {
   title: string;
@@ -8,9 +10,11 @@ interface Props {
   titleClass?: string;
   contentClass?: string;
   printHide?: boolean;
+  /** Hide section title in print (content still visible) */
+  printHideTitle?: boolean;
 }
 
-const { title, id, class: className = '', titleClass = '', contentClass = '', printHide = false } = Astro.props;
+const { title, id, class: className = '', titleClass = '', contentClass = '', printHide = false, printHideTitle = false } = Astro.props;
 const headingId = id ? `${id}-heading` : undefined;
 const contentId = id ?? `section-${Math.random().toString(36).slice(2, 9)}`;
 const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
@@ -42,8 +46,9 @@ const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
         'light:border-border light:pl-0 light:pr-[var(--spacing-fluid-xs)] light:w-auto light:ml-0',
         'lg:relative lg:top-auto lg:z-10 lg:w-auto lg:ml-0 lg:p-0 lg:bg-transparent lg:border-none lg:justify-start',
         'xl:sticky xl:top-[var(--spacing-fluid-sm)] xl:self-start xl:bg-background xl:pt-[var(--spacing-fluid-sm)]',
-        'print:static print:w-auto print:m-0 print:mb-2 print:!p-0 print:bg-transparent print:border-none',
+        'print:static print:w-auto print:!m-0 print:!p-0 print:bg-transparent print:border-none',
         '[[data-theme=light]_&.is-active]:border-[var(--section-accent)]',
+        printHideTitle && 'print:!hidden',
       ]}
     >
       <button
@@ -53,12 +58,30 @@ const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
         aria-controls={contentId}
         aria-label={`Toggle ${title} section`}
       >
-        <span class:list={['section-title block font-mono text-fluid-2xs uppercase tracking-[0.1em] leading-[1.6] whitespace-nowrap text-[var(--section-accent)] lg:text-accent-green lg:mb-[var(--spacing-fluid-2xs)] light:hidden print:!hidden', titleClass]} aria-hidden="true">
+        <Label
+          class:list={[
+            'section-title block tracking-[0.1em] leading-[1.6] whitespace-nowrap',
+            'text-[var(--section-accent)] lg:text-accent-green lg:mb-[var(--spacing-fluid-2xs)]',
+            'light:hidden print:!hidden',
+            titleClass,
+          ]}
+          aria-hidden="true"
+        >
           <span class="section-prefix">// </span>
           <span class="section-title-text">{formatTitle(title)}</span>
           <span class="section-context opacity-0 [&:not(:empty)]:opacity-100 transition-opacity duration-200 lg:hidden [&:not(:empty)]:before:content-['/_']"></span>
-        </span>
-        <span class="section-title-clean hidden font-['IBM_Plex_Sans',system-ui,sans-serif] text-fluid-sm font-semibold uppercase tracking-[0.1em] text-foreground light:block lg:light:pb-[var(--spacing-fluid-sm)] lg:light:border-b lg:light:border-b-border xl:light:inline-block xl:light:border-none print:!block print:text-left print:uppercase print:font-mono print:font-medium print:text-[10px] print:tracking-widest print:text-[var(--color-print-muted)] print:border-solid print:border-t-[0.5px] print:border-[var(--color-print-body)] print:w-full print:pt-1.5 print:pb-0 print:mb-2" aria-hidden="true">{title}</span>
+        </Label>
+        <Heading
+          section
+          as="h2"
+          class:list={[
+            'section-title-clean hidden',
+            'light:block lg:light:pb-[var(--spacing-fluid-sm)] lg:light:border-b lg:light:border-b-border',
+            'xl:light:inline-block xl:light:border-none',
+            'print:block',
+          ]}
+          aria-hidden="true"
+        >{title}</Heading>
       </button>
 
       <ActionButton
