@@ -13,7 +13,7 @@ interface Props {
 const { institution, degree, year, notable } = Astro.props;
 ---
 
-<article class="flex flex-wrap items-baseline gap-x-2 gap-y-1 print:text-[10px]">
+<article class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
   <Heading as="h3" tiny>{degree}</Heading>
   <Text as="span" small class="opacity-60">·</Text>
   <Text as="span" small>{institution}</Text>

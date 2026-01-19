@@ -61,11 +61,11 @@ const chunk = <T,>(arr: T[], n: number): T[][] =>
   }, []);
 ---
 
-<PrintOnly as="section" aria-label="Technical Skills">
+<PrintOnly as="section" aria-label="Technical Skills" block>
   <Label as="h2" variant="section">
     Tech Stack
   </Label>
-  <Stack gap="xs" class="print:mt-2 print:gap-2">
+  <Stack gap="xs" class="print:mt-0 print:gap-2">
     {sortedGroups.map((group) => (
       <Stack gap="none">
         <Label as="h3" variant="tech">

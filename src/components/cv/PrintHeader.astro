@@ -28,19 +28,23 @@ const linkedinHandle = linkedin.replace(/https?:\/\/(www\.)?linkedin\.com\/in\//
 const githubHandle = github.replace(/https?:\/\/(www\.)?github\.com\//, '');
 ---
 
-<Stack as="header" gap="xs" class="hidden print:!flex print:pb-4 print:border-b-2 print:border-black print:mb-1.5">
+<Stack as="header" gap="sm" class="hidden print:!flex print:pt-6 print:pb-5 print:border-b-2 print:border-black print:mb-3">
   <div class="print:flex print:justify-between print:items-start">
     <Stack gap="xs">
-      <Heading as="h1" name class="print:!text-[24pt] print:!leading-none">{name}</Heading>
-      <Text subtitle class="print:!text-[11pt]">{role}</Text>
-      <Text muted class="print:max-w-[85ch]">{profile.split('\n')[1]}</Text>
+      <Heading as="h1" name>{name}</Heading>
+      <Text subtitle>{role}</Text>
+      <Text muted as="div" class="print:max-w-[85ch]">
+        {profile.split('\n').filter(line => line.trim()).map(line => (
+          <span class="block">{line}</span>
+        ))}
+      </Text>
     </Stack>
 
     <Stack as="address" gap="xs" class="not-italic text-right mt-2">
-      <Text as="div">{location}{phone ? ` · ${phone}` : ''}</Text>
-      <Text as="div">{email}</Text>
-      <Text as="div">linkedin.com/in/{linkedinHandle}</Text>
-      <Text as="div">github.com/{githubHandle}</Text>
+      <Text muted as="div">{location}{phone ? ` · ${phone}` : ''}</Text>
+      <Text muted as="div">{email}</Text>
+      <Text muted as="div">linkedin.com/in/{linkedinHandle}</Text>
+      <Text muted as="div">github.com/{githubHandle}</Text>
     </Stack>
   </div>
 </Stack>

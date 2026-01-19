@@ -1,5 +1,6 @@
 ---
 import ScreenOnly from '../layout/ScreenOnly.astro';
+import Heading from '../typography/Heading.astro';
 
 interface SkillCategory {
   name: string;
@@ -19,12 +20,15 @@ const toSnakeCase = (str: string) =>
 ---
 
 <section aria-label="Skills" class="mt-fluid-lg mb-fluid-md">
-  <h2 class="mb-fluid-sm flex items-baseline gap-2 text-foreground border-b border-border pb-fluid-xs">
-    <span class="section-prefix font-mono text-fluid-xs tracking-wider text-accent-green print:text-[var(--color-print-foreground)]" aria-hidden="true">
+  <Heading
+    as="h2"
+    class="mb-fluid-sm flex items-baseline gap-2 border-b border-border pb-fluid-xs print:text-[10px] print:font-bold print:tracking-[0.06em] print:text-[var(--color-print-body)] print:border-[#e5e5e5] print:pb-1 print:mb-1.5"
+  >
+    <span class="section-prefix font-mono text-fluid-xs tracking-wider text-accent-green print:hidden" aria-hidden="true">
       // {sectionNumber}
     </span>
-    <span class="font-mono text-fluid-sm tracking-wide">SKILLS</span>
-  </h2>
+    <span class="font-mono text-fluid-sm tracking-wide print:text-[10px] print:uppercase">SKILLS</span>
+  </Heading>
 
   <div class="bg-terminal-bg text-terminal-text font-mono overflow-hidden border border-border light:border-[0.5px] print:border-[var(--color-print-border)] print:bg-transparent print:p-[0.3rem]">
     <ScreenOnly class="terminal-header flex items-center gap-1 border-b border-border px-3 py-1.5" aria-hidden="true">

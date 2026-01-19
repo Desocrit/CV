@@ -74,9 +74,9 @@ const { name, role, email, location, linkedin, github, website, summary, achieve
     <Heading as="h1" display>{name}</Heading>
 
     <!-- Role / Location / Education (custom hero subtitle styling) -->
-    <p class="text-fluid-xs font-light tracking-wide text-foreground opacity-70 print:opacity-100 print:text-[10px] print:text-[var(--color-print-body)]">
+    <Text subtitle class="opacity-70 print:opacity-100">
       {role}<span class="mx-2 text-accent-purple print:text-[var(--color-print-muted)]">//</span>{location}<span class="mx-2 text-accent-purple print:text-[var(--color-print-muted)]">//</span>{education.degree_title} {education.degree} ({education.specialism}), {education.score_short}<span class="mx-2 text-accent-purple print:text-[var(--color-print-muted)]">//</span>{education.institution}
-    </p>
+    </Text>
   </Stack>
 
   <!-- Links -->
@@ -149,12 +149,7 @@ const { name, role, email, location, linkedin, github, website, summary, achieve
       const newTheme = isCurrentlyLight ? 'dark' : 'light';
 
       localStorage.setItem('theme', newTheme);
-
-      if (newTheme === 'dark') {
-        html.removeAttribute('data-theme');
-      } else {
-        html.setAttribute('data-theme', 'light');
-      }
+      html.setAttribute('data-theme', newTheme);
 
       updateAriaLabel();
     });
