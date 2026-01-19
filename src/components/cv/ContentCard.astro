@@ -61,7 +61,7 @@ const accentColorClass: Record<AccentColor, string> = {
   purple: '[--card-accent:var(--color-accent-purple)]',
 };
 
-// Convert label to SCREAMING_CASE for display
+// Convert label to SCREAMING_CASE for dark mode display
 const labelText = label?.toUpperCase().replace(/\s+/g, '_').replace(/'/g, '');
 
 const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')).slice(0, 4);
@@ -90,7 +90,7 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
             accent
             class:list={["label-text mt-0 order-2 ml-auto text-[var(--card-accent)] transition-[text-shadow] duration-150 ease-out hover:[text-shadow:0_0_4px_var(--card-accent),0_0_10px_color-mix(in_srgb,var(--card-accent)_50%,transparent),0_0_20px_color-mix(in_srgb,var(--card-accent)_25%,transparent)] light:hover:[text-shadow:none] print:mt-0.5 sm:mt-2 sm:order-none sm:ml-0", printStackMeta && "print:hidden"]}
           >
-            <ScreenOnly as="span">{labelText}</ScreenOnly>
+            <ScreenOnly as="span"><span class="light:hidden">{labelText}</span><span class="hidden light:inline">{label}</span></ScreenOnly>
             <PrintOnly as="span">{label}</PrintOnly>
           </Label>
         )}
@@ -117,13 +117,13 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
 
         <!-- Tech stack as diagnostic nodes (screen mode) -->
         {filteredTechnologies.length > 0 ? (
-          <ScreenOnly class="!flex flex-wrap gap-1.5 mt-[var(--spacing-fluid-sm)] mb-[var(--spacing-fluid-sm)] basis-full order-[10] sm:mt-fluid-xs sm:mb-0 sm:mr-2 sm:basis-auto sm:order-none">
+          <ScreenOnly class="!flex flex-wrap gap-1.5 mt-[calc(var(--spacing-fluid-xs)*2)] mb-[var(--spacing-fluid-sm)] basis-full order-[10] sm:mb-0 sm:mr-2 sm:basis-auto sm:order-none lg:mt-[var(--spacing-fluid-sm)]">
             {filteredTechnologies.map((tech) => (
               <TechTag name={tech.name} url={tech.url} tooltip={tech.professional_tooltip ?? tech.tooltip} />
             ))}
           </ScreenOnly>
         ) : (
-          <ScreenOnly class="mt-[var(--spacing-fluid-sm)] mb-[var(--spacing-fluid-sm)] basis-full order-[10] sm:hidden" aria-hidden="true" />
+          <ScreenOnly class="mt-[calc(var(--spacing-fluid-xs)*2)] mb-[var(--spacing-fluid-sm)] basis-full order-[10] sm:hidden" aria-hidden="true" />
         )}
     </Fragment>
 
@@ -140,7 +140,7 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
             const hiddenInPrint = printBulletCount !== undefined && index >= printBulletCount;
             return (
               <li class:list={["flex items-baseline gap-2 print:block print:leading-tight print:before:content-['–'] print:before:text-[var(--color-print-muted)] print:before:mr-1.5 print:before:relative print:before:top-[2px]", extraBulletClasses, hiddenInPrint && "print:!hidden"]}>
-                <span class="shrink-0 text-[var(--card-accent)] print:hidden" aria-hidden="true">–</span>
+                <span class="shrink-0 text-[var(--card-accent)] light:relative light:top-px print:hidden" aria-hidden="true">–</span>
                 <Text as="span" muted>{cleanItem}</Text>
               </li>
             );
@@ -154,7 +154,7 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
               const cleanItem = item.replace(/^["']|["']$/g, '');
               return (
                 <li class:list={["flex items-baseline gap-2 print:block print:leading-tight print:before:content-['–'] print:before:text-[var(--color-print-muted)] print:before:mr-1.5 print:before:relative print:before:top-[2px]", extraBulletClasses]}>
-                  <span class="shrink-0 text-[var(--card-accent)] print:hidden" aria-hidden="true">–</span>
+                  <span class="shrink-0 text-[var(--card-accent)] light:relative light:top-px print:hidden" aria-hidden="true">–</span>
                   <Text as="span" muted>{cleanItem}</Text>
                 </li>
               );
@@ -165,7 +165,7 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
         <!-- Optional Details Toggle -->
         {details && !useTerminal && (
           <details class="group/details print:hidden">
-            <summary class="inline-flex cursor-pointer list-none items-center gap-0.5 font-mono uppercase text-fluid-2xs text-muted-foreground light:normal-case light:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors [&::-webkit-details-marker]:hidden [&::marker]:hidden [&::marker]:content-['']">
+            <summary class="inline-flex cursor-pointer list-none items-center gap-0.5 font-mono uppercase text-fluid-xs text-muted-foreground light:normal-case light:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors [&::-webkit-details-marker]:hidden [&::marker]:hidden [&::marker]:content-['']">
               <span class="bracket">[</span>
               <span class="light:hidden group-open/details:hidden"> VIEW_DETAILS </span>
               <span class="hidden light:hidden group-open/details:inline"> HIDE_DETAILS </span>
@@ -183,7 +183,7 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
         {prompt && useTerminal && (
           <button
             type="button"
-            class="terminal-trigger inline-flex cursor-pointer items-center gap-1 text-fluid-xs font-medium text-muted-foreground-light border-none p-0 mt-[var(--spacing-fluid-xs)] hover:text-[var(--card-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors group-[.is-active-card]:text-[var(--card-accent)] xl:group-[.is-active-card]:text-muted-foreground-light print:hidden"
+            class="terminal-trigger inline-flex cursor-pointer items-center gap-1 text-fluid-sm font-medium text-muted-foreground-light border-none p-0 mt-[calc(var(--spacing-fluid-xs)+2px)] hover:text-[var(--card-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors group-[.is-active-card]:text-[var(--card-accent)] xl:group-[.is-active-card]:text-muted-foreground-light print:hidden"
             data-prompt={prompt.trim()}
             aria-label={`View details for ${title}`}
           >

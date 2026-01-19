@@ -9,14 +9,14 @@ const label = cva(
       variant: {
         // Default: Section labels, tags (matches ContentCard tag)
         default: [
-          'text-fluid-2xs',
+          'text-fluid-xs',
           'text-muted-foreground',
           'print:text-[10px]',
           'print:text-[var(--color-print-muted)]',
         ],
         // Accent: Company labels with tracking (matches ContentCard .label-text)
         accent: [
-          'text-fluid-2xs',
+          'text-fluid-xs',
           'tracking-widest',
           'print:text-[11px]',
           'print:normal-case',
@@ -25,7 +25,7 @@ const label = cva(
         ],
         // Achievement: Sidebar achievement labels
         achievement: [
-          'text-fluid-2xs',
+          'text-fluid-xs',
           'tracking-widest',
           'print:text-[10px]',
           'print:normal-case',
@@ -34,7 +34,7 @@ const label = cva(
         ],
         // Micro: Smallest labels (used in TechStackPrint section titles)
         micro: [
-          'text-fluid-2xs',
+          'text-fluid-xs',
           'tracking-widest',
           'text-muted-foreground',
           'light:tracking-wider',
@@ -52,7 +52,7 @@ const label = cva(
         ],
         // Plain: No uppercase transform, for location/subtitle text (sans-serif in print)
         plain: [
-          'text-fluid-2xs',
+          'text-fluid-xs',
           'text-muted-foreground',
           '!normal-case',
           'light:normal-case',
@@ -63,7 +63,7 @@ const label = cva(
         ],
         // Section: Sidebar section titles with border underline
         section: [
-          'text-fluid-2xs',
+          'text-fluid-xs',
           'font-medium',
           'tracking-widest',
           'text-[var(--color-muted-foreground-light)]',
@@ -71,7 +71,10 @@ const label = cva(
           'border-[var(--color-muted-foreground)]',
           'pb-1.5',
           'block',
-          'w-full',
+          'w-fit',
+          'light:mb-2',
+          'sm:w-full',
+          'light:sm:mb-0',
           'light:!uppercase',
           // Desktop lg: tighter spacing
           'lg:pb-1',
@@ -95,7 +98,7 @@ const label = cva(
         ],
         // Subtitle: Category headers like "01 / EFFICIENCY" - whisper quiet metadata
         subtitle: [
-          'text-fluid-2xs',
+          'text-fluid-xs',
           'font-medium',
           'tracking-widest',
           'text-muted-foreground-light',
@@ -109,14 +112,14 @@ const label = cva(
         ],
         // Terminal: Terminal-style prompt text (mobile dark mode, hidden in print)
         terminal: [
-          'text-fluid-xs',
+          'text-fluid-sm',
           'font-medium',
           '!normal-case',
           'print:hidden',
         ],
         // Contact: Print contact field labels (sans-serif, semibold)
         contact: [
-          'text-fluid-2xs',
+          'text-fluid-xs',
           'text-muted-foreground',
           '!normal-case',
           'print:font-sans',
@@ -127,7 +130,7 @@ const label = cva(
         ],
         // Tech: Tech group names (sans-serif for print)
         tech: [
-          'text-fluid-2xs',
+          'text-fluid-xs',
           'tracking-widest',
           'print:font-sans',
           'print:text-[10px]',
@@ -148,7 +151,6 @@ const label = cva(
           'duration-150',
           'ease-out',
           // Light mode overrides
-          'light:text-[9px]',
           'light:!capitalize',
           'light:!font-semibold',
           'light:tracking-wider',

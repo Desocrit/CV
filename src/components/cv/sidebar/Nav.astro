@@ -29,13 +29,12 @@ const { email, linkedin, github } = Astro.props;
 ]} aria-label="Contact links">
   <Stack
     as="address"
-    gap={{ base: 'xs', lg: 'xs' }}
-    class="flex-row flex-wrap lg:flex-col gap-[var(--spacing-fluid-xs)] light:gap-4"
+    gap="sm"
+    class="flex-row flex-wrap lg:flex-col"
   >
     <SidebarAction
       href={`mailto:${email}`}
       longform={email}
-      shortform="@"
       screenOnly
       aria-label={`Send email to ${email}`}
     >
@@ -46,7 +45,6 @@ const { email, linkedin, github } = Astro.props;
       href={linkedin}
       external
       longform="LinkedIn"
-      shortform="/in"
       screenOnly
       aria-label="View LinkedIn profile (opens in new tab)"
     >
@@ -57,7 +55,6 @@ const { email, linkedin, github } = Astro.props;
       href={github}
       external
       longform="GitHub"
-      shortform="/gh"
       aria-label="View GitHub profile (opens in new tab)"
     >
       <GitHubIcon slot="icon" />
@@ -66,7 +63,6 @@ const { email, linkedin, github } = Astro.props;
     <SidebarAction
       onClick="window.print()"
       longform="Print"
-      shortform="> pdf"
       aria-label="Print this page"
     >
       <PrinterIcon slot="icon" />
@@ -76,9 +72,7 @@ const { email, linkedin, github } = Astro.props;
       id="theme-toggle"
       onClick=""
       longform="Light Mode"
-      shortform="--light"
       altLongform="Dark Mode"
-      altShortform="--dark"
       aria-label="Light Mode: Switch to light theme"
     >
       <SunIcon slot="icon" />

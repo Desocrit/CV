@@ -24,7 +24,7 @@ const toSnakeCase = (str: string) =>
     as="h2"
     class="mb-fluid-sm flex items-baseline gap-2 border-b border-border pb-fluid-xs print:text-[10px] print:font-bold print:tracking-[0.06em] print:text-[var(--color-print-body)] print:border-[#e5e5e5] print:pb-1 print:mb-1.5"
   >
-    <span class="section-prefix font-mono text-fluid-xs tracking-wider text-accent-green print:hidden" aria-hidden="true">
+    <span class="section-prefix font-mono text-fluid-sm tracking-wider text-accent-green print:hidden" aria-hidden="true">
       // {sectionNumber}
     </span>
     <span class="font-mono text-fluid-sm tracking-wide print:text-[10px] print:uppercase">SKILLS</span>
@@ -35,10 +35,10 @@ const toSnakeCase = (str: string) =>
       <span class="size-2 rounded-full bg-[#FF5F56]"></span>
       <span class="size-2 rounded-full bg-[#FFBD2E]"></span>
       <span class="size-2 rounded-full bg-[#27C93F]"></span>
-      <span class="ml-2 font-mono text-fluid-xs text-foreground opacity-70">capabilities.sh</span>
+      <span class="ml-2 font-mono text-fluid-sm text-foreground opacity-70">capabilities.sh</span>
     </ScreenOnly>
 
-    <div class="p-3 font-mono text-fluid-xs" role="region" aria-label="Skill categories">
+    <div class="p-3 font-mono text-fluid-sm" role="region" aria-label="Skill categories">
       {categories.map((category, index) => (
         <div class:list={['terminal-command-group', index > 0 && 'mt-3']}>
           <p class="text-terminal-text flex items-center gap-1.5 print:hidden">

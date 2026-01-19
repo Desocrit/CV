@@ -113,7 +113,7 @@ Never add additional font families. The theme handles font switching automatical
 
 ### Fluid Text Sizing
 Always use fluid text sizes, never fixed px/rem for body text:
-- `--text-fluid-2xs` through `--text-fluid-5xl`
+- `--text-fluid-xs` through `--text-fluid-5xl`
 - Applied via `text-fluid-*` utility classes
 
 ### Typography Rules

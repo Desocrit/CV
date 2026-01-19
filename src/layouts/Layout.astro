@@ -177,7 +177,7 @@ const jsonLd = {
         --color-secondary: #0a0a0a;
         --color-secondary-foreground: #f2f2f2;
         --color-muted: #111111;
-        --color-muted-foreground: #767676;
+        --color-muted-foreground: #8a8a8a;
         --color-muted-foreground-light: #a0a0a0;
         --color-accent: #111111;
         --color-accent-foreground: #f2f2f2;
@@ -231,9 +231,9 @@ const jsonLd = {
     <!-- Theme detection + font loading: set theme, wait for fonts, then reveal -->
     <script is:inline>
       (function() {
-        var d = document.documentElement;
-        var saved = localStorage.getItem('theme');
-        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const d = document.documentElement;
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         d.setAttribute('data-theme', saved || (prefersDark ? 'dark' : 'light'));
         document.fonts.ready.then(function() { d.setAttribute('data-theme-ready', ''); });
       })();

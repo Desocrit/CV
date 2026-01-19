@@ -43,6 +43,7 @@ const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
     <div
       class:list={[
         'section-header',
+        'mt-0.5 light:mt-1.5',
         'sticky top-[-1px] z-20 flex items-center justify-between',
         'w-screen ml-[calc(-1*var(--spacing-fluid-md))] px-[var(--spacing-fluid-md)] py-2.5',
         'bg-background border-y border-[var(--section-accent)]',
@@ -64,14 +65,13 @@ const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
         <Label
           class:list={[
             'section-title block tracking-[0.1em] leading-[1.6] whitespace-nowrap',
-            'text-[var(--section-accent)] lg:text-accent-green lg:mb-[var(--spacing-fluid-2xs)]',
+            '!text-[var(--section-accent)] lg:mb-[var(--spacing-fluid-2xs)]',
             'light:hidden print:!hidden',
             titleClass,
           ]}
           aria-hidden="true"
         >
-          <span class="section-prefix">// </span>
-          <span class="section-title-text">{formatTitle(title)}</span>
+          <span class="section-title-text lg:mb-2">// {formatTitle(title)}</span>
           <span class="section-context opacity-0 [&:not(:empty)]:opacity-100 transition-opacity duration-200 lg:hidden [&:not(:empty)]:before:content-['/_']"></span>
         </Label>
         <Heading
@@ -79,17 +79,19 @@ const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
           as="h2"
           class:list={[
             'section-title-clean hidden',
+            'text-[var(--section-accent)]',
             'light:block lg:light:pb-[var(--spacing-fluid-sm)] lg:light:border-b lg:light:border-b-border',
+            'lg:light:w-full lg:light:text-left',
             'xl:light:inline-block xl:light:border-none',
             'print:block',
           ]}
           aria-hidden="true"
-        >{title}</Heading>
+        ><span class="light:hidden print:hidden lg:mb-2">// </span>{title}</Heading>
       </button>
 
       <ActionButton
         label="^"
-        class="scroll-top-btn shrink-0 relative z-2 lg:hidden print:!hidden before:content-[''] before:absolute before:inset-[-0.5rem] before:z-[1] before:print:hidden [&_.bracket]:text-[var(--section-accent)] [&_.label]:text-[var(--section-accent)]"
+        class="scroll-top-btn shrink-0 relative z-2 lg:hidden print:!hidden before:content-[''] before:absolute before:inset-[-0.5rem] before:z-[1] before:print:hidden [&_.bracket]:text-[var(--section-accent)] [&_.label]:text-[var(--section-accent)] [&_.label]:light:text-muted-foreground"
         screenReaderLabel="Scroll to top"
       />
     </div>
@@ -111,15 +113,16 @@ const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
       btn.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); window.scrollTo({ top: 0, behavior: 'smooth' }); })
     );
 
-    // Only apply scroll-based active states on xs/sm screens (below md breakpoint)
-    if (!matchMedia('(max-width: 729px)').matches) return;
-
+    // Accordion toggle works on all screen sizes
     document.querySelectorAll('.section-toggle').forEach(toggle =>
       toggle.addEventListener('click', () => {
         const section = toggle.closest('[data-section]');
         if (section) toggle.setAttribute('aria-expanded', String(!section.classList.toggle('is-collapsed')));
       })
     );
+
+    // Only apply scroll-based active states on xs/sm screens (below md breakpoint)
+    if (!matchMedia('(max-width: 729px)').matches) return;
 
     const sections = document.querySelectorAll('[data-section]');
     if (!sections.length) return;
@@ -146,9 +149,11 @@ const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
         cards.forEach(c => c.classList.remove('is-active-card'));
         if (active) {
           (active as Element).classList.add('is-active-card');
-          // For impact cards in 2-column layout, also activate sibling cards with same header
+          // For impact cards in 2-column layout (sm: 560-729px), also activate sibling cards with same header
+          // Skip on xs (<560px) where there's only 1 card per row
           const activeHeader = (active as HTMLElement).dataset['header'];
-          if (activeHeader && (active as Element).classList.contains('impact-card-wrapper')) {
+          const isSmBreakpoint = matchMedia('(min-width: 560px)').matches;
+          if (activeHeader && isSmBreakpoint && (active as Element).classList.contains('impact-card-wrapper')) {
             cards.forEach(c => {
               if (c !== active && (c as HTMLElement).dataset['header'] === activeHeader) {
                 c.classList.add('is-active-card');

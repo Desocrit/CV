@@ -27,16 +27,16 @@ const shortLocation = location.split(',')[0] ?? location;
   'print:hidden',
 ]}>
   <!-- Desktop: stacked layout -->
-  <Stack gap="xs" class="hidden lg:flex">
-    <Heading as="h1" name>{name}</Heading>
-    <Text subtitle class="print:mt-0.5">{role}</Text>
+  <Stack gap="none" class="hidden lg:flex">
+    <Heading as="h1" class="mb-2" name>{name}</Heading>
+    <Text subtitle class="mb-1 print:mt-0.5">{role}</Text>
     <Label as="p" plain>{location}</Label>
   </Stack>
 
   <!-- Mobile: compact space-between layout -->
   <Stack gap="xs" class="lg:hidden print:!hidden">
     <Heading as="h1" name>{name}</Heading>
-    <Label terminal color="muted" class="whitespace-nowrap flex-shrink-0">
+    <Label terminal color="muted" class="whitespace-nowrap flex-shrink-0 mt-1 light:mt-0">
       <span class="light:hidden"><span class="opacity-70">//</span> {role.toUpperCase().replace(/\s+/g, '_')}, {shortLocation.toUpperCase()}</span>
       <span class="hidden light:inline">{role}, {shortLocation}</span>
     </Label>

@@ -48,7 +48,7 @@ const toSnakeCase = (str: string) =>
   as="section"
   gap={{ base: 'xs', print: 'none' }}
   class:list={[
-    'sm:col-start-2 sm:row-span-3 sm:self-start',
+    'sm:col-start-2 sm:row-span-3 sm:self-start lg:col-auto lg:row-auto lg:self-auto',
     'print:pb-4 print:mb-4',
   ]}
   aria-label="Key Achievements"
@@ -69,7 +69,7 @@ const toSnakeCase = (str: string) =>
     as="h2"
     terminal
     color="green"
-    class="block light:hidden sm:hidden print:!hidden"
+    class="block light:hidden sm:hidden mb-2 print:!hidden"
   >
     &gt; ACHIEVEMENTS
   </Label>

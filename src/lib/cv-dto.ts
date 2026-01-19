@@ -9,7 +9,7 @@ import { cvData, type TechTag } from './cv-data';
 
 // ===== LAYOUT DTO =====
 export const layoutDTO = {
-  title: `${cvData.name} - CV`,
+  title: `CV / ${cvData.name}`,
   description: `Professional CV for ${cvData.name}, ${cvData.role} based in ${cvData.location}.`,
   name: cvData.name,
   jobTitle: cvData.role,

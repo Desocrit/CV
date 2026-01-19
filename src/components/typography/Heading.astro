@@ -45,9 +45,9 @@ const heading = cva('text-foreground', {
       // Name: Sidebar name display (responsive sizing)
       name: [
         'text-xl',
-        'light:text-[26px]',
+        'light:text-fluid-xl',
         'lg:text-3xl',
-        'light:lg:text-[32px]',
+        'light:lg:text-fluid-xl',
         'font-medium',
         'tracking-tight',
         'leading-none',
@@ -61,6 +61,15 @@ const heading = cva('text-foreground', {
         'font-semibold',
         'uppercase',
         'tracking-[0.1em]',
+        // Light mode: smaller size, wider tracking, explicit !important to prevent accent color bleed
+        'light:!text-foreground',
+        'light:text-fluid-md',
+        'light:tracking-[0.2em]',
+        'light:font-sans',
+        'light:order-[-1]',
+        'light:mb-0',
+        'light:pb-0',
+        'light:!block',
         // Print: matches sidebar IMPACT title exactly
         'print:text-left',
         'print:uppercase',

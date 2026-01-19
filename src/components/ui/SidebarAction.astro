@@ -3,9 +3,9 @@
  * SidebarAction - Unified component for sidebar links, buttons, and toggles
  *
  * Layout behavior:
- * - Mobile dark: Shows bracketed shortform tag like [@], [/in], [--light]
- * - Mobile light: Shows icon only (larger touch target)
- * - Desktop (lg+): Shows icon + longform text with animated underline
+ * - Mobile dark: Shows icon only in purple accent
+ * - Mobile light: Shows icon only in muted gray
+ * - Desktop (lg+): Shows icon + longform text with animated underline (both themes)
  * - Print: Hidden entirely
  *
  * Supports dual-state rendering for theme toggle via alt* props and alt-icon slot.
@@ -20,12 +20,8 @@ interface Props {
   onClick?: string;
   /** Element ID */
   id?: string;
-  /** Unix-style shortform tag displayed in brackets on mobile dark (e.g., "@", "/in", "--light") */
-  shortform: string;
   /** Full text label shown on desktop (e.g., "LinkedIn", "Light Mode") */
   longform: string;
-  /** Alternative shortform for light mode (theme toggle) */
-  altShortform?: string;
   /** Alternative longform for light mode (theme toggle) */
   altLongform?: string;
   /** Accessibility label */
@@ -41,9 +37,7 @@ const {
   external = false,
   onClick,
   id,
-  shortform,
   longform,
-  altShortform,
   altLongform,
   'aria-label': ariaLabel,
   screenOnly = false,
@@ -58,7 +52,7 @@ const baseClasses = [
   // Layout - relative for touch target pseudo-element
   'relative inline-flex items-center gap-2',
   // Typography
-  'font-mono text-fluid-xs not-italic',
+  'font-mono text-fluid-sm not-italic',
   // Colors & transitions
   'text-muted-foreground hover:text-foreground transition-colors duration-200',
   // Focus states
@@ -76,30 +70,35 @@ const baseClasses = [
 ].filter(Boolean);
 
 // Icon wrapper classes (single icon mode)
+// Dark mode: purple on mobile, muted on desktop
+// Light mode: muted with opacity (unchanged from original)
 const iconWrapperClasses = [
   'flex items-center shrink-0',
-  // Mobile dark: hidden, Mobile light: larger icons, Desktop: normal icons
-  '[&>svg]:hidden [&>svg]:shrink-0',
-  'light:[&>svg]:block light:[&>svg]:size-[1.125rem] light:[&>svg]:opacity-70',
-  'lg:[&>svg]:block lg:[&>svg]:size-3 lg:[&>svg]:opacity-50',
+  '[&>svg]:block [&>svg]:shrink-0 [&>svg]:size-[1.125rem]',
+  // Dark mode: purple accent
+  'text-accent-purple',
+  // Light mode: muted gray with opacity (original behavior)
+  'light:text-muted-foreground light:[&>svg]:opacity-70',
+  // Desktop (lg+): smaller icons, muted color for both themes
+  'lg:text-muted-foreground lg:[&>svg]:size-3 lg:[&>svg]:opacity-50',
 ].join(' ');
 
-// Primary icon classes (for dual-state: shown in dark mode)
+// Primary icon classes (for dual-state: shown in dark mode only)
 const primaryIconClasses = [
-  'hidden shrink-0',
-  // Desktop dark: show icon
-  'lg:block lg:size-3 lg:opacity-50',
-  // Light mode: always hidden (alt icon shows instead)
+  'block shrink-0 text-accent-purple [&>svg]:size-[1.125rem]',
+  // Desktop: smaller, muted
+  'lg:text-muted-foreground lg:[&>svg]:size-3 lg:[&>svg]:opacity-50',
+  // Light mode: hidden (alt icon shows instead)
   'light:hidden',
 ].join(' ');
 
-// Alt icon classes (for dual-state: shown in light mode)
+// Alt icon classes (for dual-state: shown in light mode only)
 const altIconClasses = [
   'hidden shrink-0',
-  // Mobile light: show larger icon
-  'light:block light:[&>svg]:size-[1.125rem] light:opacity-70',
-  // Desktop light: show smaller icon
-  'lg:light:[&>svg]:size-3 lg:light:opacity-50',
+  // Light mode mobile: show, muted gray with opacity
+  'light:block light:text-muted-foreground light:[&>svg]:size-[1.125rem] light:[&>svg]:opacity-70',
+  // Desktop light: smaller, muted
+  'lg:light:[&>svg]:size-3 lg:light:[&>svg]:opacity-50',
 ].join(' ');
 
 // Link text classes - with animated underline on hover
@@ -110,19 +109,6 @@ const linkTextClasses = [
   // Animated underline (desktop only)
   "after:content-[''] after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-px after:bg-foreground after:transition-[width] after:duration-200 after:ease-out",
   'group-hover:after:w-full',
-].join(' ');
-
-// Tag classes - unix-style brackets on mobile dark mode
-const tagClasses = [
-  // Mobile dark: show with brackets
-  'inline-flex items-center font-mono text-fluid-xs text-accent-purple tracking-normal transition-[filter] duration-150',
-  "before:content-['['] before:mr-[0.125em]",
-  "after:content-[']'] after:ml-[0.125em]",
-  'group-hover:brightness-[1.2]',
-  // Mobile light: hidden (icons shown instead)
-  'light:hidden',
-  // Desktop: hidden
-  'lg:hidden',
 ].join(' ');
 
 // Element type
@@ -166,18 +152,6 @@ const Element = isButton ? 'button' : 'a';
       </>
     ) : (
       longform
-    )}
-  </span>
-
-  {/* Tag section (mobile dark only) */}
-  <span class={tagClasses}>
-    {hasDualState ? (
-      <>
-        <span class="block light:hidden">{shortform}</span>
-        <span class="hidden light:block">{altShortform}</span>
-      </>
-    ) : (
-      shortform
     )}
   </span>
 </Element>

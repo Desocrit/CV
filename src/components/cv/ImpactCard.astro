@@ -19,10 +19,19 @@ const { node } = Astro.props;
     // Base styles
     'relative z-[1] bg-background',
     // Animated border pseudo-element via CSS custom properties
-    'before:content-[\'\'] before:absolute before:inset-[-1px]',
+    'before:content-[\'\'] before:absolute before:inset-[-1px] before:z-0',
     'before:bg-[conic-gradient(from_var(--border-angle,0deg),transparent_0%,transparent_25%,var(--card-accent)_50%,transparent_75%,transparent_100%)]',
-    'before:opacity-0 before:transition-opacity before:duration-300 before:ease-out before:z-0',
+    'before:opacity-0 before:transition-opacity before:duration-300 before:ease-out',
+    // Dark mode hover animation
     'hover:before:opacity-100 hover:before:animate-[spin-border_3s_linear_infinite]',
+    // Active state (when .is-active-card is added via JS)
+    '[&.is-active-card]:before:opacity-100',
+    '[&.is-active-card]:before:animate-[spin-border_3s_linear_infinite]',
+    // Light mode: hide animated border, use offset shadow instead
+    'light:before:!hidden',
+    'light:transition-shadow light:duration-150 light:ease-out',
+    'light:hover:shadow-[var(--shadow-offset)_var(--shadow-offset)_0px_color-mix(in_srgb,var(--card-accent)_40%,white)]',
+    'light:[&.is-active-card]:shadow-[var(--shadow-offset)_var(--shadow-offset)_0px_color-mix(in_srgb,var(--card-accent)_40%,white)]',
     // Hide in print
     'print:hidden',
   ]}
@@ -37,7 +46,10 @@ const { node } = Astro.props;
       border border-border bg-background
       cursor-pointer text-left
       focus-visible:outline-1 focus-visible:outline-[var(--card-accent)] focus-visible:outline-offset-2
-      light:border-l-[3px] light:border-l-[var(--card-accent)]"
+      light:border-[0.5px] light:transition-[border-color] light:duration-150 light:ease-out
+      light:border-l-[3px] light:border-l-[var(--card-accent)]
+      light:group-hover/card:border-[var(--card-accent)]
+      light:group-[.is-active-card]/card:border-[var(--card-accent)]"
     type="button"
     aria-label={`${node.title}: ${node.description}`}
     data-prompt={node.prompt}
@@ -66,75 +78,14 @@ const { node } = Astro.props;
     <span
       class="card-cta
         shrink-0 ml-4
-        font-mono text-fluid-xs
+        font-mono text-fluid-sm
         text-[var(--card-accent)] opacity-50
         transition-opacity duration-150 ease-out
-        group-hover/card:opacity-100 group-[.is-active-card]/card:opacity-100"
+        group-hover/card:opacity-100 group-[.is-active-card]/card:opacity-100
+        light:font-semibold"
       aria-hidden="true"
     >
-      <span class="cta-bracket">[</span><span class="cta-arrow">&gt;</span><span class="cta-bracket">]</span>
+      <span class="cta-bracket light:hidden">[</span><span class="cta-arrow light:px-[0.25em]">&gt;</span><span class="cta-bracket light:hidden">]</span>
     </span>
   </button>
 </div>
-
-<style is:global>
-  /* ==========================================================================
-     ACTIVE STATE: Trigger hover effects when card is at viewport top
-     ========================================================================== */
-  .impact-card-wrapper.is-active-card::before {
-    opacity: 1;
-    animation: spin-border 3s linear infinite;
-  }
-
-  /* ==========================================================================
-     LIGHT MODE: Impact Card Hover Effects
-     Hard offset shadow on hover (architectural blueprint style)
-     Disable swirling border animation, use offset shadow instead
-     ========================================================================== */
-
-  /* Disable the swirling conic-gradient border animation for light mode */
-  [data-theme='light'] .impact-card-wrapper::before {
-    display: none !important;
-  }
-
-  [data-theme='light'] .impact-card-wrapper.is-active-card {
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px color-mix(in srgb, var(--card-accent) 40%, white);
-  }
-
-  [data-theme='light'] .impact-card-wrapper.is-active-card .impact-card {
-    border-color: var(--card-accent);
-  }
-
-  /* Impact cards - border color change and offset shadow on hover */
-  [data-theme='light'] .impact-card-wrapper {
-    transition: box-shadow 0.15s ease-out;
-  }
-
-  [data-theme='light'] .impact-card-wrapper:hover {
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px color-mix(in srgb, var(--card-accent) 40%, white);
-  }
-
-  /* Impact card inner element styling for light mode */
-  [data-theme='light'] .impact-card {
-    border-width: var(--hairline-border);
-    transition: border-color 0.15s ease-out;
-  }
-
-  [data-theme='light'] .impact-card-wrapper:hover .impact-card {
-    border-color: var(--card-accent);
-  }
-
-  /* Impact card CTA - hide brackets, just show arrow */
-  [data-theme='light'] .card-cta .cta-bracket {
-    display: none !important;
-  }
-
-  [data-theme='light'] .card-cta {
-    font-weight: 600;
-  }
-
-  [data-theme='light'] .card-cta .cta-arrow {
-    padding: 0 0.25em;
-  }
-
-</style>

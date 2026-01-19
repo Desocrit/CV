@@ -15,9 +15,10 @@ const baseClasses = [
   // Layout
   'inline-flex items-center',
   // Typography
-  'font-mono text-fluid-xs',
+  'font-mono text-fluid-sm',
   // Colors
   'text-[var(--color-accent-purple)]',
+  'light:text-muted-foreground',
   // Button reset
   'border-none p-0 cursor-pointer',
   // Transitions
@@ -29,7 +30,7 @@ const baseClasses = [
 ];
 
 const bracketClasses = 'bracket text-[var(--color-accent-purple)] light:hidden';
-const labelClasses = 'label text-[var(--color-accent-purple)] light:font-semibold';
+const labelClasses = 'label text-[var(--color-accent-purple)] light:text-muted-foreground light:font-semibold';
 ---
 
 {isLink ? (
