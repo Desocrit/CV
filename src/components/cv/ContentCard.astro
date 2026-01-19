@@ -31,9 +31,26 @@ interface Props {
   hideExtraBullets?: boolean;
   /** Heading level for the card title (default: h3 for proper hierarchy under h2 section headings) */
   headingLevel?: HeadingLevel;
+  /** Hide the tag in print mode */
+  printHideTag?: boolean;
+  /** Stack meta in print: Title on line 1, Label | Date on line 2 (for History/Education) */
+  printStackMeta?: boolean;
+  /** Limit number of bullets shown in print (undefined = show all) */
+  printBulletCount?: number;
+  /** Merge headline into bullet list in print mode */
+  printHeadlineAsBullet?: boolean;
+  /** Use compact 3-line education format in print */
+  printEducationCompact?: boolean;
+  /** Education print fields */
+  printDegreeTitle?: string;
+  printDegree?: string;
+  printInstitution?: string;
+  printTenure?: string;
+  printSpecialism?: string;
+  printScore?: string;
 }
 
-const { title, subtitle, tag, label, technologies = [], headline, bulletPoints, supportingData = [], details, cta, prompt, useTerminal = false, metaWidth, accentColor = 'purple', hideExtraBullets = false, headingLevel = 'h3' } = Astro.props;
+const { title, subtitle, tag, label, technologies = [], headline, bulletPoints, supportingData = [], details, cta, prompt, useTerminal = false, metaWidth, accentColor = 'purple', hideExtraBullets = false, headingLevel = 'h3', printHideTag = false, printStackMeta = false, printBulletCount, printHeadlineAsBullet = false, printEducationCompact = false, printDegreeTitle, printDegree, printInstitution, printTenure, printSpecialism, printScore } = Astro.props;
 
 // Classes to hide extra bullets on screen, show all in print
 const extraBulletClasses = hideExtraBullets ? '[&:nth-child(n+2)]:hidden print:[&:nth-child(n+2)]:!list-item' : '';
@@ -52,8 +69,8 @@ const labelText = label?.toUpperCase().replace(/\s+/g, '_').replace(/'/g, '');
 const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')).slice(0, 4);
 ---
 
-<article class:list={['content-card', 'group', accentColorClass[accentColor], 'py-[0.35rem]', 'print:py-[0.35rem]']}>
-  <CardGrid metaWidth={metaWidth}>
+<article class:list={['content-card', 'group', accentColorClass[accentColor], 'py-[0.35rem]', 'print:pt-0 print:pb-0']}>
+  <CardGrid metaWidth={metaWidth} class={printEducationCompact ? 'print:!hidden' : ''}>
     <Fragment slot="meta">
         <Heading
           as={headingLevel}
@@ -64,7 +81,7 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
         </Heading>
 
         {tag && (
-          <Label as="p" variant="plain" class="order-2 ml-auto mt-0 has-[~.label-text]:order-3 has-[~.label-text]:basis-full has-[~.label-text]:ml-0 sm:order-none sm:ml-0 sm:has-[~.label-text]:order-none sm:has-[~.label-text]:basis-auto">
+          <Label as="p" variant="plain" class:list={["order-2 ml-auto mt-0 has-[~.label-text]:order-3 has-[~.label-text]:basis-full has-[~.label-text]:ml-0 sm:order-none sm:ml-0 sm:has-[~.label-text]:order-none sm:has-[~.label-text]:basis-auto", (printHideTag || printStackMeta) && "print:hidden"]}>
             <span>{tag}</span>
           </Label>
         )}
@@ -73,11 +90,22 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
           <Label
             as="p"
             variant="accent"
-            class="label-text mt-0 order-2 ml-auto text-[var(--card-accent)] transition-[text-shadow] duration-150 ease-out hover:[text-shadow:0_0_4px_var(--card-accent),0_0_10px_color-mix(in_srgb,var(--card-accent)_50%,transparent),0_0_20px_color-mix(in_srgb,var(--card-accent)_25%,transparent)] light:hover:[text-shadow:none] print:mt-0.5 sm:mt-2 sm:order-none sm:ml-0"
+            class:list={["label-text mt-0 order-2 ml-auto text-[var(--card-accent)] transition-[text-shadow] duration-150 ease-out hover:[text-shadow:0_0_4px_var(--card-accent),0_0_10px_color-mix(in_srgb,var(--card-accent)_50%,transparent),0_0_20px_color-mix(in_srgb,var(--card-accent)_25%,transparent)] light:hover:[text-shadow:none] print:mt-0.5 sm:mt-2 sm:order-none sm:ml-0", printStackMeta && "print:hidden"]}
           >
             <ScreenOnly as="span">{labelText}</ScreenOnly>
             <PrintOnly as="span">{label}</PrintOnly>
           </Label>
+        )}
+
+        {/* Print stacked layout: Label (strong) | Date (weaker) on second line */}
+        {printStackMeta && (label || tag) && (
+          <PrintOnly class="basis-full mt-0.5">
+            <p class="flex items-baseline gap-1 m-0">
+              {label && <Label as="span" variant="accent" class="!text-foreground !font-semibold">{label}</Label>}
+              {label && tag && <Label as="span" variant="default" class="mx-0.5">·</Label>}
+              {tag && <Label as="span" variant="default" class="!font-normal">{tag}</Label>}
+            </p>
+          </PrintOnly>
         )}
 
         {subtitle && (
@@ -103,18 +131,25 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
 
     <Fragment slot="content">
         <!-- Headline -->
-        <Text lead class="print:break-before-avoid">
+        <Text lead class:list={["print:break-before-avoid", printHeadlineAsBullet && "print:hidden"]}>
           {headline.trim()}
         </Text>
 
         <!-- Bullet Points -->
-        <ul class="bullet-list space-y-1 mt-[var(--spacing-fluid-xs)] print:pl-4 print:mt-2 print:has-[li:nth-child(-n+4):last-child]:break-inside-avoid print:has-[li:nth-child(5)]:break-inside-auto">
-          {bulletPoints.map((item) => {
+        <ul class:list={["bullet-list space-y-1 print:space-y-0 mt-[var(--spacing-fluid-xs)] print:mt-1 print:has-[li:nth-child(-n+4):last-child]:break-inside-avoid print:has-[li:nth-child(5)]:break-inside-auto", printBulletCount === 0 && !printHeadlineAsBullet && "print:hidden", printHeadlineAsBullet && "print:!mt-0"]}>
+          {/* Headline as first bullet in print mode */}
+          {printHeadlineAsBullet && (
+            <li class="hidden print:!block print:leading-tight print:before:content-['•'] print:before:mr-1.5 print:before:relative print:before:top-[2px]">
+              <Text as="span" muted>{headline.trim()}</Text>
+            </li>
+          )}
+          {bulletPoints.map((item, index) => {
             const cleanItem = item.replace(/^["']|["']$/g, '');
+            const hiddenInPrint = printBulletCount !== undefined && index >= printBulletCount;
             return (
-              <li class:list={["flex items-baseline gap-2 text-fluid-xs text-muted-foreground print:block print:list-disc print:my-1 print:text-[10px] print:leading-[1.35] print:text-muted-foreground", extraBulletClasses]}>
+              <li class:list={["flex items-baseline gap-2 print:block print:leading-tight print:before:content-['•'] print:before:mr-1.5 print:before:relative print:before:top-[2px]", extraBulletClasses, hiddenInPrint && "print:!hidden"]}>
                 <span class="shrink-0 text-[var(--card-accent)] print:hidden" aria-hidden="true">–</span>
-                <span>{cleanItem}</span>
+                <Text as="span" muted>{cleanItem}</Text>
               </li>
             );
           })}
@@ -122,13 +157,13 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
 
         <!-- Supporting Data -->
         {supportingData.length > 0 && (
-          <ul class="supporting-list space-y-1 print:pl-4 print:mt-0">
+          <ul class:list={["supporting-list space-y-1 print:space-y-0 print:mt-0", printBulletCount !== undefined && "print:hidden"]}>
             {supportingData.map((item) => {
               const cleanItem = item.replace(/^["']|["']$/g, '');
               return (
-                <li class:list={["flex items-baseline gap-2 text-fluid-xs text-muted-foreground print:block print:list-disc print:my-1 print:text-[10px] print:leading-[1.35] print:text-muted-foreground", extraBulletClasses]}>
+                <li class:list={["flex items-baseline gap-2 print:block print:leading-tight print:before:content-['•'] print:before:mr-1.5 print:before:relative print:before:top-[2px]", extraBulletClasses]}>
                   <span class="shrink-0 text-[var(--card-accent)] print:hidden" aria-hidden="true">–</span>
-                  <span>{cleanItem}</span>
+                  <Text as="span" muted>{cleanItem}</Text>
                 </li>
               );
             })}
@@ -146,9 +181,9 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
               <span class="hidden light:group-open/details:inline">&#8592; Hide details</span>
               <span class="bracket">]</span>
             </summary>
-            <div class="mt-fluid-xs pl-3 border-l-2 border-[var(--card-accent)] text-fluid-xs text-muted-foreground leading-relaxed whitespace-pre-line print:pl-0 print:mt-0.5 print:border-none print:text-[10px] print:text-muted-foreground">
+            <Text muted class="mt-fluid-xs pl-3 border-l-2 border-[var(--card-accent)] whitespace-pre-line print:pl-0 print:mt-0.5 print:border-none">
               {details.trim()}
-            </div>
+            </Text>
           </details>
         )}
 
@@ -166,28 +201,26 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
         )}
     </Fragment>
   </CardGrid>
+
+  {/* Compact education format for print */}
+  {printEducationCompact && (
+    <PrintOnly class="space-y-0">
+      <Heading as="p" tiny class="m-0">
+        {printDegreeTitle}{' '}{printDegree}
+      </Heading>
+      <p class="m-0 flex items-baseline gap-1">
+        <Label as="span" variant="accent" class="!text-[var(--color-print-foreground)] !font-semibold">{printInstitution}</Label>
+        <Label as="span" variant="default" class="mx-0.5">·</Label>
+        <Label as="span" variant="default" class="!font-normal">{printTenure}</Label>
+      </p>
+      <p class="m-0 flex items-baseline gap-1">
+        <Label as="span" variant="accent" class="!text-[var(--color-print-foreground)] !font-semibold">{printSpecialism}</Label>
+        <Label as="span" variant="default" class="mx-0.5">·</Label>
+        <Label as="span" variant="default" class="!font-normal">{printScore}</Label>
+      </p>
+    </PrintOnly>
+  )}
 </article>
-
-<style>
-  /* Light mode: heavier weight and normal case for label text */
-  :global([data-theme='light']) .label-text {
-    text-transform: none !important;
-    font-weight: 500;
-  }
-
-  :global([data-theme='light']) .label-text .screen-only {
-    display: none !important;
-  }
-
-  :global([data-theme='light']) .label-text .print-only {
-    display: inline !important;
-  }
-
-  /* Light mode: hide brackets in details toggle */
-  :global([data-theme='light']) details .bracket {
-    display: none !important;
-  }
-</style>
 
 <script>
   // Terminal trigger handler - handles both button clicks and card clicks
