@@ -146,6 +146,7 @@ const jsonLd = {
     <link rel="preload" href="/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/IBMPlexSans-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/IBMPlexSans-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/IBMPlexMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Print stylesheet - loaded with media="print" to avoid blocking initial render -->
@@ -162,6 +163,10 @@ const jsonLd = {
 
     <!-- Critical CSS variables - must load before external CSS to prevent FOUC -->
     <style is:inline>
+      /* FOUC prevention: hide until theme is resolved */
+      html:not([data-theme-ready]) {
+        visibility: hidden;
+      }
       :root {
         --color-background: #050505;
         --color-foreground: #f2f2f2;
@@ -223,15 +228,17 @@ const jsonLd = {
         --glow-text-base: rgba(29, 29, 31, 0.5);
       }
     </style>
+    <!-- Theme detection + font loading: set theme, wait for fonts, then reveal -->
     <script is:inline>
       (function() {
-        const saved = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (saved === 'light' || (!saved && !prefersDark)) {
-          document.documentElement.setAttribute('data-theme', 'light');
-        }
+        var d = document.documentElement;
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        d.setAttribute('data-theme', saved || (prefersDark ? 'dark' : 'light'));
+        document.fonts.ready.then(function() { d.setAttribute('data-theme-ready', ''); });
       })();
     </script>
+    <noscript><style>html { visibility: visible !important; }</style></noscript>
 
     <script is:inline>
       if ('serviceWorker' in navigator && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
