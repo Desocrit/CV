@@ -237,6 +237,10 @@
     --color-muted-foreground: var(--color-print-muted);
     --color-muted-foreground-light: var(--color-print-body);
     --color-border: var(--color-print-border);
+
+    /* Override font variables to use IBM Plex for print */
+    --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'Consolas', monospace;
   }
 }
 
@@ -265,38 +269,6 @@
 [data-theme='light'] h4 {
   font-weight: 500;
   letter-spacing: -0.015em;
-}
-
-/* Mono elements need to breathe in light mode */
-[data-theme='light'] .font-mono,
-[data-theme='light'] [class*="font-mono"],
-[data-theme='light'] code,
-[data-theme='light'] pre {
-  font-family: 'IBM Plex Mono', 'Consolas', monospace;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  font-variant-ligatures: none;
-}
-
-/* Component-specific light mode styles have been moved to their respective components:
-   - Badge styles → Badge.astro
-   - Terminal styles → SkillsTerminal.astro
-   - Impact card styles → ImpactGrid.astro
-   - Section styles → Section.astro
-   - Content card styles → ContentCard.astro
-*/
-
-/* ==========================================================================
-   LIGHT MODE: Global Text Transform Reset
-   Removes uppercase transforms site-wide for Swiss typography
-   Note: !important needed to override Tailwind's uppercase utility class
-   Note: Excluded from print - print uses uppercase for section titles
-   ========================================================================== */
-@media not print {
-  [data-theme='light'] .uppercase,
-  [data-theme='light'] [class*='uppercase'] {
-    text-transform: none !important;
-  }
 }
 
 @keyframes blink {
