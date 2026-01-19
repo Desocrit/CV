@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getAllByRole, getByText } from '@testing-library/dom';
+import { getAllByRole, queryAllByText } from '@testing-library/dom';
 import { JSDOM } from 'jsdom';
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -46,6 +46,24 @@ describe('Build Output Smoke Tests', () => {
     const data = JSON.parse(jsonLd?.textContent ?? '{}') as Record<string, unknown>;
     expect(data['@context']).toBe('https://schema.org');
     expect(data['@type']).toBe('Person');
+  });
+
+  it('renders main content sections', () => {
+    const html = readFileSync(distPath, 'utf-8');
+    const dom = new JSDOM(html);
+    const { document } = dom.window;
+    const container = document.body;
+
+    // Main landmark (note: current structure has nested mains - testing at least one exists)
+    const mains = getAllByRole(container, 'main');
+    expect(mains.length).toBeGreaterThan(0);
+
+    // Skip link for accessibility
+    expect(document.querySelector('a[href="#main-content"]')).not.toBeNull();
+
+    // Section headings (SCREAMING_SNAKE_CASE in section-title-text spans)
+    expect(queryAllByText(container, /PROJECTS/i).length).toBeGreaterThan(0);
+    expect(queryAllByText(container, /HISTORY/i).length).toBeGreaterThan(0);
   });
 
   it('contains print button', () => {
