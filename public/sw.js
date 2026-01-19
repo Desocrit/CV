@@ -1,7 +1,7 @@
 // Service Worker with Network-First Strategy
 // Version: 1.1.0
 
-const CACHE_NAME = 'cv-cache-v2';
+const CACHE_NAME = 'cv-cache-v3';
 const CACHE_MAX_AGE_MS = 3 * 24 * 60 * 60 * 1000; // 3 days in milliseconds
 
 // Paths that should never be cached
