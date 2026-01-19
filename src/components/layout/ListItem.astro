@@ -26,7 +26,7 @@ const { class: className = '', bordered = true } = Astro.props;
 
 <div
   class:list={[
-    'content-list-item block list-none py-[var(--spacing-fluid-sm)] first:border-t-0 first:pt-0 light:!border-t-0 print:!border-t-0 print:!py-[0.1rem]',
+    'content-list-item block list-none py-[var(--spacing-fluid-sm)] first:border-t-0 first:pt-0 light:!border-t-0 print:!border-t-0 print:!pt-0 print:!pb-3',
     bordered && 'border-t border-[var(--color-border)]',
     className,
   ]}

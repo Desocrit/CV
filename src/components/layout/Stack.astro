@@ -24,7 +24,7 @@ import { cva } from 'class-variance-authority';
  */
 
 type GapSize = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-type Breakpoint = 'base' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+type Breakpoint = 'base' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'print';
 type ResponsiveGap = Partial<Record<Breakpoint, GapSize>>;
 
 export interface Props {
@@ -92,6 +92,14 @@ const breakpointGapClasses: Record<Exclude<Breakpoint, 'base'>, Record<GapSize, 
     lg: '2xl:gap-[var(--spacing-fluid-lg)]',
     xl: '2xl:gap-[var(--spacing-fluid-xl)]',
   },
+  print: {
+    none: 'print:gap-0',
+    xs: 'print:gap-1',
+    sm: 'print:gap-2',
+    md: 'print:gap-3',
+    lg: 'print:gap-4',
+    xl: 'print:gap-6',
+  },
 };
 
 function getGapClasses(gap: GapSize | ResponsiveGap): string {
@@ -109,7 +117,7 @@ function getGapClasses(gap: GapSize | ResponsiveGap): string {
   }
 
   // Handle breakpoint-prefixed classes
-  const breakpoints: Exclude<Breakpoint, 'base'>[] = ['sm', 'md', 'lg', 'xl', '2xl'];
+  const breakpoints: Exclude<Breakpoint, 'base'>[] = ['sm', 'md', 'lg', 'xl', '2xl', 'print'];
   for (const bp of breakpoints) {
     const bpGap = gap[bp];
     if (bpGap) {

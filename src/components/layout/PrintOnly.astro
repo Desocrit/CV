@@ -15,11 +15,13 @@ export interface Props {
   as?: 'div' | 'span' | 'section' | 'aside' | 'article';
   /** Additional CSS classes */
   class?: string;
+  /** Keep the wrapper element in print instead of using display:contents (default: false) */
+  block?: boolean;
 }
 
-const { as: Tag = 'div', class: className = '' } = Astro.props;
+const { as: Tag = 'div', class: className = '', block = false } = Astro.props;
 ---
 
-<Tag class:list={['print-only hidden print:!contents', className]}>
+<Tag class:list={['print-only hidden', block ? 'print:!block' : 'print:!contents', className]}>
   <slot />
 </Tag>

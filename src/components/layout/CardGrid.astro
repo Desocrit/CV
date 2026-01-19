@@ -26,20 +26,20 @@ interface Props {
 const { metaWidth = 'default', class: className = '' } = Astro.props;
 
 const metaWidthClasses = {
-  narrow: 'grid-cols-1 sm:grid-cols-[minmax(110px,150px)_1fr] print:grid-cols-[105px_1fr]',
-  default: 'grid-cols-1 sm:grid-cols-[minmax(125px,165px)_1fr] print:grid-cols-[105px_1fr]',
-  wide: 'grid-cols-1 sm:grid-cols-[minmax(130px,170px)_1fr] print:grid-cols-[105px_1fr]',
+  narrow: 'grid-cols-1 sm:grid-cols-[minmax(110px,150px)_1fr] print:block',
+  default: 'grid-cols-1 sm:grid-cols-[minmax(125px,165px)_1fr] print:block',
+  wide: 'grid-cols-1 sm:grid-cols-[minmax(130px,170px)_1fr] print:block',
 };
 ---
 
 <div
   class:list={[
-    'card-grid grid gap-[var(--spacing-fluid-xs)] sm:gap-[var(--spacing-fluid-md)] print:gap-3',
+    'card-grid grid gap-[var(--spacing-fluid-xs)] sm:gap-[var(--spacing-fluid-md)] print:gap-0',
     metaWidthClasses[metaWidth],
     className,
   ]}
 >
-  <div class="card-grid__meta min-w-0 flex flex-wrap items-baseline justify-between sm:block print:break-inside-avoid">
+  <div class="card-grid__meta min-w-0 flex flex-wrap items-baseline justify-between gap-x-2 sm:block print:block print:mb-1 print:break-inside-avoid">
     <slot name="meta" />
   </div>
   <div class="card-grid__content min-w-0">
