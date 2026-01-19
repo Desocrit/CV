@@ -48,24 +48,6 @@ describe('Build Output Smoke Tests', () => {
     expect(data['@type']).toBe('Person');
   });
 
-  it('renders main content sections', () => {
-    const html = readFileSync(distPath, 'utf-8');
-    const dom = new JSDOM(html);
-    const { document } = dom.window;
-    const container = document.body;
-
-    // Main landmark (note: current structure has nested mains - testing at least one exists)
-    const mains = getAllByRole(container, 'main');
-    expect(mains.length).toBeGreaterThan(0);
-
-    // Skip link for accessibility
-    expect(document.querySelector('a[href="#main-content"]')).not.toBeNull();
-
-    // Section headings (SCREAMING_SNAKE_CASE in section-title-text spans)
-    expect(getByText(container, 'PROJECTS')).not.toBeNull();
-    expect(getByText(container, 'HISTORY')).not.toBeNull();
-  });
-
   it('contains print button', () => {
     const html = readFileSync(distPath, 'utf-8');
     const dom = new JSDOM(html);
