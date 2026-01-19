@@ -1,20 +1,35 @@
 ---
-// Blueprint spotlight effect for dark mode
-// Shows faint grid lines under the cursor like searching a blueprint
+// Spotlight effect that follows cursor
+// Dark mode: Blueprint grid pattern (technical/terminal aesthetic)
+// Light mode: Warm parchment glow (aged paper aesthetic)
 ---
 
+<!-- Main spotlight (glow + grid for dark mode) -->
 <div
   id="blueprint-spotlight"
   class="fixed inset-0 pointer-events-none z-[9999] opacity-0 transition-opacity duration-300 ease-out print:hidden [&.active]:opacity-100"
   aria-hidden="true"
 ></div>
 
+<!-- Separate layer for parchment lines (no blur) -->
+<div
+  id="parchment-lines"
+  class="fixed inset-0 pointer-events-none z-[9998] opacity-0 transition-opacity duration-300 ease-out print:hidden [&.active]:opacity-100"
+  aria-hidden="true"
+></div>
+
 <script>
-  const GRID_SIZE = 24; // Grid cell size in pixels
-  const SPOTLIGHT_RADIUS = 180; // Radius of the spotlight
-  const FADE_TIMEOUT = 2000; // Hide spotlight after 2s of no movement
+  // Dark mode: Blueprint grid
+  const GRID_SIZE = 24;
+  const SPOTLIGHT_RADIUS = 180;
+
+  // Light mode: Parchment glow
+  const PARCHMENT_RADIUS = 155;
+
+  const FADE_TIMEOUT = 2000;
 
   let spotlight: HTMLElement | null = null;
+  let parchmentLines: HTMLElement | null = null;
   let fadeTimer: number | null = null;
   let isActive = false;
   let rafId: number | null = null;
@@ -25,15 +40,18 @@
     return document.documentElement.getAttribute('data-theme') !== 'light';
   }
 
-  function updateSpotlight(x: number, y: number): void {
-    if (!spotlight || !isActive) return;
+  function updateBlueprintSpotlight(x: number, y: number): void {
+    if (!spotlight) return;
 
-    // Use CSS custom properties for smooth updates
+    // Hide parchment lines in dark mode
+    parchmentLines?.classList.remove('active');
+
     spotlight.style.setProperty('--mouse-x', `${x}px`);
     spotlight.style.setProperty('--mouse-y', `${y}px`);
 
-    // Create the grid + spotlight effect
-    // Grid lines using repeating linear gradients, masked by radial gradient
+    // Clear any filter from parchment mode
+    spotlight.style.filter = '';
+
     spotlight.style.background = `
       radial-gradient(
         circle ${SPOTLIGHT_RADIUS}px at ${x}px ${y}px,
@@ -42,7 +60,6 @@
       )
     `;
 
-    // Use mask to show grid only in spotlight area
     spotlight.style.maskImage = `
       radial-gradient(
         circle ${SPOTLIGHT_RADIUS}px at ${x}px ${y}px,
@@ -52,7 +69,6 @@
     `;
     spotlight.style.webkitMaskImage = spotlight.style.maskImage;
 
-    // Grid pattern as background
     spotlight.style.backgroundColor = 'transparent';
     spotlight.style.backgroundImage = `
       linear-gradient(to right, rgba(55, 191, 81, 0.06) 1px, transparent 1px),
@@ -64,15 +80,105 @@
       )
     `;
     spotlight.style.backgroundSize = `${GRID_SIZE}px ${GRID_SIZE}px, ${GRID_SIZE}px ${GRID_SIZE}px, 100% 100%`;
+  }
+
+  function updateParchmentSpotlight(x: number, y: number): void {
+    if (!spotlight) return;
+
+    spotlight.style.setProperty('--mouse-x', `${x}px`);
+    spotlight.style.setProperty('--mouse-y', `${y}px`);
+
+    spotlight.style.background = 'transparent';
+    spotlight.style.maskImage = '';
+    spotlight.style.webkitMaskImage = '';
+
+    // Blurred warm glow only on main spotlight
+    spotlight.style.filter = 'blur(25px)';
+    spotlight.style.backgroundImage = `
+      radial-gradient(
+        circle ${PARCHMENT_RADIUS}px at ${x}px ${y}px,
+        rgba(195, 170, 125, 0.08) 0%,
+        rgba(190, 165, 120, 0.05) 40%,
+        rgba(185, 160, 115, 0.02) 70%,
+        transparent 100%
+      )
+    `;
+    spotlight.style.backgroundSize = '100% 100%';
+
+    // Sparse, long aging lines with randomness via multiple offset gradients
+    if (parchmentLines) {
+      parchmentLines.classList.add('active');
+      parchmentLines.style.filter = 'blur(1px)';
+      // Layer multiple gradients at different angles and offsets for randomness
+      parchmentLines.style.backgroundImage = `
+        repeating-linear-gradient(
+          1.5deg,
+          transparent 0px,
+          rgba(140, 115, 75, 0.03) 0.5px,
+          rgba(140, 115, 75, 0.015) 2px,
+          transparent 3px,
+          transparent 67px
+        ),
+        repeating-linear-gradient(
+          -0.5deg,
+          transparent 0px,
+          transparent 31px,
+          rgba(125, 100, 60, 0.025) 31.5px,
+          rgba(125, 100, 60, 0.012) 33px,
+          transparent 34px,
+          transparent 89px
+        ),
+        repeating-linear-gradient(
+          2.5deg,
+          transparent 0px,
+          transparent 53px,
+          rgba(150, 130, 90, 0.027) 53.5px,
+          rgba(150, 130, 90, 0.013) 55px,
+          transparent 56px,
+          transparent 127px
+        ),
+        repeating-linear-gradient(
+          0.8deg,
+          transparent 0px,
+          transparent 19px,
+          rgba(135, 110, 70, 0.022) 19.5px,
+          rgba(135, 110, 70, 0.01) 21px,
+          transparent 22px,
+          transparent 103px
+        )
+      `;
+      parchmentLines.style.backgroundSize = '100% 67px, 100% 89px, 100% 127px, 100% 103px';
+
+      // Mask lines to spotlight area
+      parchmentLines.style.maskImage = `
+        radial-gradient(
+          circle ${PARCHMENT_RADIUS * 1.2}px at ${x}px ${y}px,
+          black 0%,
+          black 50%,
+          transparent 100%
+        )
+      `;
+      parchmentLines.style.webkitMaskImage = parchmentLines.style.maskImage;
+    }
+  }
+
+  function updateSpotlight(x: number, y: number): void {
+    if (!spotlight || !isActive) return;
+
+    if (isDarkMode()) {
+      updateBlueprintSpotlight(x, y);
+    } else {
+      updateParchmentSpotlight(x, y);
+    }
 
     spotlight.classList.add('active');
 
-    // Reset fade timer
     if (fadeTimer !== null) {
       clearTimeout(fadeTimer);
     }
     fadeTimer = window.setTimeout(() => {
       spotlight?.classList.remove('active');
+      parchmentLines?.classList.remove('active');
     }, FADE_TIMEOUT);
   }
 
@@ -82,7 +188,6 @@
     currentX = e.clientX;
     currentY = e.clientY;
 
-    // Use requestAnimationFrame for smooth updates
     if (rafId !== null) {
       cancelAnimationFrame(rafId);
     }
@@ -95,6 +200,7 @@
     if (isActive) return;
     isActive = true;
     spotlight = document.getElementById('blueprint-spotlight');
+    parchmentLines = document.getElementById('parchment-lines');
     if (spotlight) {
       document.addEventListener('mousemove', handleMouseMove, { passive: true });
     }
@@ -120,30 +226,60 @@
       spotlight.style.maskImage = '';
       spotlight.style.webkitMaskImage = '';
       spotlight.style.backgroundImage = '';
+      spotlight.style.filter = '';
+    }
+
+    if (parchmentLines) {
+      parchmentLines.classList.remove('active');
+      parchmentLines.style.backgroundImage = '';
+      parchmentLines.style.maskImage = '';
+      parchmentLines.style.webkitMaskImage = '';
+      parchmentLines.style.filter = '';
     }
   }
 
   function init(): void {
     spotlight = document.getElementById('blueprint-spotlight');
+    parchmentLines = document.getElementById('parchment-lines');
     if (!spotlight) return;
 
-    // Only start if in dark mode
-    if (isDarkMode()) {
-      startSpotlight();
-    }
+    // Start for both modes now
+    startSpotlight();
 
-    // Watch for theme changes
+    // Watch for theme changes to switch effect style
     const observer = new MutationObserver(() => {
-      if (isDarkMode()) {
-        startSpotlight();
-      } else {
-        stopSpotlight();
+      // Clear current effect and re-render at current position
+      if (spotlight && isActive) {
+        spotlight.style.background = '';
+        spotlight.style.maskImage = '';
+        spotlight.style.webkitMaskImage = '';
+        spotlight.style.backgroundImage = '';
+        spotlight.style.filter = '';
+      }
+      if (parchmentLines) {
+        parchmentLines.classList.remove('active');
+        parchmentLines.style.backgroundImage = '';
+        parchmentLines.style.maskImage = '';
+        parchmentLines.style.webkitMaskImage = '';
+        parchmentLines.style.filter = '';
+      }
+      if (isActive) {
+        updateSpotlight(currentX, currentY);
       }
     });
 
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['data-theme']
+    });
+
+    // Stop effect when page is hidden to save resources
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopSpotlight();
+      } else {
+        startSpotlight();
+      }
     });
   }
 

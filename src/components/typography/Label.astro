@@ -182,7 +182,7 @@ type LabelVariants = VariantProps<typeof label>;
 type VariantKey = NonNullable<LabelVariants['variant']>;
 
 interface Props extends Omit<LabelVariants, 'variant'> {
-  as?: 'span' | 'div' | 'label' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  as?: 'span' | 'div' | 'label' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'time';
   class?: string;
   variant?: VariantKey;
   // Boolean variant props - use `<Label section>` instead of `<Label variant="section">`

@@ -37,8 +37,6 @@ interface Props {
   printStackMeta?: boolean;
   /** Limit number of bullets shown in print (undefined = show all) */
   printBulletCount?: number;
-  /** Merge headline into bullet list in print mode */
-  printHeadlineAsBullet?: boolean;
   /** Use compact 3-line education format in print */
   printEducationCompact?: boolean;
   /** Education print fields */
@@ -50,7 +48,7 @@ interface Props {
   printScore?: string;
 }
 
-const { title, subtitle, tag, label, technologies = [], headline, bulletPoints, supportingData = [], details, cta, prompt, useTerminal = false, metaWidth, accentColor = 'purple', hideExtraBullets = false, headingLevel = 'h3', printHideTag = false, printStackMeta = false, printBulletCount, printHeadlineAsBullet = false, printEducationCompact = false, printDegreeTitle, printDegree, printInstitution, printTenure, printSpecialism, printScore } = Astro.props;
+const { title, subtitle, tag, label, technologies = [], headline, bulletPoints, supportingData = [], details, cta, prompt, useTerminal = false, metaWidth, accentColor = 'purple', hideExtraBullets = false, headingLevel = 'h3', printHideTag = false, printStackMeta = false, printBulletCount, printEducationCompact = false, printDegreeTitle, printDegree, printInstitution, printTenure, printSpecialism, printScore } = Astro.props;
 
 // Classes to hide extra bullets on screen, show all in print
 const extraBulletClasses = hideExtraBullets ? '[&:nth-child(n+2)]:hidden print:[&:nth-child(n+2)]:!list-item' : '';
@@ -131,23 +129,17 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
 
     <Fragment slot="content">
         <!-- Headline -->
-        <Text lead class:list={["print:break-before-avoid print:mt-1", printHeadlineAsBullet && "print:hidden"]}>
+        <Text lead class="print:break-before-avoid print:mt-1">
           {headline.trim()}
         </Text>
 
         <!-- Bullet Points -->
-        <ul class:list={["bullet-list space-y-1 print:space-y-0 mt-[var(--spacing-fluid-xs)] print:mt-1 print:has-[li:nth-child(-n+4):last-child]:break-inside-avoid print:has-[li:nth-child(5)]:break-inside-auto", printBulletCount === 0 && !printHeadlineAsBullet && "print:hidden", printHeadlineAsBullet && "print:!mt-0"]}>
-          {/* Headline as first bullet in print mode */}
-          {printHeadlineAsBullet && (
-            <li class="hidden print:!block print:leading-tight print:before:content-['•'] print:before:mr-1.5 print:before:relative print:before:top-[2px]">
-              <Text as="span" muted>{headline.trim()}</Text>
-            </li>
-          )}
+        <ul class:list={["bullet-list space-y-1 print:space-y-0 mt-[var(--spacing-fluid-xs)] print:mt-1 print:has-[li:nth-child(-n+4):last-child]:break-inside-avoid print:has-[li:nth-child(5)]:break-inside-auto", printBulletCount === 0 && "print:hidden"]}>
           {bulletPoints.map((item, index) => {
             const cleanItem = item.replace(/^["']|["']$/g, '');
             const hiddenInPrint = printBulletCount !== undefined && index >= printBulletCount;
             return (
-              <li class:list={["flex items-baseline gap-2 print:block print:leading-tight print:before:content-['•'] print:before:mr-1.5 print:before:relative print:before:top-[2px]", extraBulletClasses, hiddenInPrint && "print:!hidden"]}>
+              <li class:list={["flex items-baseline gap-2 print:block print:leading-tight print:before:content-['–'] print:before:text-[var(--color-print-muted)] print:before:mr-1.5 print:before:relative print:before:top-[2px]", extraBulletClasses, hiddenInPrint && "print:!hidden"]}>
                 <span class="shrink-0 text-[var(--card-accent)] print:hidden" aria-hidden="true">–</span>
                 <Text as="span" muted>{cleanItem}</Text>
               </li>
@@ -161,7 +153,7 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
             {supportingData.map((item) => {
               const cleanItem = item.replace(/^["']|["']$/g, '');
               return (
-                <li class:list={["flex items-baseline gap-2 print:block print:leading-tight print:before:content-['•'] print:before:mr-1.5 print:before:relative print:before:top-[2px]", extraBulletClasses]}>
+                <li class:list={["flex items-baseline gap-2 print:block print:leading-tight print:before:content-['–'] print:before:text-[var(--color-print-muted)] print:before:mr-1.5 print:before:relative print:before:top-[2px]", extraBulletClasses]}>
                   <span class="shrink-0 text-[var(--card-accent)] print:hidden" aria-hidden="true">–</span>
                   <Text as="span" muted>{cleanItem}</Text>
                 </li>
