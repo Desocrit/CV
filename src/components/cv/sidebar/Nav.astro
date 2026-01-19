@@ -29,8 +29,8 @@ const { email, linkedin, github } = Astro.props;
 ]} aria-label="Contact links">
   <Stack
     as="address"
-    gap={{ base: 'sm', lg: 'xs' }}
-    class="flex-row flex-wrap lg:flex-col light:gap-4"
+    gap={{ base: 'xs', lg: 'xs' }}
+    class="flex-row flex-wrap lg:flex-col gap-[var(--spacing-fluid-xs)] light:gap-4"
   >
     <SidebarAction
       href={`mailto:${email}`}
@@ -112,12 +112,7 @@ const { email, linkedin, github } = Astro.props;
       const newTheme = isCurrentlyLight ? 'dark' : 'light';
 
       localStorage.setItem('theme', newTheme);
-
-      if (newTheme === 'dark') {
-        html.removeAttribute('data-theme');
-      } else {
-        html.setAttribute('data-theme', 'light');
-      }
+      html.setAttribute('data-theme', newTheme);
 
       updateAriaLabel();
     });

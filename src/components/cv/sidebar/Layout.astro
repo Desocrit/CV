@@ -23,9 +23,9 @@ const { class: className = '' } = Astro.props;
 <aside class:list={[
   'static max-h-none overflow-y-visible scrollbar-hidden',
   'p-[var(--spacing-fluid-md)] pb-0',
-  'sm:grid sm:grid-cols-2 sm:grid-rows-[auto_auto_auto] sm:gap-x-[var(--spacing-fluid-md)] sm:gap-y-[var(--spacing-fluid-sm)]',
+  'sm:grid sm:grid-cols-2 sm:grid-rows-[auto_auto_auto] sm:gap-x-[var(--spacing-fluid-md)] sm:gap-y-[var(--spacing-fluid-xs)]',
   'lg:block lg:sticky lg:top-0 lg:self-start lg:max-h-screen lg:overflow-y-auto lg:p-[var(--spacing-fluid-lg)] lg:pb-0',
-  'print:block print:h-auto print:overflow-visible print:p-0 print:pr-12',
+  'print:block print:h-auto print:overflow-visible print:pt-0 print:pb-0 print:pl-0 print:pr-10',
   className,
 ]}>
   <Stack gap={{ base: 'md', lg: 'lg' }} class="sm:contents lg:flex print:flex print:flex-col print:gap-0">
