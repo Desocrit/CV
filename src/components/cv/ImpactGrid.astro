@@ -13,7 +13,8 @@ const screenNodes = nodes.filter((node) => !node.print_only);
 ---
 
 {/* Screen: Interactive card grid (hidden in print - Impact data rendered via sidebar Achievements) */}
-<div
+<section
+  aria-label="Key impact metrics"
   class="impact-grid
     grid grid-cols-1 gap-4 items-start mt-2
     sm:grid-cols-2
@@ -22,13 +23,21 @@ const screenNodes = nodes.filter((node) => !node.print_only);
   {screenNodes.map((node) => (
     <ImpactCard node={node} />
   ))}
-</div>
+</section>
 
 {/* Keyframes and CSS Houdini property for border animation */}
 <style is:global>
   @keyframes spin-border {
     to {
       --border-angle: 360deg;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    @keyframes spin-border {
+      to {
+        --border-angle: 0deg;
+      }
     }
   }
 

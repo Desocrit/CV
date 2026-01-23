@@ -6,13 +6,13 @@
  * Handles border-top with automatic removal for first items via CSS :first-child.
  *
  * @example
- * <div class="content-list">
+ * <ul class="content-list">
  *   {items.map(item => (
  *     <ListItem>
  *       <ContentCard {...item} />
  *     </ListItem>
  *   ))}
- * </div>
+ * </ul>
  */
 export interface Props {
   /** Additional CSS classes */
@@ -24,7 +24,7 @@ export interface Props {
 const { class: className = '', bordered = true } = Astro.props;
 ---
 
-<div
+<li
   class:list={[
     'content-list-item block list-none py-[var(--spacing-fluid-sm)] first:border-t-0 first:pt-0 light:!border-t-0 print:!border-t-0 print:!pt-0 print:!pb-4',
     bordered && 'border-t border-[var(--color-border)]',
@@ -32,4 +32,4 @@ const { class: className = '', bordered = true } = Astro.props;
   ]}
 >
   <slot />
-</div>
+</li>

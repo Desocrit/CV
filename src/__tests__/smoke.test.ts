@@ -71,8 +71,8 @@ describe('Build Output Smoke Tests', () => {
     const dom = new JSDOM(html);
     const { document } = dom.window;
 
-    // Print button uses onclick="window.print()"
-    const printBtn = document.querySelector('button[onclick="window.print()"]');
+    // Print button uses data-action="print" with event listener
+    const printBtn = document.querySelector('button[data-action="print"]');
     expect(printBtn).not.toBeNull();
   });
 });
@@ -98,11 +98,11 @@ describe('CSS Spacing Consistency Tests', () => {
     expect(content).toContain('py-[var(--spacing-fluid-sm)]');
   });
 
-  it('Section grid children align to top via Tailwind', () => {
-    const sectionPath = join(srcPath, 'components', 'ui', 'Section.astro');
-    const content = readFileSync(sectionPath, 'utf-8');
+  it('SectionHeader grid children align to top via Tailwind', () => {
+    const headerPath = join(srcPath, 'components', 'ui', 'SectionHeader.astro');
+    const content = readFileSync(headerPath, 'utf-8');
 
-    // Section uses Tailwind utility for grid alignment at xl breakpoint
+    // SectionHeader uses Tailwind utility for grid alignment at xl breakpoint
     // xl:self-start aligns the header to top of grid cell
     expect(content).toContain('xl:self-start');
   });

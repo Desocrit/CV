@@ -28,7 +28,6 @@ const { email, linkedin, github } = Astro.props;
   'print:hidden',
 ]} aria-label="Contact links">
   <Stack
-    as="address"
     gap="sm"
     class="flex-row flex-wrap lg:flex-col"
   >
@@ -61,7 +60,7 @@ const { email, linkedin, github } = Astro.props;
     </SidebarAction>
 
     <SidebarAction
-      onClick="window.print()"
+      action="print"
       longform="Print"
       aria-label="Print this page"
     >
@@ -70,7 +69,7 @@ const { email, linkedin, github } = Astro.props;
 
     <SidebarAction
       id="theme-toggle"
-      onClick=""
+      action="theme-toggle"
       longform="Light Mode"
       altLongform="Dark Mode"
       aria-label="Light Mode: Switch to light theme"

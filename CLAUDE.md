@@ -312,3 +312,5 @@ class="grid-cols-[minmax(125px,165px)_1fr]"
 - Components: PascalCase (`ContentCard.astro`)
 - Utilities: camelCase (`cv-data.ts`)
 - Styles: kebab-case (`global.css`)
+
+This is a Tailwind only repository. Do not use explicit css styles for it.

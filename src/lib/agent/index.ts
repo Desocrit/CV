@@ -4,10 +4,7 @@
 
 export type {
   ChatRequest,
-  UIMessagePart,
-  TextPart,
   ModelMessage,
-  CVNodeMetadata,
   EmbeddingResult,
   CVSearchDocument,
   CVSearchResult,

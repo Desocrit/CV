@@ -1,0 +1,58 @@
+---
+import Label from '../typography/Label.astro';
+import Heading from '../typography/Heading.astro';
+
+/**
+ * SectionTitle - Dual title display for sections
+ *
+ * Dark mode: "// SECTION_NAME" in monospace (Label)
+ * Light mode: Clean "Section Name" heading (Heading)
+ * Print: Clean heading only
+ */
+
+interface Props {
+  title: string;
+  /** Additional classes for hover color transitions */
+  class?: string;
+  /** Show mobile context suffix (e.g., "// PROJECTS_[CONTEXT]") */
+  showContext?: boolean;
+}
+
+const { title, class: className = '', showContext = false } = Astro.props;
+
+const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
+---
+
+{/* Dark mode: "// SECTION_NAME" */}
+<Label
+  class:list={[
+    'section-title',
+    'block tracking-[0.1em] leading-[1.6] whitespace-nowrap',
+    '!text-[var(--section-accent)] lg:mb-[var(--spacing-fluid-2xs)]',
+    'light:hidden print:!hidden',
+    className,
+  ]}
+  aria-hidden="true"
+>
+  <span class="section-title-text lg:mb-2">// {formatTitle(title)}</span>
+  {showContext && (
+    <span class="section-context opacity-0 [&:not(:empty)]:opacity-100 transition-opacity duration-200 lg:hidden" />
+  )}
+</Label>
+
+{/* Light mode + print: Clean heading */}
+<Heading
+  section
+  as="h2"
+  class:list={[
+    'section-title-clean hidden',
+    'text-[var(--section-accent)]',
+    'light:block lg:light:pb-[var(--spacing-fluid-sm)] lg:light:border-b lg:light:border-b-border',
+    'lg:light:w-full lg:light:text-left',
+    'xl:light:inline-block xl:light:border-none',
+    'print:block',
+  ]}
+  aria-hidden="true"
+>
+  <span class="light:hidden print:hidden lg:mb-2">// </span>{title}
+</Heading>

@@ -63,8 +63,6 @@ const accentColorClass: Record<AccentColor, string> = {
 
 // Convert label to SCREAMING_CASE for dark mode display
 const labelText = label?.toUpperCase().replace(/\s+/g, '_').replace(/'/g, '');
-
-const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')).slice(0, 4);
 ---
 
 <article class:list={['content-card', 'group', accentColorClass[accentColor], 'py-[0.35rem]', 'print:pt-0 print:pb-0']}>
@@ -73,7 +71,7 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
         <Heading
           as={headingLevel}
           tiny
-          class="card-title transition-[text-shadow] duration-150 ease-out hover:[text-shadow:0_0_4px_var(--card-accent),0_0_12px_color-mix(in_srgb,var(--card-accent)_60%,transparent),0_0_24px_color-mix(in_srgb,var(--card-accent)_30%,transparent)] light:hover:[text-shadow:none] flex-none order-1 sm:flex-initial sm:order-none"
+          class="card-title transition-[text-shadow] duration-150 ease-out flex-none order-1 sm:flex-initial sm:order-none"
         >
           {title}
         </Heading>
@@ -88,7 +86,7 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
           <Label
             as="p"
             accent
-            class:list={["label-text mt-0 order-2 ml-auto text-[var(--card-accent)] transition-[text-shadow] duration-150 ease-out hover:[text-shadow:0_0_4px_var(--card-accent),0_0_10px_color-mix(in_srgb,var(--card-accent)_50%,transparent),0_0_20px_color-mix(in_srgb,var(--card-accent)_25%,transparent)] light:hover:[text-shadow:none] print:mt-0.5 sm:mt-2 sm:order-none sm:ml-0", printStackMeta && "print:hidden"]}
+            class:list={["label-text mt-0 order-2 ml-auto text-[var(--card-accent)] transition-[text-shadow] duration-150 ease-out print:mt-0.5 sm:mt-2 sm:order-none sm:ml-0", printStackMeta && "print:hidden"]}
           >
             <ScreenOnly as="span"><span class="light:hidden">{labelText}</span><span class="hidden light:inline">{label}</span></ScreenOnly>
             <PrintOnly as="span">{label}</PrintOnly>
@@ -116,9 +114,9 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
         )}
 
         <!-- Tech stack as diagnostic nodes (screen mode) -->
-        {filteredTechnologies.length > 0 ? (
+        {technologies.length > 0 ? (
           <ScreenOnly class="!flex flex-wrap gap-1.5 mt-[calc(var(--spacing-fluid-xs)*2)] mb-[var(--spacing-fluid-sm)] basis-full order-[10] sm:mb-0 sm:mr-2 sm:basis-auto sm:order-none lg:mt-[var(--spacing-fluid-sm)]">
-            {filteredTechnologies.map((tech) => (
+            {technologies.map((tech) => (
               <TechTag name={tech.name} url={tech.url} tooltip={tech.professional_tooltip ?? tech.tooltip} />
             ))}
           </ScreenOnly>
@@ -251,3 +249,26 @@ const filteredTechnologies = technologies.filter(t => !t.name.startsWith('TODO')
   // Re-initialize after Astro page transitions
   document.addEventListener('astro:page-load', initContentCardHandlers);
 </script>
+
+<style>
+  /* Hover glow effects for card title and label (dark mode only) */
+  .card-title:hover {
+    text-shadow:
+      0 0 4px var(--card-accent),
+      0 0 12px color-mix(in srgb, var(--card-accent) 60%, transparent),
+      0 0 24px color-mix(in srgb, var(--card-accent) 30%, transparent);
+  }
+
+  .label-text:hover {
+    text-shadow:
+      0 0 4px var(--card-accent),
+      0 0 10px color-mix(in srgb, var(--card-accent) 50%, transparent),
+      0 0 20px color-mix(in srgb, var(--card-accent) 25%, transparent);
+  }
+
+  /* Disable glow in light mode */
+  :global([data-theme='light']) .card-title:hover,
+  :global([data-theme='light']) .label-text:hover {
+    text-shadow: none;
+  }
+</style>

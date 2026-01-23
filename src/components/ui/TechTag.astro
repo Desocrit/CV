@@ -53,7 +53,6 @@ const { name, url, tooltip, class: className = '' } = Astro.props;
     className,
   ]}
   title={tooltip}
-  style="--tag-accent: var(--card-accent, var(--color-accent-purple));"
 >
   <span class="pointer-events-none">{name}</span>
   <span
@@ -81,7 +80,14 @@ const { name, url, tooltip, class: className = '' } = Astro.props;
    * 2. Mask compositing (mask-composite: exclude) for border-only gradient effect
    * 3. @keyframes definition for the sweep animation
    * 4. :global() selector with theme-aware media query for dark mode hover state
+   * 5. CSS custom property (--tag-accent) for accent color inheritance
    */
+
+  /* Set custom property for accent color inheritance from card */
+  .tech-tag {
+    --tag-accent: var(--card-accent, var(--color-accent-purple));
+  }
+
   .tech-tag-sweep {
     background: linear-gradient(
       90deg,
@@ -116,8 +122,8 @@ const { name, url, tooltip, class: className = '' } = Astro.props;
     }
   }
 
-  /* Dark mode md+: glimmer sweep animation on hover */
-  @media (min-width: 1024px) {
+  /* Dark mode md+: glimmer sweep animation on hover (respects reduced motion) */
+  @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
     :global(:not([data-theme='light'])) .tech-tag:hover .tech-tag-sweep {
       animation: glimmer-sweep 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }

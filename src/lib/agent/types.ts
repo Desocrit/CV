@@ -23,11 +23,6 @@ export const chatRequestSchema = z.object({
 });
 
 export type ChatRequest = z.infer<typeof chatRequestSchema>;
-export type UIMessagePart = z.infer<typeof messagePartSchema>;
-export interface TextPart {
-  type: 'text';
-  text: string;
-}
 
 // ============================================================================
 // Model Message Types (for AI SDK)
@@ -42,13 +37,11 @@ export interface ModelMessage {
 // Embedding & Vector Store Types
 // ============================================================================
 
-export const cvNodeMetadataSchema = z.object({
+const cvNodeMetadataSchema = z.object({
   node_id: z.string().optional(),
   category: z.string().optional(),
   header: z.string().optional(),
 });
-
-export type CVNodeMetadata = z.infer<typeof cvNodeMetadataSchema>;
 
 export const embeddingResultSchema = z.object({
   content: z.string(),

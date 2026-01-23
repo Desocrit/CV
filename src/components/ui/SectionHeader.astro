@@ -1,0 +1,45 @@
+---
+/**
+ * SectionHeader - Responsive sticky header for sections
+ *
+ * Responsive behavior (all Tailwind):
+ * - Mobile: Sticky at top, full-width with accent border
+ * - lg (960px+): Relative positioning, inline
+ * - xl (1300px+): Sticky in side column
+ */
+
+interface Props {
+  class?: string;
+  printHide?: boolean;
+}
+
+const { class: className = '', printHide = false } = Astro.props;
+---
+
+<div
+  class:list={[
+    'section-header',
+    // Base: mobile sticky header
+    'mt-0.5 light:mt-1.5',
+    'sticky top-[-1px] z-20',
+    'flex items-center justify-between',
+    // Full-bleed on mobile
+    'w-screen ml-[calc(-1*var(--spacing-fluid-md))] px-[var(--spacing-fluid-md)] py-2.5',
+    // Mobile appearance
+    'bg-background border-y border-[var(--section-accent)]',
+    // Light mode mobile adjustments
+    'light:border-border light:pl-0 light:pr-[var(--spacing-fluid-xs)] light:w-auto light:ml-0',
+    // lg: relative, inline
+    'lg:relative lg:top-auto lg:z-10 lg:w-auto lg:ml-0 lg:p-0 lg:bg-transparent lg:border-none lg:justify-start',
+    // xl: sticky side column
+    'xl:sticky xl:top-[var(--spacing-fluid-sm)] xl:self-start xl:bg-background xl:pt-[var(--spacing-fluid-sm)]',
+    // Print: static, no decoration
+    'print:static print:w-auto print:!m-0 print:!p-0 print:bg-transparent print:border-none',
+    // Light mode active state
+    '[[data-theme=light]_&.is-active]:border-[var(--section-accent)]',
+    printHide && 'print:!hidden',
+    className,
+  ]}
+>
+  <slot />
+</div>

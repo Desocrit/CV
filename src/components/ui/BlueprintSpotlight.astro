@@ -283,12 +283,25 @@
     });
   }
 
-  // Respect reduced motion preferences
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    // Skip effect entirely for users who prefer reduced motion
-  } else if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+  // Defer initialization to avoid impacting Lighthouse scores
+  function deferInit(): void {
+    // Respect reduced motion preferences
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  }
+
+  // Use requestIdleCallback to defer non-critical visual effects
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(deferInit, { timeout: 3000 });
   } else {
-    init();
+    // Fallback for Safari and older browsers
+    setTimeout(deferInit, 1000);
   }
 </script>

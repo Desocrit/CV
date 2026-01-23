@@ -22,7 +22,7 @@ const toSnakeCase = (str: string) =>
 <section aria-label="Skills" class="mt-fluid-lg mb-fluid-md">
   <Heading
     as="h2"
-    class="mb-fluid-sm flex items-baseline gap-2 border-b border-border pb-fluid-xs print:text-[10px] print:font-bold print:tracking-[0.06em] print:text-[var(--color-print-body)] print:border-[#e5e5e5] print:pb-1 print:mb-1.5"
+    class="mb-fluid-sm flex items-baseline gap-2 border-b border-border pb-fluid-xs print:text-[10px] print:font-bold print:tracking-[0.06em] print:text-[var(--color-print-body)] print:border-[var(--color-print-border)] print:pb-1 print:mb-1.5"
   >
     <span class="section-prefix font-mono text-fluid-sm tracking-wider text-accent-green print:hidden" aria-hidden="true">
       // {sectionNumber}
@@ -32,9 +32,9 @@ const toSnakeCase = (str: string) =>
 
   <div class="bg-terminal-bg text-terminal-text font-mono overflow-hidden border border-border light:border-[0.5px] print:border-[var(--color-print-border)] print:bg-transparent print:p-[0.3rem]">
     <ScreenOnly class="terminal-header flex items-center gap-1 border-b border-border px-3 py-1.5" aria-hidden="true">
-      <span class="size-2 rounded-full bg-[#FF5F56]"></span>
-      <span class="size-2 rounded-full bg-[#FFBD2E]"></span>
-      <span class="size-2 rounded-full bg-[#27C93F]"></span>
+      <span class="size-2 rounded-full bg-[var(--color-terminal-btn-close)]"></span>
+      <span class="size-2 rounded-full bg-[var(--color-terminal-btn-minimize)]"></span>
+      <span class="size-2 rounded-full bg-[var(--color-terminal-btn-maximize)]"></span>
       <span class="ml-2 font-mono text-fluid-sm text-foreground opacity-70">capabilities.sh</span>
     </ScreenOnly>
 

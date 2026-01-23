@@ -63,7 +63,16 @@ class NeonVectorStore implements VectorStoreService {
    */
   private parseResult(row: unknown): EmbeddingResult | null {
     const parsed = embeddingResultSchema.safeParse(row);
-    return parsed.success ? parsed.data : null;
+    if (!parsed.success) {
+      console.error(
+        '[VectorStore] Failed to parse embedding result:',
+        parsed.error.format(),
+        'Row data:',
+        JSON.stringify(row, null, 2)
+      );
+      return null;
+    }
+    return parsed.data;
   }
 }
 

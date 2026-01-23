@@ -10,14 +10,17 @@
  *
  * Supports dual-state rendering for theme toggle via alt* props and alt-icon slot.
  * When altLongform is provided, switches between states based on light: variant.
+ *
+ * For buttons, use data-action to specify the action type (e.g., "print", "theme-toggle").
+ * Actions are handled via client-side event listeners.
  */
 interface Props {
   /** Link URL - if provided, renders as <a> */
   href?: string;
   /** Opens link in new tab */
   external?: boolean;
-  /** Click handler - if provided without href, renders as <button> */
-  onClick?: string;
+  /** Action identifier for buttons - handled via client-side event listeners */
+  action?: 'print' | 'theme-toggle' | string;
   /** Element ID */
   id?: string;
   /** Full text label shown on desktop (e.g., "LinkedIn", "Light Mode") */
@@ -35,7 +38,7 @@ interface Props {
 const {
   href,
   external = false,
-  onClick,
+  action,
   id,
   longform,
   altLongform,
@@ -109,6 +112,8 @@ const linkTextClasses = [
   // Animated underline (desktop only)
   "after:content-[''] after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-px after:bg-foreground after:transition-[width] after:duration-200 after:ease-out",
   'group-hover:after:w-full',
+  // Print: disable underline animation
+  'print:after:hidden print:after:content-none',
 ].join(' ');
 
 // Element type
@@ -122,7 +127,7 @@ const Element = isButton ? 'button' : 'a';
   class:list={[baseClasses, className]}
   target={external ? '_blank' : undefined}
   rel={external ? 'noopener noreferrer' : undefined}
-  onclick={onClick}
+  data-action={action}
   aria-label={ariaLabel}
 >
   {/* Icon section */}
@@ -155,3 +160,32 @@ const Element = isButton ? 'button' : 'a';
     )}
   </span>
 </Element>
+
+<script>
+  /**
+   * Handle SidebarAction button clicks via data-action attribute.
+   * Supported actions: "print"
+   * Note: "theme-toggle" is handled separately in Nav.astro
+   */
+  function initSidebarActions() {
+    document.querySelectorAll<HTMLButtonElement>('button[data-action]').forEach((button) => {
+      const action = button.dataset['action'];
+
+      if (action === 'print') {
+        button.addEventListener('click', () => {
+          window.print();
+        });
+      }
+    });
+  }
+
+  // Initialize on DOMContentLoaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSidebarActions);
+  } else {
+    initSidebarActions();
+  }
+
+  // Re-initialize after Astro page transitions
+  document.addEventListener('astro:page-load', initSidebarActions);
+</script>

@@ -172,7 +172,6 @@ projects:
 
 work_history:
   - company: Let's Do This
-    color: green
     role: Principal Engineer
     tenure: Feb 2021 — Present
     summary: Architected the transition from startup to resilience
@@ -204,7 +203,6 @@ work_history:
         professional_tooltip: Solving over-fetching by inviting N+1 to dinner
 
   - company: Singletrack
-    color: orange
     role: Senior Engineer
     tenure: Nov 2017 — Jan 2021
     summary: Worked in financial data analysis, ingestion and visualisation
@@ -235,7 +233,6 @@ work_history:
         professional_tooltip: The world's favorite pseudocode, despite the GIL
 
   - company: RateSetter
-    color: blue
     role: Software Engineer
     tenure: Feb 2016 — Nov 2017
     summary: A P2P lending platform in a high-compliance environment

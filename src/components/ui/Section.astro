@@ -1,33 +1,86 @@
 ---
 import ActionButton from './ActionButton.astro';
-import Label from '../typography/Label.astro';
-import Heading from '../typography/Heading.astro';
+import SectionHeader from './SectionHeader.astro';
+import SectionTitle from './SectionTitle.astro';
+
+/**
+ * Section - Collapsible content section with responsive header
+ *
+ * Features:
+ * - Mobile: Sticky header with scroll-to-top
+ * - Desktop: Side column layout at xl
+ * - Accordion toggle on all screen sizes
+ * - Dynamic accent color from active cards (mobile)
+ */
+
+export type AccentColor = 'green' | 'orange' | 'blue' | 'purple' | 'red' | 'cyan';
 
 interface Props {
   title: string;
   id?: string;
   class?: string;
-  titleClass?: string;
   contentClass?: string;
+  /** Colors for content list hover effects (nth-child based) */
+  hoverColors?: AccentColor[];
+  /** Enable impact card hover effects (color-class based) */
+  hoverImpact?: boolean;
   printHide?: boolean;
-  /** Hide section title in print (content still visible) */
   printHideTitle?: boolean;
-  /** Add border-bottom divider in print mode */
   printBorderBottom?: boolean;
 }
 
-const { title, id, class: className = '', titleClass = '', contentClass = '', printHide = false, printHideTitle = false, printBorderBottom = false } = Astro.props;
+const {
+  title,
+  id,
+  class: className = '',
+  contentClass = '',
+  hoverColors,
+  hoverImpact = false,
+  printHide = false,
+  printHideTitle = false,
+  printBorderBottom = false,
+} = Astro.props;
+
 const headingId = id ? `${id}-heading` : undefined;
 const contentId = id ?? `section-${Math.random().toString(36).slice(2, 9)}`;
-const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
+
+// Generate hover color classes for content lists (nth-child based)
+const contentHoverClasses = hoverColors?.length
+  ? [
+      'transition-colors duration-150 ease-out',
+      ...hoverColors.map((color, i) =>
+        `min-[1200px]:group-has-[.content-list-item:nth-child(${i + 1}):hover]:[color:var(--color-accent-${color})]`
+      ),
+    ].join(' ')
+  : '';
+
+// Impact hover classes (fixed set of 6 colors, color-class based)
+const impactHoverClasses = hoverImpact
+  ? [
+      'transition-colors duration-150 ease-out',
+      'min-[1300px]:group-has-[.impact-card-wrapper--green:hover]:[color:var(--color-accent-green)]',
+      'min-[1300px]:group-has-[.impact-card-wrapper--blue:hover]:[color:var(--color-accent-blue)]',
+      'min-[1300px]:group-has-[.impact-card-wrapper--purple:hover]:[color:var(--color-accent-purple)]',
+      'min-[1300px]:group-has-[.impact-card-wrapper--orange:hover]:[color:var(--color-accent-orange)]',
+      'min-[1300px]:group-has-[.impact-card-wrapper--red:hover]:[color:var(--color-accent-red)]',
+      'min-[1300px]:group-has-[.impact-card-wrapper--cyan:hover]:[color:var(--color-accent-cyan)]',
+    ].join(' ')
+  : '';
+
+const titleHoverClasses = contentHoverClasses || impactHoverClasses;
 ---
 
 <section
   class:list={[
-    'group my-[var(--spacing-fluid-md)] lg:my-[var(--spacing-fluid-sm)] lg:first:mt-0 [--section-label-width:140px]',
+    'group',
+    'my-[var(--spacing-fluid-md)] lg:my-[var(--spacing-fluid-sm)] lg:first:mt-0',
+    '[--section-label-width:140px]',
+    // First-child rules
     'lg:[&:first-child_.section-header]:pt-0 lg:[&:first-child_.section-header]:border-t-0',
     'lg:[&:first-child_[data-content]]:pt-0',
+    // Collapse state
     '[&.is-collapsed_[data-content]]:hidden',
+    // Print
     'print:my-0',
     printHide && 'print:hidden',
     printBorderBottom && 'print:mb-4',
@@ -40,21 +93,7 @@ const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
   style="--section-accent: var(--color-accent-green);"
 >
   <div class="flex flex-col lg:gap-[var(--spacing-fluid-xs)] xl:grid xl:grid-cols-[var(--section-label-width)_1fr] xl:gap-[var(--spacing-fluid-sm)] print:block">
-    <div
-      class:list={[
-        'section-header',
-        'mt-0.5 light:mt-1.5',
-        'sticky top-[-1px] z-20 flex items-center justify-between',
-        'w-screen ml-[calc(-1*var(--spacing-fluid-md))] px-[var(--spacing-fluid-md)] py-2.5',
-        'bg-background border-y border-[var(--section-accent)]',
-        'light:border-border light:pl-0 light:pr-[var(--spacing-fluid-xs)] light:w-auto light:ml-0',
-        'lg:relative lg:top-auto lg:z-10 lg:w-auto lg:ml-0 lg:p-0 lg:bg-transparent lg:border-none lg:justify-start',
-        'xl:sticky xl:top-[var(--spacing-fluid-sm)] xl:self-start xl:bg-background xl:pt-[var(--spacing-fluid-sm)]',
-        'print:static print:w-auto print:!m-0 print:!p-0 print:bg-transparent print:border-none',
-        '[[data-theme=light]_&.is-active]:border-[var(--section-accent)]',
-        printHideTitle && 'print:!hidden',
-      ]}
-    >
+    <SectionHeader printHide={printHideTitle}>
       <button
         type="button"
         class="section-toggle inline-flex items-center border-none p-0 m-0 bg-transparent cursor-pointer relative focus-visible:outline-2 focus-visible:outline-[var(--section-accent)] focus-visible:outline-offset-2 lg:contents print:contents before:content-[''] before:absolute before:inset-[-0.75rem] before:min-w-[44px] before:min-h-[44px] before:print:hidden"
@@ -62,31 +101,7 @@ const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
         aria-controls={contentId}
         aria-label={`Toggle ${title} section`}
       >
-        <Label
-          class:list={[
-            'section-title block tracking-[0.1em] leading-[1.6] whitespace-nowrap',
-            '!text-[var(--section-accent)] lg:mb-[var(--spacing-fluid-2xs)]',
-            'light:hidden print:!hidden',
-            titleClass,
-          ]}
-          aria-hidden="true"
-        >
-          <span class="section-title-text lg:mb-2">// {formatTitle(title)}</span>
-          <span class="section-context opacity-0 [&:not(:empty)]:opacity-100 transition-opacity duration-200 lg:hidden [&:not(:empty)]:before:content-['/_']"></span>
-        </Label>
-        <Heading
-          section
-          as="h2"
-          class:list={[
-            'section-title-clean hidden',
-            'text-[var(--section-accent)]',
-            'light:block lg:light:pb-[var(--spacing-fluid-sm)] lg:light:border-b lg:light:border-b-border',
-            'lg:light:w-full lg:light:text-left',
-            'xl:light:inline-block xl:light:border-none',
-            'print:block',
-          ]}
-          aria-hidden="true"
-        ><span class="light:hidden print:hidden lg:mb-2">// </span>{title}</Heading>
+        <SectionTitle title={title} class={titleHoverClasses} showContext />
       </button>
 
       <ActionButton
@@ -94,10 +109,14 @@ const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
         class="scroll-top-btn shrink-0 relative z-2 lg:hidden print:!hidden before:content-[''] before:absolute before:inset-[-0.5rem] before:z-[1] before:print:hidden [&_.bracket]:text-[var(--section-accent)] [&_.label]:text-[var(--section-accent)] [&_.label]:light:text-muted-foreground"
         screenReaderLabel="Scroll to top"
       />
-    </div>
+    </SectionHeader>
 
     <div
-      class:list={['section-content w-full min-w-0 pt-[var(--spacing-fluid-sm)] lg:pt-0 xl:pt-[var(--spacing-fluid-sm)] print:pt-0', contentClass]}
+      class:list={[
+        'section-content w-full min-w-0',
+        'pt-[var(--spacing-fluid-sm)] lg:pt-0 xl:pt-[var(--spacing-fluid-sm)] print:pt-0',
+        contentClass,
+      ]}
       data-content
       id={contentId}
     >
@@ -109,25 +128,34 @@ const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
 
 <script>
   const initSection = () => {
+    // Scroll-to-top
     document.querySelectorAll('.scroll-top-btn').forEach(btn =>
-      btn.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); window.scrollTo({ top: 0, behavior: 'smooth' }); })
-    );
-
-    // Accordion toggle works on all screen sizes
-    document.querySelectorAll('.section-toggle').forEach(toggle =>
-      toggle.addEventListener('click', () => {
-        const section = toggle.closest('[data-section]');
-        if (section) toggle.setAttribute('aria-expanded', String(!section.classList.toggle('is-collapsed')));
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       })
     );
 
-    // Only apply scroll-based active states on xs/sm screens (below md breakpoint)
+    // Accordion toggle
+    document.querySelectorAll('.section-toggle').forEach(toggle =>
+      toggle.addEventListener('click', () => {
+        const section = toggle.closest('[data-section]');
+        if (section) {
+          toggle.setAttribute('aria-expanded', String(!section.classList.toggle('is-collapsed')));
+        }
+      })
+    );
+
+    // Mobile scroll-based active states (below md breakpoint only)
     if (!matchMedia('(max-width: 729px)').matches) return;
 
     const sections = document.querySelectorAll('[data-section]');
     if (!sections.length) return;
 
-    const toScreamingCase = (s: string) => s.toUpperCase().replace(/\s+/g, '_').replace(/'/g, '');
+    const toScreamingCase = (s: string) =>
+      s.toUpperCase().replace(/\s+/g, '_').replace(/'/g, '');
+
     const getContextText = (card: Element) =>
       toScreamingCase(
         card.querySelector('.card-header')?.textContent?.trim().replace(/^\[\s*|\s*\]$/g, '') ||
@@ -135,49 +163,75 @@ const formatTitle = (s: string) => s.toUpperCase().replace(/\s+/g, '_');
         card.querySelector('.card-title')?.textContent?.trim() || ''
       );
 
-    const updateSections = () => sections.forEach(section => {
-      const rect = section.getBoundingClientRect();
-      const header = section.querySelector('.section-header');
-      const context = section.querySelector('.section-context') as HTMLElement | null;
-      const cards = section.querySelectorAll('.content-card, .impact-card-wrapper');
-      const el = section as HTMLElement;
+    const updateSections = () => {
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        const header = section.querySelector('.section-header');
+        const context = section.querySelector('.section-context') as HTMLElement | null;
+        const cards = section.querySelectorAll('.content-card, .impact-card-wrapper');
+        const el = section as HTMLElement;
 
-      if (rect.top <= 10 && rect.bottom > 50) {
-        header?.classList.add('is-active');
-        let active: Element | null = null, highest = -Infinity;
-        cards.forEach(c => { const r = c.getBoundingClientRect(); if (r.top <= 80 && r.bottom > 0 && r.top > highest) { highest = r.top; active = c; } });
-        cards.forEach(c => c.classList.remove('is-active-card'));
-        if (active) {
-          (active as Element).classList.add('is-active-card');
-          // For impact cards in 2-column layout (sm: 560-729px), also activate sibling cards with same header
-          // Skip on xs (<560px) where there's only 1 card per row
-          const activeHeader = (active as HTMLElement).dataset['header'];
-          const isSmBreakpoint = matchMedia('(min-width: 560px)').matches;
-          if (activeHeader && isSmBreakpoint && (active as Element).classList.contains('impact-card-wrapper')) {
-            cards.forEach(c => {
-              if (c !== active && (c as HTMLElement).dataset['header'] === activeHeader) {
-                c.classList.add('is-active-card');
-              }
-            });
+        if (rect.top <= 10 && rect.bottom > 50) {
+          header?.classList.add('is-active');
+
+          // Find active card (highest one in viewport)
+          let active: Element | null = null;
+          let highest = -Infinity;
+          cards.forEach(c => {
+            const r = c.getBoundingClientRect();
+            if (r.top <= 80 && r.bottom > 0 && r.top > highest) {
+              highest = r.top;
+              active = c;
+            }
+          });
+
+          cards.forEach(c => c.classList.remove('is-active-card'));
+
+          if (active) {
+            (active as Element).classList.add('is-active-card');
+
+            // Impact cards: also activate siblings with same header in 2-column layout
+            const activeHeader = (active as HTMLElement).dataset['header'];
+            const isSmBreakpoint = matchMedia('(min-width: 560px)').matches;
+            if (activeHeader && isSmBreakpoint && (active as Element).classList.contains('impact-card-wrapper')) {
+              cards.forEach(c => {
+                if (c !== active && (c as HTMLElement).dataset['header'] === activeHeader) {
+                  c.classList.add('is-active-card');
+                }
+              });
+            }
+
+            // Update section accent color from card
+            const accent = getComputedStyle(active).getPropertyValue('--card-accent').trim();
+            if (accent) el.style.setProperty('--section-accent', accent);
+            if (context) context.textContent = '/_' + getContextText(active);
           }
-          const accent = getComputedStyle(active).getPropertyValue('--card-accent').trim();
-          if (accent) el.style.setProperty('--section-accent', accent);
-          if (context) context.textContent = getContextText(active);
+        } else {
+          header?.classList.remove('is-active');
+          el.style.setProperty('--section-accent', 'var(--color-accent-green)');
+          if (context) context.textContent = '';
+          cards.forEach(c => c.classList.remove('is-active-card'));
         }
-      } else {
-        header?.classList.remove('is-active');
-        el.style.setProperty('--section-accent', 'var(--color-accent-green)');
-        if (context) context.textContent = '';
-        cards.forEach(c => c.classList.remove('is-active-card'));
-      }
-    });
+      });
+    };
 
     let ticking = false;
-    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { updateSections(); ticking = false; }); } }, { passive: true });
+    addEventListener('scroll', () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          updateSections();
+          ticking = false;
+        });
+      }
+    }, { passive: true });
     updateSections();
   };
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initSection);
-  else initSection();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSection);
+  } else {
+    initSection();
+  }
   document.addEventListener('astro:page-load', initSection);
 </script>

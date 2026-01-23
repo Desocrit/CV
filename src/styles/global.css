@@ -2,7 +2,9 @@
 @plugin '@tailwindcss/typography';
 
 /* Custom variant for light mode (dark is default, light is opt-in via data-theme) */
+/* Print always uses light mode styles regardless of current theme */
 @custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
+@custom-variant print (@media print);
 
 @font-face {
   font-family: 'Geist';
@@ -142,6 +144,9 @@
   --color-terminal-text: #767676;
   --color-terminal-prompt: #767676;
   --color-terminal-accent: #f2f2f2;
+  --color-terminal-btn-close: #FF5F56;
+  --color-terminal-btn-minimize: #FFBD2E;
+  --color-terminal-btn-maximize: #27C93F;
 
   --color-status-live: #f2f2f2;
   --color-status-completed: #767676;
@@ -200,6 +205,9 @@
   --color-terminal-text: #1D1D1F; /* Charcoal Mono */
   --color-terminal-prompt: #636366;
   --color-terminal-accent: #1D1D1F;
+  --color-terminal-btn-close: #8B3A3A; /* Oxblood */
+  --color-terminal-btn-minimize: #B5651D; /* Raw Sienna */
+  --color-terminal-btn-maximize: #2D6A4F; /* Forest Green */
 
   /* Engineering Inks (Swiss architectural palette) */
   --color-accent-purple: #9A5B4C; /* Terracotta */
@@ -242,6 +250,32 @@
     --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
     --font-mono: 'IBM Plex Mono', 'Consolas', monospace;
   }
+
+  /* Print typography - always use light mode (IBM Plex) styles */
+  html {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3 {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    line-height: 1.1;
+  }
+
+  h4 {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
+
+  code, pre, .font-mono, [class*="mono"] {
+    font-family: 'IBM Plex Mono', 'Consolas', monospace;
+    font-variant-ligatures: none;
+  }
 }
 
 /* ==========================================================================
@@ -271,9 +305,25 @@
   letter-spacing: -0.015em;
 }
 
+/* Light mode monospace: disable ligatures for architectural clarity */
+[data-theme='light'] code,
+[data-theme='light'] pre,
+[data-theme='light'] .font-mono,
+[data-theme='light'] [class*="mono"] {
+  font-family: 'IBM Plex Mono', 'Consolas', monospace;
+  font-variant-ligatures: none;
+}
+
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blink,
+  [class*="blink"] {
+    animation: none;
+  }
 }
 
 @layer base {

@@ -33,10 +33,15 @@ export interface StreamOptions {
   messages: ModelMessage[];
 }
 
+export interface TextStreamResponseOptions {
+  /** Additional headers to include in the response */
+  headers?: Record<string, string>;
+}
+
 export interface CVAgent {
   /** Streams a response for the given conversation */
   stream(options: StreamOptions): {
-    toTextStreamResponse(): Response;
+    toTextStreamResponse(options?: TextStreamResponseOptions): Response;
   };
 }
 
