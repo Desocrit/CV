@@ -26,6 +26,43 @@ outlier_achievements:
     description: Per annum savings on infrastructure
 
 projects:
+  - project_title: Tempo
+    subtitle: Design System
+    headline: Unified design language to bridge engineering, design, and AI
+    metric:
+      - Replaced over 10,000 legacy components with accessible Tailwind
+      - Cut rebrand lead time from 12 dev weeks to 1 by clearing design debt
+    action:
+      - Strictly aligned designers developer concepts to allow AI driven UI
+      # - Seamlessly orchestrated a high-risk 30 day migration of the entire system
+    prompt: How did Tempo allow AI to build pixel-perfect designs with Figma MCP?
+    cta: How did Tempo allow AI to build pixel-perfect designs with Figma MCP?
+    war_story: []
+    stack_and_tools:
+      - name: Storybook
+        group: Design Tools
+        url: https://storybook.js.org/
+        tooltip: Components in solitary confinement
+        professional_tooltip: Component-driven development, validated in a vacuum
+        hide_on_sidebar: true
+      - name: CVA
+        group: Design Tools
+        url: https://cva.style/docs
+        tooltip: Tailwind's ternary operator, but legible
+        professional_tooltip: Discriminated unions for conditional class composition
+        hide_on_sidebar: true
+      - name: Tailwind
+        group: Frontend
+        url: https://tailwindcss.com/docs/utility-first
+        tooltip: class="mb-4 pt-2 flex justify-oh-god-why"
+        professional_tooltip: Because naming things is the only hard problem left in CS
+      - name: Figma
+        group: Design Tools
+        url: https://www.figma.com/
+        tooltip: Where designs go to get ignored
+        professional_tooltip: CRDTs meet the design-to-code impedance mismatch
+        hide_on_sidebar: true
+
   - project_title: Nova
     subtitle: AI Analytics
     headline: Developed an analytics agent that cut data requests by 98%
@@ -65,39 +102,6 @@ projects:
         tooltip: Ctrl+F for robots
         professional_tooltip: Open-book exams for latent space
 
-  - project_title: System Tests
-    subtitle: Testing Framework
-    headline: Built a 'Virtual Monolith' for local testing of distributed services
-    metric:
-      - Boosted test coverage by 35% by making full-stack tests the easiest option
-      - Allowed us to fully replace our previous integration tests with System Tests
-    action:
-      - Used local GRPC to allow step-through debugging across an entire stack
-      # - Traded framework complexity for developer simplicity, eliminating the need for snapshots
-    cta: How did we handle the dependency cycles that this would cause?
-    prompt: How did Chris handle dependency cycles in the System Test framework?
-    stack_and_tools:
-      - name: GraphQL
-        group: AI & APIs
-        url: https://graphql.org/learn/
-        tooltip: Over-fetching's arch-nemesis
-        professional_tooltip: Solving over-fetching by inviting N+1 to dinner
-      - name: SQS
-        group: Infrastructure
-        url: https://aws.amazon.com/sqs/
-        tooltip: Bezos's waiting room
-        professional_tooltip: At-least-once semantics, at-most-once documented
-      - name: Docker
-        group: Infrastructure
-        url: https://docs.docker.com/get-started/
-        tooltip: '"Works on my machine" as a service'
-        professional_tooltip: A few namespaces and a cgroup in a trench coat
-      - name: gRPC
-        group: AI & APIs
-        url: https://grpc.io/docs/what-is-grpc/introduction/
-        tooltip: HTTP/2's favourite child
-        professional_tooltip: Strongly-typed telepathy for services that hate overhead
-
   - project_title: Checkout
     subtitle: Total rebuild
     headline: Rebuilt the checkout from scratch for stability and scalability
@@ -134,42 +138,38 @@ projects:
         professional_tooltip: Directed acyclic graphs for your component tree
         hide_on_sidebar: true
 
-  - project_title: Tempo
-    subtitle: Design System
-    headline: Unified design language to bridge engineering, design, and AI
+  - project_title: System Tests
+    subtitle: Testing Framework
+    headline: Built a 'Virtual Monolith' for local testing of distributed services
     metric:
-      - Replaced over 10,000 legacy components with accessible Tailwind
-      - Cut rebrand lead time from 12 dev weeks to 1 by clearing design debt
+      - Boosted test coverage by 35% by making full-stack tests the easiest option
+      - Allowed us to fully replace our previous integration tests with System Tests
     action:
-      - Strictly aligned designers developer concepts to allow AI driven UI
-      # - Seamlessly orchestrated a high-risk 30 day migration of the entire system
-    prompt: How did Tempo allow AI to build pixel-perfect designs with Figma MCP?
-    cta: How did Tempo allow AI to build pixel-perfect designs with Figma MCP?
-    war_story: []
+      - Used local GRPC to allow step-through debugging across an entire stack
+      # - Traded framework complexity for developer simplicity, eliminating the need for snapshots
+    cta: How did we handle the dependency cycles that this would cause?
+    prompt: How did Chris handle dependency cycles in the System Test framework?
     stack_and_tools:
-      - name: Storybook
-        group: Design Tools
-        url: https://storybook.js.org/
-        tooltip: Components in solitary confinement
-        professional_tooltip: Component-driven development, validated in a vacuum
-        hide_on_sidebar: true
-      - name: CVA
-        group: Design Tools
-        url: https://cva.style/docs
-        tooltip: Tailwind's ternary operator, but legible
-        professional_tooltip: Discriminated unions for conditional class composition
-        hide_on_sidebar: true
-      - name: Tailwind
-        group: Frontend
-        url: https://tailwindcss.com/docs/utility-first
-        tooltip: class="mb-4 pt-2 flex justify-oh-god-why"
-        professional_tooltip: Because naming things is the only hard problem left in CS
-      - name: Figma
-        group: Design Tools
-        url: https://www.figma.com/
-        tooltip: Where designs go to get ignored
-        professional_tooltip: CRDTs meet the design-to-code impedance mismatch
-        hide_on_sidebar: true
+      - name: GraphQL
+        group: AI & APIs
+        url: https://graphql.org/learn/
+        tooltip: Over-fetching's arch-nemesis
+        professional_tooltip: Solving over-fetching by inviting N+1 to dinner
+      - name: SQS
+        group: Infrastructure
+        url: https://aws.amazon.com/sqs/
+        tooltip: Bezos's waiting room
+        professional_tooltip: At-least-once semantics, at-most-once documented
+      - name: Docker
+        group: Infrastructure
+        url: https://docs.docker.com/get-started/
+        tooltip: '"Works on my machine" as a service'
+        professional_tooltip: A few namespaces and a cgroup in a trench coat
+      - name: gRPC
+        group: AI & APIs
+        url: https://grpc.io/docs/what-is-grpc/introduction/
+        tooltip: HTTP/2's favourite child
+        professional_tooltip: Strongly-typed telepathy for services that hate overhead
 
 work_history:
   - company: Let's Do This
@@ -271,53 +271,7 @@ education:
     notable: Highest overall grade in the BSc.
 
 impact_nodes:
-  # Category 1: Speed & Standards (Green)
-  - header: Developer Velocity
-    short_header: EFFICIENCY
-    title: CI/CD Architecture
-    metric_value: 90%
-    metric_label: CI savings
-    description: Applied cross-branch caching & parallelisation
-    long_description: Reduced test latency by 90% and CI costs by 75% using cross-branch caching
-    color: green
-    print_only: false
-    prompt: How did Chris optimize the CI/CD pipeline to achieve 10x faster test execution?
-
-  - header: Developer Velocity
-    short_header: EFFICIENCY
-    title: Monorepo
-    metric_value: "100%"
-    metric_label: Typescript
-    description: Unified 22 services into one strict monorepo
-    long_description: Consolidated 22 services into one monorepo with 100% strict Typescript
-    color: green
-    print_only: false
-    prompt: How did Chris consolidate 22 services into a monorepo and enforce strict TypeScript?
-
-  # Category 2: Risk & Efficiency (Orange)
-  - header: System Integrity
-    short_header: RESILIENCE
-    title: Capital Efficiency
-    metric_value: "$500k"
-    metric_label: Recovered
-    description: Cut DB usage by 90% and pruned features
-    long_description: Saved 500k/year and by optimising the database and pruning unused features
-    color: orange
-    print_only: false
-    prompt: Walk me through the optimization strategies that saved $500k annually.
-
-  - header: System Integrity
-    short_header: RESILIENCE
-    title: Security Hardening
-    metric_value: "35+"
-    metric_label: CVEs Fixed
-    description: Implemented automated SAST/DAST pipelines
-    long_description: Implemented automated SAST/DAST tooling to find and fix 35+ critical CVEs
-    color: orange
-    print_only: false
-    prompt: Describe Chris's approach to security hardening and CVE remediation.
-
-  # Category 3: People & Culture (Blue)
+  # Category 1: People & Culture (Blue)
   - header: Talent Density
     short_header: CULTURE
     title: The AI Pivot
@@ -340,7 +294,7 @@ impact_nodes:
     print_only: false
     prompt: Explain the impact of the Knowledge Infrastructure and "Two Minute Guides" on onboarding.
 
-  # Category 4: Growth & Reach (Purple)
+  # Category 2: Growth & Reach (Purple)
   - header: Global Scale
     short_header: INFRASTRUCTURE
     title: 1000x Throughput
@@ -362,6 +316,52 @@ impact_nodes:
     color: purple
     print_only: false
     prompt: Explain the strategy behind the 100% i18n migration and AI translation pipeline.
+
+  # Category 3: Speed & Standards (Green)
+  - header: Developer Velocity
+    short_header: EFFICIENCY
+    title: CI/CD Architecture
+    metric_value: 90%
+    metric_label: CI savings
+    description: Applied cross-branch caching & parallelisation
+    long_description: Reduced test latency by 90% and CI costs by 75% using cross-branch caching
+    color: green
+    print_only: false
+    prompt: How did Chris optimize the CI/CD pipeline to achieve 10x faster test execution?
+
+  - header: Developer Velocity
+    short_header: EFFICIENCY
+    title: Monorepo
+    metric_value: "100%"
+    metric_label: Typescript
+    description: Unified 22 services into one strict monorepo
+    long_description: Consolidated 22 services into one monorepo with 100% strict Typescript
+    color: green
+    print_only: false
+    prompt: How did Chris consolidate 22 services into a monorepo and enforce strict TypeScript?
+
+  # Category 4: Risk & Efficiency (Orange)
+  - header: System Integrity
+    short_header: RESILIENCE
+    title: Capital Efficiency
+    metric_value: "$500k"
+    metric_label: Recovered
+    description: Cut DB usage by 90% and pruned features
+    long_description: Saved 500k/year and by optimising the database and pruning unused features
+    color: orange
+    print_only: false
+    prompt: Walk me through the optimization strategies that saved $500k annually.
+
+  - header: System Integrity
+    short_header: RESILIENCE
+    title: Security Hardening
+    metric_value: "35+"
+    metric_label: CVEs Fixed
+    description: Implemented automated SAST/DAST pipelines
+    long_description: Implemented automated SAST/DAST tooling to find and fix 35+ critical CVEs
+    color: orange
+    print_only: false
+    prompt: Describe Chris's approach to security hardening and CVE remediation.
 
 meta:
   keywords: [Principal Engineer, AI Infrastructure Lead, Systems Architect]
