@@ -15,10 +15,20 @@ declare global {
   }
 }
 
-export default function TerminalWrapper() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [initialQuery, setInitialQuery] = useState<string | undefined>();
-  const [nodeId, setNodeId] = useState<string | undefined>();
+interface TerminalWrapperProps {
+  defaultOpen?: boolean;
+  defaultQuery?: string;
+  defaultNodeId?: string;
+}
+
+export default function TerminalWrapper({
+  defaultOpen = false,
+  defaultQuery,
+  defaultNodeId,
+}: TerminalWrapperProps) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const [initialQuery, setInitialQuery] = useState<string | undefined>(defaultQuery);
+  const [nodeId, setNodeId] = useState<string | undefined>(defaultNodeId);
 
   const handleOpen = useCallback((event: CustomEvent<TerminalOpenEventDetail>) => {
     setInitialQuery(event.detail?.initialQuery);

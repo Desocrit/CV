@@ -2,7 +2,6 @@
 import '../styles/global.css';
 import GlitchEffect from '../components/ui/GlitchEffect.astro';
 import BlueprintSpotlight from '../components/ui/BlueprintSpotlight.astro';
-import TerminalWrapper from '../components/ui/terminal/TerminalWrapper';
 
 interface SocialLink {
   platform: string;
@@ -158,12 +157,9 @@ const jsonLd = {
 
     <link rel="canonical" href={url} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Preload only the default (dark) theme fonts; light mode fonts load via @font-face + font-display: swap -->
     <link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/IBMPlexSans-Medium.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/IBMPlexSans-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/IBMPlexMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Print stylesheet - loaded with media="print" to avoid blocking initial render -->
     <link rel="stylesheet" href="/styles/print.css" media="print" />
@@ -244,14 +240,14 @@ const jsonLd = {
         --glow-text-base: rgba(29, 29, 31, 0.5);
       }
     </style>
-    <!-- Theme detection + font loading: set theme, wait for fonts, then reveal -->
+    <!-- Theme detection: set theme and reveal immediately (fonts use font-display: swap) -->
     <script is:inline>
       (function() {
         const d = document.documentElement;
         const saved = localStorage.getItem('theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         d.setAttribute('data-theme', saved || (prefersDark ? 'dark' : 'light'));
-        document.fonts.ready.then(function() { d.setAttribute('data-theme-ready', ''); });
+        d.setAttribute('data-theme-ready', '');
       })();
     </script>
     <noscript><style>html { visibility: visible !important; }</style></noscript>
@@ -276,7 +272,38 @@ const jsonLd = {
       <slot />
     </main>
 
-    <TerminalWrapper client:idle />
+    <div id="terminal-root"></div>
+    <script>
+      let terminalLoaded = false;
+
+      async function loadTerminal(detail?: { initialQuery?: string; nodeId?: string }) {
+        if (terminalLoaded) return;
+        terminalLoaded = true;
+
+        const [{ createElement }, { createRoot }, { default: TerminalWrapper }] = await Promise.all([
+          import('react'),
+          import('react-dom/client'),
+          import('../components/ui/terminal/TerminalWrapper'),
+        ]);
+
+        const container = document.getElementById('terminal-root');
+        if (!container) return;
+
+        createRoot(container).render(
+          createElement(TerminalWrapper, {
+            defaultOpen: true,
+            defaultQuery: detail?.initialQuery,
+            defaultNodeId: detail?.nodeId,
+          })
+        );
+      }
+
+      window.addEventListener('open-rag-terminal', (e: Event) => {
+        const ce = e as CustomEvent<{ initialQuery?: string; nodeId?: string }>;
+        loadTerminal(ce.detail);
+      });
+      window.addEventListener('terminal:open', () => loadTerminal());
+    </script>
 
     <GlitchEffect />
     <BlueprintSpotlight />

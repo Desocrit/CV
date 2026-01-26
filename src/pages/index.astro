@@ -39,13 +39,13 @@ import {
       hoverColors={['green', 'orange', 'blue', 'purple']}
       printBorderBottom
     >
-      <div class="content-list">
+      <ul class="content-list">
         {projectCards.map((card) => (
           <ListItem>
             <ContentCard {...card} hideExtraBullets />
           </ListItem>
         ))}
-      </div>
+      </ul>
     </Section>
 
     <Section
@@ -64,13 +64,13 @@ import {
       contentClass="light:pt-[var(--spacing-fluid-xs)]"
       hoverColors={['green', 'purple', 'blue']}
     >
-      <div class="content-list">
+      <ul class="content-list">
         {workHistoryCards.map((card) => (
           <ListItem>
             <ContentCard {...card} />
           </ListItem>
         ))}
-      </div>
+      </ul>
     </Section>
 
     <Section
@@ -78,11 +78,11 @@ import {
       id="education"
       printHideTitle
     >
-      <div class="content-list">
+      <ul class="content-list">
         <ListItem bordered={false}>
           <ContentCard {...educationCard} />
         </ListItem>
-      </div>
+      </ul>
     </Section>
   </CVLayout>
 </Layout>
