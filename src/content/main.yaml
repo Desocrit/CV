@@ -355,7 +355,7 @@ impact_nodes:
   - header: Global Scale
     short_header: INFRASTRUCTURE
     title: 100% Internationalization
-    metric_value: "500k"
+    metric_value: "150k"
     metric_label: Translations
     description: Localised to 100% in 12 languages using AI
     long_description: Translated our site into 12+ languages through an agentic translation piepline
