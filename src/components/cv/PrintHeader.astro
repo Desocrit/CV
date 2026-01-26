@@ -18,14 +18,16 @@ interface Props {
   email: string;
   linkedin: string;
   github: string;
+  source: string;
   profile: string;
 }
 
-const { name, role, location, phone, email, linkedin, github, profile } = Astro.props;
+const { name, role, location, phone, email, linkedin, github, source, profile } = Astro.props;
 
 // Extract usernames from URLs
 const linkedinHandle = linkedin.replace(/https?:\/\/(www\.)?linkedin\.com\/in\//, '').slice(0, -1);
 const githubHandle = github.replace(/https?:\/\/(www\.)?github\.com\//, '');
+const sourceRepo = source.replace(/https?:\/\/(www\.)?github\.com\//, '');
 ---
 
 <Stack as="header" gap="sm" class="hidden print:!flex print:pt-3 print:pb-3 print:border-b-2 print:border-[var(--color-print-foreground)] print:mb-3">
@@ -45,6 +47,7 @@ const githubHandle = github.replace(/https?:\/\/(www\.)?github\.com\//, '');
       <Text muted as="div">{email}</Text>
       <Text muted as="div">/in/{linkedinHandle}</Text>
       <Text muted as="div">github.com/{githubHandle}</Text>
+      <Text muted as="div">src: {sourceRepo}</Text>
     </Stack>
   </div>
 </Stack>

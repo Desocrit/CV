@@ -204,7 +204,7 @@ const titleHoverClasses = contentHoverClasses || impactHoverClasses;
             // Update section accent color from card
             const accent = getComputedStyle(active).getPropertyValue('--card-accent').trim();
             if (accent) el.style.setProperty('--section-accent', accent);
-            if (context) context.textContent = '/_' + getContextText(active);
+            if (context) context.textContent = '/' + getContextText(active);
           }
         } else {
           header?.classList.remove('is-active');

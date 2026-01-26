@@ -93,6 +93,7 @@ export const cvSchema = z.object({
   phone: nonEmptyString.optional(),
   website: z.string().url(),
   github: z.string().url(),
+  source: z.string().url(),
   linkedin: z.string().url(),
   summary: nonEmptyString,
   outlier_achievements: z.array(outlierAchievementSchema),

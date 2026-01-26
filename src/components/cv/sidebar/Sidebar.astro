@@ -33,6 +33,7 @@ interface Props {
   location: string;
   linkedin: string;
   github: string;
+  source: string;
   profile: string;
   achievements: AchievementItem[];
   /** Impact nodes grouped by category with subheadings for print */
@@ -48,6 +49,7 @@ const {
   location,
   linkedin,
   github,
+  source,
   profile,
   achievements,
   impactPrintGroups,
@@ -58,7 +60,7 @@ const {
 <Layout>
   <Header slot="header" name={name} role={role} location={location} />
 
-  <Nav slot="nav" email={email} linkedin={linkedin} github={github} />
+  <Nav slot="nav" email={email} linkedin={linkedin} github={github} source={source} />
 
   <Profile profile={profile} />
   <Achievements

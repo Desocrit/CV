@@ -15,9 +15,10 @@ interface Props {
   email: string;
   linkedin: string;
   github: string;
+  source: string;
 }
 
-const { phone, email, linkedin, github } = Astro.props;
+const { phone, email, linkedin, github, source } = Astro.props;
 ---
 
 <PrintOnly class="print:!flex print:mt-1.5">
@@ -39,6 +40,10 @@ const { phone, email, linkedin, github } = Astro.props;
     <Stack gap="none">
       <Label contact>GitHub</Label>
       <Text as="span" mono>{github.replace('https://', '')}</Text>
+    </Stack>
+    <Stack gap="none">
+      <Label contact>Source</Label>
+      <Text as="span" mono>{source.replace('https://', '')}</Text>
     </Stack>
   </Stack>
 </PrintOnly>

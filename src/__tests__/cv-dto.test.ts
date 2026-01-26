@@ -83,6 +83,7 @@ interface CVData {
   phone?: string;
   website: string;
   github: string;
+  source: string;
   linkedin: string;
   summary: string;
   outlier_achievements: OutlierAchievement[];
@@ -108,6 +109,7 @@ function createLayoutDTO(cvData: CVData) {
     socialLinks: [
       { platform: 'LinkedIn' as const, url: cvData.linkedin },
       { platform: 'GitHub' as const, url: cvData.github },
+      { platform: 'Source' as const, url: cvData.source },
     ],
     workExperiences: cvData.work_history.map((exp) => {
       const tenureParts = exp.tenure.split(' — ');
@@ -177,6 +179,7 @@ function createSidebarDTO(cvData: CVData) {
     location: cvData.location,
     linkedin: cvData.linkedin,
     github: cvData.github,
+    source: cvData.source,
     profile: cvData.summary,
     achievements: cvData.outlier_achievements,
     impactPrintGroups,
@@ -257,6 +260,7 @@ const mockCvData: CVData = {
   phone: '123-456-7890',
   website: 'https://example.com',
   github: 'https://github.com/testuser',
+  source: 'https://github.com/testuser/cv',
   linkedin: 'https://linkedin.com/in/testuser',
   summary: 'A skilled engineer',
   outlier_achievements: [
@@ -418,7 +422,7 @@ describe('CV DTO Transformations', () => {
     it('transforms social links correctly', () => {
       const layoutDTO = createLayoutDTO(mockCvData);
 
-      expect(layoutDTO.socialLinks).toHaveLength(2);
+      expect(layoutDTO.socialLinks).toHaveLength(3);
       expect(layoutDTO.socialLinks[0]).toEqual({
         platform: 'LinkedIn',
         url: 'https://linkedin.com/in/testuser',
@@ -426,6 +430,10 @@ describe('CV DTO Transformations', () => {
       expect(layoutDTO.socialLinks[1]).toEqual({
         platform: 'GitHub',
         url: 'https://github.com/testuser',
+      });
+      expect(layoutDTO.socialLinks[2]).toEqual({
+        platform: 'Source',
+        url: 'https://github.com/testuser/cv',
       });
     });
 

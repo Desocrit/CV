@@ -10,6 +10,7 @@ import Stack from '../../layout/Stack.astro';
 import EmailIcon from '../../icons/EmailIcon.astro';
 import LinkedInIcon from '../../icons/LinkedInIcon.astro';
 import GitHubIcon from '../../icons/GitHubIcon.astro';
+import SourceIcon from '../../icons/SourceIcon.astro';
 import PrinterIcon from '../../icons/PrinterIcon.astro';
 import SunIcon from '../../icons/SunIcon.astro';
 import MoonIcon from '../../icons/MoonIcon.astro';
@@ -18,9 +19,10 @@ interface Props {
   email: string;
   linkedin: string;
   github: string;
+  source: string;
 }
 
-const { email, linkedin, github } = Astro.props;
+const { email, linkedin, github, source } = Astro.props;
 ---
 
 <nav class:list={[
@@ -57,6 +59,15 @@ const { email, linkedin, github } = Astro.props;
       aria-label="View GitHub profile (opens in new tab)"
     >
       <GitHubIcon slot="icon" />
+    </SidebarAction>
+
+    <SidebarAction
+      href={source}
+      external
+      longform="Source"
+      aria-label="View source code (opens in new tab)"
+    >
+      <SourceIcon slot="icon" />
     </SidebarAction>
 
     <SidebarAction

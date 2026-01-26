@@ -218,6 +218,7 @@ export const layoutDTO = {
   socialLinks: [
     { platform: 'LinkedIn' as const, url: cvData.linkedin },
     { platform: 'GitHub' as const, url: cvData.github },
+    { platform: 'Source' as const, url: cvData.source },
   ],
   workExperiences: cvData.work_history.map((exp) => {
     const parsed = parseTenure(exp.tenure, exp.company);
@@ -286,6 +287,7 @@ export const sidebarDTO = {
   location: cvData.location,
   linkedin: cvData.linkedin,
   github: cvData.github,
+  source: cvData.source,
   profile: cvData.summary,
   achievements: cvData.outlier_achievements,
   /** Impact nodes grouped by category with subheadings for print */

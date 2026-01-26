@@ -6,6 +6,7 @@ email: cjasaunders@outlook.com
 phone: "079 3328 1158"
 website: https://cs-cv.vercel.app/
 github: https://github.com/csaunders-ldt
+source: https://github.com/Desocrit/CV
 linkedin: https://www.linkedin.com/in/christopher-saunders-48b092110/
 
 # Abstract
@@ -17,12 +18,12 @@ outlier_achievements:
   - metric: Throughput
     headline: 1000x
     description: Improved system burst throughput
-  - metric: Cost Savings
-    headline: $500k
-    description: Per annum savings on infrastructure
   - metric: Contributions
     headline: "3000+"
     description: Average Github contributions per year
+  - metric: Cost Savings
+    headline: $500k
+    description: Per annum savings on infrastructure
 
 projects:
   - project_title: Nova
@@ -140,7 +141,7 @@ projects:
       - Replaced over 10,000 legacy components with accessible Tailwind
       - Cut rebrand lead time from 12 dev weeks to 1 by clearing design debt
     action:
-      - Strictly aligned designer and developer concepts to allow AI driven UI
+      - Strictly aligned designers developer concepts to allow AI driven UI
       # - Seamlessly orchestrated a high-risk 30 day migration of the entire system
     prompt: How did Tempo allow AI to build pixel-perfect designs with Figma MCP?
     cta: How did Tempo allow AI to build pixel-perfect designs with Figma MCP?
@@ -176,7 +177,7 @@ work_history:
     tenure: Feb 2021 — Present
     summary: Architected the transition from startup to resilience
     impact:
-      - Handled the London Marathon via rewriting and tuning the Checkout
+      - Handled London Marathon ballot via rewriting and tuning the Checkout
       - Led a strategic pivot to an AI First, through training, tooling, and building
       - Drove engineering standards while having the highest individual velocity
     supporting_data: []
